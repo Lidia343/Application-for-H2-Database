@@ -356,7 +356,7 @@ public class Graphics {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
 			
-			if (!isConnectionToDataBase) commandsExecuter.clearCommandsStack();
+			commandsExecuter.clearCommandsStack();//if (!isConnectionToDataBase) 
 			if (isConnection) {
 				storage.closeStorage();
 				/*if (!storage.getErrorMessage().equals("")) {
@@ -381,7 +381,7 @@ public class Graphics {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
 			
-			if (!isConnectionToFileStorage) commandsExecuter.clearCommandsStack();
+			commandsExecuter.clearCommandsStack(); //if (!isConnectionToFileStorage) 
 			if (isConnection) {
 				storage.closeStorage();
 				/*if (!storage.getErrorMessage().equals("")) {
@@ -421,7 +421,7 @@ public class Graphics {
 				user.setAge(Integer.parseInt(ageText.getText()));
 				user.setIsActive(isActiveButton.getSelection());
 				
-				commandsExecuter.executeCommand(new CommandAdd (storage), user);
+				commandsExecuter.executeCommand(new CommandAdd (storage, user));
 		
 				if (!isRightStorage()) return;
 				
@@ -481,7 +481,7 @@ public class Graphics {
 				user.setAge(Integer.parseInt(ageText.getText()));
 				user.setIsActive(isActiveButton.getSelection());
 				
-				commandsExecuter.executeCommand(new CommandUpdate(storage), user);
+				commandsExecuter.executeCommand(new CommandUpdate(storage, user));
 				if (!isRightStorage()) return;
 
 				table.getItem(selectedRowIndex).setText(new String[] {Integer.toString(user.getId()), user.getName(), user.getSurname(), Integer.toString(user.getAge()), Boolean.toString(user.getIsActive())});
@@ -518,14 +518,16 @@ public class Graphics {
 			
 			if ((int)key.character == 0x1a) {
 				if (commandsExecuter.getCommandsStackSize() != 0) {
-					System.out.println(Integer.toString(commandsExecuter.getCommandsStackSize()));
+					//System.out.println();
+					//System.out.println(Integer.toString(commandsExecuter.getCommandsStackSize()));
 					commandsExecuter.undoLastCommand();
+					System.out.println();
 					if (table.getItemCount() == 0) storage.updateStorageObject();
-					System.out.println(Integer.toString(commandsExecuter.getCommandsStackSize()));
+					//System.out.println(Integer.toString(commandsExecuter.getCommandsStackSize()));
 					clearTextFields();
 					showTable(true);
 					shell.pack();
-				}
+				} else return;
 			}
 		}
 	};
@@ -565,7 +567,7 @@ public class Graphics {
 			for (User temp : users) {
 				if (temp.getId() == selectedId) user = temp;
 			}
-			commandsExecuter.executeCommand(new CommandDelete (storage), user);
+			commandsExecuter.executeCommand(new CommandDelete (storage, user));
 			if (!isRightStorage()) return;
 				
 			titleLabel.setText("Добавление пользователя:");

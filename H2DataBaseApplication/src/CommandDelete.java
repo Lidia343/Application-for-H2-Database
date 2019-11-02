@@ -32,14 +32,14 @@ public class CommandDelete implements Command{
 	private Storage storage;
 	private User user;
 	
-	public CommandDelete (Storage storage) {
+	public CommandDelete (Storage storage, User user) {
 		this.storage = storage;
+		this.user = user;
 	}
 	
 	@Override
-	public void execute(User user) {
+	public void execute() {
 		storage.deleteUser(user.getId());
-		this.user = user;
 	}
 	
 	@Override public void undo() {

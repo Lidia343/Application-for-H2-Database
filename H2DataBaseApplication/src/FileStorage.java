@@ -125,7 +125,7 @@ public class FileStorage implements Storage {
 				usersDataList.add(user);
 				line = reader.readLine();
 			}
-			findMaxUserId();//////////////////////
+			findMaxUserId();
 			errorMessage = "";
 		} catch (Exception e) {
 			errorMessage = e.getMessage();

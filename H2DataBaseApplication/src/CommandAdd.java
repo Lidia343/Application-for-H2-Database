@@ -3,13 +3,15 @@ import java.util.ArrayList;
 public class CommandAdd implements Command{
 	
 	private Storage storage;
+	private User user;
 	
-	public CommandAdd (Storage storage) {
+	public CommandAdd (Storage storage, User user) {
 		this.storage = storage;
+		this.user = user;
 	}
 	
 	@Override
-	public void execute(User user) {
+	public void execute() {
 		storage.addUser(user);
 	}
 	
@@ -22,6 +24,5 @@ public class CommandAdd implements Command{
 		}
 		if (users.size() != 0)
 		storage.deleteUser(user.getId());
-		System.out.println(Integer.toString(user.getId()));
 	}
 }

@@ -12,9 +12,9 @@ public class CommandsExecuter {
 		commands.clear();
 	}
 	
-	public void executeCommand(Command command, User user) {
+	public void executeCommand(Command command) {
 		commands.push(command);
-		commands.peek().execute(user);
+		commands.peek().execute();
 	}
 	
 	public void undoLastCommand() {
