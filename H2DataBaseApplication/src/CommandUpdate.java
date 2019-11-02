@@ -12,7 +12,7 @@ public class CommandUpdate implements Command{
 	@Override
 	public void execute(User user) {
 		ArrayList<User> users = new ArrayList<User>();
-		users = storage.getUsersDataSet(false).getUsersList();
+		users = storage.getUsersDataSet(false);
 		for (User temp : users) {
 			if (temp.getId() == user.getId())
 				this.user = temp;

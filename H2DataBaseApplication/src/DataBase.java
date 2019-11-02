@@ -1,7 +1,8 @@
 import java.sql.Connection; 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;  
+import java.sql.Statement;
+import java.util.ArrayList;  
 
 /**
  * Класс предназначен для работы с базой данных.
@@ -106,8 +107,9 @@ public class DataBase implements Storage {
 	  }
 	
 	@Override
-	public User getUsersDataSet(boolean isSorted) {
-		 User users = new User ();
+	public ArrayList <User> getUsersDataSet(boolean isSorted) {
+
+		ArrayList <User> users = new ArrayList <User>();
 		 try {
 			  if (isSorted)  resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users order by id"); else
 			  resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users");
@@ -121,7 +123,7 @@ public class DataBase implements Storage {
 				  user.setSurname(resultSet.getString("Surname"));
 				  user.setAge(resultSet.getInt("Age"));
 				  user.setIsActive(resultSet.getBoolean("isActive"));
-				  users.addUser(user);
+				  users.add(user);
 			  }
 			  else return null;
 			  errorMessage = "";

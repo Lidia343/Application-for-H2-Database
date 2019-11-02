@@ -432,23 +432,17 @@ public class Graphics {
 				
 				try {
 					
-					User users = storage.getUsersDataSet(true);///////////////////////////////////////////////////////////////////////////////////////////////////////
-					ArrayList<User> usersList = users.getUsersList();
+					ArrayList <User> users = storage.getUsersDataSet(true);///////////////////////////////////////////////////////////////////////////////////////////////////////
 					
 					if (!isRightStorage()) return;
 					
-					for (int i = 0; i < usersList.size(); i++) {
+					for (int i = 0; i < users.size(); i++) {
 						
-						id = usersList.get(i).getId();
-						name = usersList.get(i).getName();
-						surname = usersList.get(i).getSurname();
-						age = usersList.get(i).getAge();
-						isActive = usersList.get(i).getIsActive();
-						
-						if (!users.getErrorMessage().equals("")) {
-							createMessageBox(SWT.ERROR, users.getErrorMessage());
-							return;
-						}
+						id = users.get(i).getId();
+						name = users.get(i).getName();
+						surname = users.get(i).getSurname();
+						age = users.get(i).getAge();
+						isActive = users.get(i).getIsActive();
 					}
 
 					TableItem item = new TableItem(table, SWT.NONE);
@@ -568,10 +562,10 @@ public class Graphics {
 			shell.pack();
 				
 			command.add(new CommandDelete (storage));//////////////////////////////////////////////////////////////
-			ArrayList<User> list = new ArrayList<User>();
-			list = storage.getUsersDataSet(false).getUsersList();
+			ArrayList<User> users = new ArrayList<User>();
+			users = storage.getUsersDataSet(false);
 			User user = null;
-			for (User temp : list) {
+			for (User temp : users) {
 				if (temp.getId() == selectedId) user = temp;
 			}
 			command.get(command.size() - 1).execute(user);/////////////////////////////////////////////////////////////////////////
@@ -609,20 +603,15 @@ public class Graphics {
 		String name, surname;
 		boolean isActive;
 		try {
-			User users = storage.getUsersDataSet(isAfterDeleteCanceling);
-			ArrayList<User> usersList = users.getUsersList();
+			ArrayList <User> users = storage.getUsersDataSet(isAfterDeleteCanceling);
 			if (!isRightStorage()) return;
 			
-			for (int i = 0; i < usersList.size(); i++) {
-				id = usersList.get(i).getId();
-				name = usersList.get(i).getName();
-				surname = usersList.get(i).getSurname();
-				age = usersList.get(i).getAge();
-				isActive = usersList.get(i).getIsActive();
-				if (!users.getErrorMessage().equals("")) {
-					createMessageBox(SWT.ERROR, users.getErrorMessage());
-					return;
-				}
+			for (int i = 0; i < users.size(); i++) {
+				id = users.get(i).getId();
+				name = users.get(i).getName();
+				surname = users.get(i).getSurname();
+				age = users.get(i).getAge();
+				isActive = users.get(i).getIsActive();
 				TableItem item = new TableItem(table, SWT.NONE);
 				item.setText(new String[] {Integer.toString(id), name, surname, Integer.toString(age), Boolean.toString(isActive)});
 			}

@@ -22,7 +22,7 @@ public class FileStorage implements Storage {
 	private FileWriter idWriter;
 	private BufferedReader reader;
 	private BufferedReader idReader;
-	////////////////////////////////////////////////////////Возможно, поменять список
+
 	private ArrayList<String> usersDataList; //Список для всех пользователей, занесённых в файл
 	private ArrayList<String> prevUsersDataList; //Список для пользователей, занесённых в файл и расположенных до выбранного для удаления/изменения пользователя
 	private ArrayList<String> nextUsersDataList; //Список для пользователей, занесённых в файл и расположенных после выбранного для удаления/изменения пользователя
@@ -403,12 +403,14 @@ public class FileStorage implements Storage {
 	}
 	
 	@Override
-	public User getUsersDataSet(boolean isSorted) {
-		User users = new User();
+	public ArrayList <User> getUsersDataSet(boolean isSorted) {
+		
+		ArrayList <User> users = new ArrayList <User>();
 		int id, age;
 		String name, surname;
 		boolean isActive;
 		try {
+			if (usersDataList != null)
 			for (int i = 0; i < usersDataList.size() - 4; i += 5) {
 				id = Integer.parseInt(usersDataList.get(i));
 				name = usersDataList.get(i + 1);
@@ -421,9 +423,9 @@ public class FileStorage implements Storage {
 				user.setSurname(surname);
 				user.setAge(age);
 				user.setIsActive(isActive);
-				users.addUser(user);
-			}
-			if (isSorted) Collections.sort(users.getUsersList(), new UsersListSorter());
+				users.add(user);
+			} else return null;
+			if (isSorted) Collections.sort(users, new UsersListSorter());
 			errorMessage = "";
 		} catch (Exception e) {
 			errorMessage = e.getMessage();

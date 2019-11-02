@@ -16,7 +16,7 @@ public class CommandAdd implements Command{
 	@Override public void undo() {
 		User user = null;
 		ArrayList<User> users = new ArrayList<User>();
-		users = storage.getUsersDataSet(false).getUsersList();
+		users = storage.getUsersDataSet(false);
 		for (User temp : users) {
 			user = temp;
 		}

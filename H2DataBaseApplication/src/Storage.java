@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Интерфейс, необходимый для определения методов, которые должны содержать классы, реализующие хранение данных.
@@ -49,10 +50,9 @@ public interface Storage {
 	void deleteUser(int id);
 	
 	/**
-	 * Метод для возврата объекта, содержащего данные всех пользователей хранилища.
-	 * @return объект класса DataSet
+	 * Метод для возврата списка, содержащего данные всех пользователей хранилища.
 	 */
-	User getUsersDataSet(boolean isSorted);
+	ArrayList <User> getUsersDataSet(boolean isSorted);
 	
 	/**
 	 * Метод для возврата сообщения об ошибке.
