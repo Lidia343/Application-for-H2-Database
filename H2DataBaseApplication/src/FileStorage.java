@@ -23,7 +23,7 @@ public class FileStorage implements Storage {
 	private BufferedReader reader;
 	private BufferedReader idReader;
 
-	private ArrayList<String> usersDataList; //Список для всех пользователей, занесённых в файл
+	private ArrayList<User> usersDataList; //Список для всех пользователей, занесённых в файл
 	private ArrayList<String> prevUsersDataList; //Список для пользователей, занесённых в файл и расположенных до выбранного для удаления/изменения пользователя
 	private ArrayList<String> nextUsersDataList; //Список для пользователей, занесённых в файл и расположенных после выбранного для удаления/изменения пользователя
 	
@@ -36,7 +36,7 @@ public class FileStorage implements Storage {
 	public FileStorage() {
 		errorMessage = "";
 		id = 0;
-		usersDataList = new ArrayList<String>();
+		usersDataList = new ArrayList<User>();
 		prevUsersDataList = new ArrayList<String>();
 		nextUsersDataList = new ArrayList<String>();
 	}
@@ -88,12 +88,15 @@ public class FileStorage implements Storage {
 		
 		try {
 			writer.close();
+			User user;
 			reader = new BufferedReader (new FileReader (file));
 			reader.readLine();
 			reader.readLine();
 			String line = reader.readLine(), buffer;
 			int i;
+			int j = 0;
 			while (line != null) {
+				user = new User ();
 				buffer = "";
 				i = 0;
 				while (i < line.length()) {
@@ -103,13 +106,23 @@ public class FileStorage implements Storage {
 							((line.charAt(i) >= 'а') && (line.charAt(i) <= 'я')) ||
 							((line.charAt(i) >= 'А') && (line.charAt(i) <= 'Я'))) {
 						buffer += line.charAt(i); 
-						if (buffer.equals("true") || buffer.equals("false")) usersDataList.add(buffer);
+						if (buffer.equals("true") || buffer.equals("false")) {
+							user.setIsActive(Boolean.parseBoolean(buffer));
+						}
 					} else {
-						if (!buffer.equals("")) usersDataList.add(buffer);
+						if (!buffer.equals("")) {
+							if (j == 0) user.setId(Integer.parseInt(buffer));
+							if (j == 1) user.setName(buffer);
+							if (j == 2) user.setSurname(buffer);
+							if (j == 3) user.setAge(Integer.parseInt(buffer));
+							j++;
+						}
 						buffer = "";  
 					}
 					i++;
 				}
+				j = 0;
+				usersDataList.add(user);
 				line = reader.readLine();
 			}
 			
@@ -186,11 +199,8 @@ public class FileStorage implements Storage {
 			writer.append(userLine); 
 			writer.close();
 			
-			usersDataList.add(Integer.toString(id + 1));
-			usersDataList.add(user.getName());
-			usersDataList.add(user.getSurname());
-			usersDataList.add(Integer.toString(user.getAge()));
-			usersDataList.add(Boolean.toString(user.getIsActive()));
+			user.setId(id + 1);
+			usersDataList.add(user);
 			
 			if (isUpdated) updateIdFile (Integer.toString(id + 1));
 		} catch (Exception e) {
@@ -211,28 +221,29 @@ public class FileStorage implements Storage {
 		}
 	}
 	
+	private void findMaxUserId() {
+		if (usersDataList.size() != 0) {
+			int[] indexes = new int[usersDataList.size()];
+			for (int i = 0; i < usersDataList.size(); i++) {
+				indexes[i] = usersDataList.get(i).getId();
+			}
+			
+			int max = indexes[0], maxi = 0;
+			for (int i = 0; i < indexes.length; i++) 
+				if (indexes[i] > max) {
+					max = indexes[i];
+					maxi = i;
+				}
+			
+			updateIdFile(Integer.toString(indexes[maxi]));
+		}
+	}
+	
 	@Override
 	public void addUser (User user, int deletedId) {
 		try {
 			writeUserInFile (user, deletedId - 1, false);
-			if (usersDataList.size() != 0) {
-				
-				int[] indexes = new int[usersDataList.size()/5];
-				int t = 0;
-				for (int i = 0; i < usersDataList.size() - 4; i+=5) {
-					indexes[t] = Integer.parseInt(usersDataList.get(i));
-					t++;
-				}
-				
-				int max = indexes[0], maxi = 0;
-				for (int i = 0; i < indexes.length; i++) 
-					if (indexes[i] > max) {
-						max = indexes[i];
-						maxi = i;
-					}
-				
-				updateIdFile(Integer.toString(indexes[maxi]));
-			}
+			findMaxUserId();
 		} catch (Exception e) {
 			errorMessage = e.getMessage();
 		}
@@ -311,12 +322,10 @@ public class FileStorage implements Storage {
 			writer.write(user.getId() + "\t" + user.getName() + afterNameTab + user.getSurname() + afterSurnameTab + user.getAge() + "\t\t" + user.getIsActive() + "\r\n");
 			updateTextAfterUser ();
 			
-			int dataIndex = usersDataList.indexOf(Integer.toString(user.getId()));
-			usersDataList.set(dataIndex + 1, user.getName());
-			usersDataList.set(dataIndex + 2, user.getSurname());
-			usersDataList.set(dataIndex + 3, Integer.toString(user.getAge()));
-			usersDataList.set(dataIndex + 4, Boolean.toString(user.getIsActive()));
-		
+			int dataIndex = 0;
+			for (User temp : usersDataList)
+				if (temp.getId() == user.getId()) dataIndex = usersDataList.indexOf(temp);
+			usersDataList.set(dataIndex, user);
 			errorMessage = "";
 		} catch (Exception e) {
 			errorMessage = e.getMessage();
@@ -329,33 +338,12 @@ public class FileStorage implements Storage {
 		updateTextBeforeUser (id);
 		updateTextAfterUser ();
 
-		int dataIndex = usersDataList.indexOf(Integer.toString(id)); 
-		usersDataList.remove(dataIndex + 4); 
-		usersDataList.remove(dataIndex + 3);
-		usersDataList.remove(dataIndex + 2);
-		usersDataList.remove(dataIndex + 1);
-		usersDataList.remove(dataIndex);
-		
-		if (usersDataList.size() != 0) {
-		
-			int[] indexes = new int[usersDataList.size()/5];
-			int t = 0;
-			for (int i = 0; i < usersDataList.size() - 4; i+=5) {
-				indexes[t] = Integer.parseInt(usersDataList.get(i));
-				t++;
-			}
-			
-			int max = indexes[0], maxi = 0;
-			for (int i = 0; i < indexes.length; i++) 
-				if (indexes[i] > max) {
-					max = indexes[i];
-					maxi = i;
-				}
-			
-			updateIdFile(Integer.toString(indexes[maxi]));
-		}
-		
-		
+		int dataIndex = 0;
+		for (User temp : usersDataList)
+			if (temp.getId() == id) dataIndex = usersDataList.indexOf(temp);
+		usersDataList.remove(dataIndex); 
+
+		findMaxUserId();
 		//if (usersDataList.size() != 0)
 		/*try {//////////////////////////////////////////////////////////////////
 			/*reader = new BufferedReader (new FileReader (file));
@@ -405,32 +393,8 @@ public class FileStorage implements Storage {
 	@Override
 	public ArrayList <User> getUsersDataSet(boolean isSorted) {
 		
-		ArrayList <User> users = new ArrayList <User>();
-		int id, age;
-		String name, surname;
-		boolean isActive;
-		try {
-			if (usersDataList != null)
-			for (int i = 0; i < usersDataList.size() - 4; i += 5) {
-				id = Integer.parseInt(usersDataList.get(i));
-				name = usersDataList.get(i + 1);
-				surname = usersDataList.get(i + 2);
-				age = Integer.parseInt(usersDataList.get(i + 3));
-				isActive = Boolean.parseBoolean(usersDataList.get(i + 4));
-				User user = new User();
-				user.setId(id);
-				user.setName(name);
-				user.setSurname(surname);
-				user.setAge(age);
-				user.setIsActive(isActive);
-				users.add(user);
-			} else return null;
-			if (isSorted) Collections.sort(users, new UsersListSorter());
-			errorMessage = "";
-		} catch (Exception e) {
-			errorMessage = e.getMessage();
-		}
-		return users;
+		if (isSorted) Collections.sort(usersDataList, new UsersListSorter());
+		return usersDataList;
 	}
 	
 	@Override
