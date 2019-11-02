@@ -125,7 +125,7 @@ public class FileStorage implements Storage {
 				usersDataList.add(user);
 				line = reader.readLine();
 			}
-			
+			findMaxUserId();//////////////////////
 			errorMessage = "";
 		} catch (Exception e) {
 			errorMessage = e.getMessage();
@@ -236,7 +236,7 @@ public class FileStorage implements Storage {
 				}
 			
 			updateIdFile(Integer.toString(indexes[maxi]));
-		}
+		} else updateIdFile ("-1");
 	}
 	
 	@Override
