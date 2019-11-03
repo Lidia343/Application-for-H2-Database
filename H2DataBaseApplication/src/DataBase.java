@@ -9,7 +9,8 @@ import java.util.ArrayList;
  */
 public class DataBase implements Storage {
 	
-	private String JDBC_Driver;   
+	private String JDBC_Driver;
+	private String databaseName;
 	  
 	private Connection connection;
 	private Statement statement;
@@ -20,7 +21,8 @@ public class DataBase implements Storage {
     /**
 	* Конструктор класса DataBase
 	*/
-	public DataBase() {
+	public DataBase(String databaseName) {
+		this.databaseName = databaseName;
 		JDBC_Driver = "org.h2.Driver"; 
 		errorMessage = "";
 	}
@@ -31,7 +33,7 @@ public class DataBase implements Storage {
 		  statement = null; 
 		  try { 
 			  Class.forName(JDBC_Driver);      
-			  connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", ""); 
+			  connection = DriverManager.getConnection(databaseName, "sa", ""); 
 			  statement = connection.createStatement(); 		
 			  errorMessage = "";
 		  } catch(Exception e) { 
@@ -76,6 +78,17 @@ public class DataBase implements Storage {
 	public void addUser(User user) {
 		String sql = "INSERT INTO Users VALUES (DEFAULT, '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.getIsActive() + ")"; 
 		sendAddingRequest (sql);
+		
+		/*try {
+			resultSet = statement.executeQuery("SELECT id FROM Users");
+			while (resultSet.next())
+			if (resultSet != null) {
+				user.setId(resultSet.getInt("id"));
+			}
+			errorMessage = "";
+		} catch (Exception e) {
+			errorMessage = e.getMessage();
+		}*/
 	}
 	
 	@Override

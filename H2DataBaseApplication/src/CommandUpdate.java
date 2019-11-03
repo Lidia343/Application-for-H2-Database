@@ -3,11 +3,13 @@ import java.util.ArrayList;
 public class CommandUpdate implements Command{
 	
 	private Storage storage;
-	private User user;
+	private User prevUser;
+	private User nextUser;
 	
 	public CommandUpdate (Storage storage, User user) {
 		this.storage = storage;
-		this.user = user;
+		nextUser = user;
+		prevUser = null;
 	}
 	
 	@Override
@@ -15,14 +17,19 @@ public class CommandUpdate implements Command{
 		ArrayList<User> users = new ArrayList<User>();
 		users = storage.getUsersDataSet(false);
 		for (User temp : users) 
-			if (temp.getId() == user.getId()) {
-				storage.updateUser(user);
-				this.user = temp;
+			if (temp.getId() == nextUser.getId()) {
+				storage.updateUser(nextUser);
+				prevUser = temp;
 				break;
 			}
 	}
 	
 	@Override public void undo() {
-		storage.updateUser(user);
+		storage.updateUser(prevUser);
+	}
+	
+	@Override
+	public void redo() {
+		storage.updateUser(nextUser);
 	}
 }

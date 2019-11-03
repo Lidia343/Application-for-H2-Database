@@ -1,2 +1,5 @@
 Код:	Имя:    							Фамилия:							Возраст:	Активен:
 
+0	yy								yy								55		false
+1	yy								yy								55		false
+2	yy								yy								55		false

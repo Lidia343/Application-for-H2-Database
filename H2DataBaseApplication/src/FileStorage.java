@@ -33,7 +33,8 @@ public class FileStorage implements Storage {
 	/**
 	 * Конструктор класса FileStorage.
 	 */
-	public FileStorage() {
+	public FileStorage(String fileName) {
+		this.fileName = fileName;
 		errorMessage = "";
 		id = 0;
 		usersDataList = new ArrayList<User>();
@@ -43,7 +44,8 @@ public class FileStorage implements Storage {
 	
 	@Override
 	public void setStorage() {
-		this.fileName = "file.txt";
+		//this.fileName = "file.txt";
+		file = new File (fileName);
 	}
 	
 	/*
@@ -136,7 +138,7 @@ public class FileStorage implements Storage {
 	@Override
 	public void createStorageObject() {
 		
-		file = new File (fileName);
+		//file = new File (fileName);
 		maxIdFile = new File ("maxId.txt");
 		//setHidden("maxId.txt", false);
 		try {

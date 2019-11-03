@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.KeyAdapter;
@@ -34,6 +35,8 @@ public class Graphics {
 	private Color backColor; //Цвет фона
 	private Font font; 
 	
+	private Combo combo;
+	private Button openingStorageButton;
 	private Label titleLabel;
 	private Text nameText;
 	private Text surnameText;
@@ -45,8 +48,6 @@ public class Graphics {
 	private Table table;
 	private Button updatingUserButton;
 	private Button deletingUserButton;
-	private Button isFileStorageButton;
-	private Button isDataBaseButton;
 	
 	private int selectedRowIndex;
 	private int selectedId;
@@ -78,6 +79,7 @@ public class Graphics {
 	public void createWindow() {
 		
 		shell.addKeyListener(cancelPressingListener);
+		shell.addKeyListener(doubleCancelPressingListener);
 		
 		rowIsNotSelected = true;
 		
@@ -89,8 +91,32 @@ public class Graphics {
 		
 		createGridLayout(shell); 
 		
+		Composite heightComposite = new Composite (shell, SWT.BORDER);
+		GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		heightComposite.setBackground(backColor);
+		heightComposite.setLayoutData(gridData);
+		
+		createGridLayout (heightComposite);
+		
+		Label choosingLabel = new Label (heightComposite, SWT.NONE);
+		gridData = createGridData(SWT.LEFT, false, 0, 0, 0, 0);
+		choosingLabel.setLayoutData(gridData);
+		setLabel(choosingLabel, "Имя хранилища:");
+		
+		combo = new Combo (heightComposite, SWT.DROP_DOWN);
+		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
+		combo.setLayoutData(gridData);
+		combo.setForeground(foreColor);
+		combo.setFont(font);
+		
+		openingStorageButton = new Button (heightComposite, SWT.PUSH);
+		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		int choosingButtonWidthHint = gridData.widthHint;
+		openingStorageButton.setLayoutData(gridData);
+		setButton(openingStorageButton, "Открыть"); 
+		
 		titleLabel = new Label(shell, SWT.NONE);
-		GridData gridData = createGridData(SWT.CENTER, false, 0, 0, 0, 2);
+		gridData = createGridData(SWT.CENTER, false, 0, 0, 0, 2);
 		titleLabel.setLayoutData(gridData);
 		setLabel(titleLabel, "Добавление пользователя:");
 		
@@ -136,6 +162,7 @@ public class Graphics {
 		
 		Button addingUserButton = new Button (shell, SWT.PUSH);
 		gridData = createGridData (SWT.RIGHT, false, 120, 30, 50, 2);
+		gridData.widthHint = choosingButtonWidthHint;
 		addingUserButton.setLayoutData(gridData);
 		setButton(addingUserButton, "Добавить"); 
 		
@@ -185,18 +212,19 @@ public class Graphics {
 		deletingUserButton.setLayoutData(gridData);
 		setButton(deletingUserButton, "Удалить"); 
 		
-		isFileStorageButton = new Button (shell, SWT.PUSH);
+		openingStorageButton.addSelectionListener(isDataBaseSelection);
+		/*isFileStorageButton = new Button (shell, SWT.PUSH);
 		gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 2);
 		isFileStorageButton.setLayoutData(gridData);
-		setButton(isFileStorageButton, "Работать с файлом"); 
+		setButton(isFileStorageButton, "Работать с файлом"); */
 		
-		isDataBaseButton = new Button (shell, SWT.PUSH);
+		/*isDataBaseButton = new Button (shell, SWT.PUSH);
 		gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 2);
 		isDataBaseButton.setLayoutData(gridData);
-		setButton(isDataBaseButton, "Работать с базой данных"); 
+		setButton(isDataBaseButton, "Работать с базой данных")*/; 
 		
-		isFileStorageButton.addSelectionListener(isFileStorageSelection);
-		isDataBaseButton.addSelectionListener(isDataBaseSelection);
+		/*isFileStorageButton.addSelectionListener(isFileStorageSelection);
+		isDataBaseButton.addSelectionListener(isDataBaseSelection);*/
 		
 		deletingUserButton.addSelectionListener(deletingUserSelection);
 		
@@ -231,6 +259,21 @@ public class Graphics {
 		g.horizontalSpacing = 5; //Расстояние между соседними ячейками по горизонтали
 		g.verticalSpacing = 10; //Расстояние между соседними ячейками по вертикали
 		s.setLayout(g); //Установка слоя на окно shell
+	}
+	
+	/**
+	 * Создание таблицы из ячеек на composite для расположения в них графических компонентов.
+	 * @param composite - объект класса Composite
+	 */
+	private void createGridLayout(Composite composite) { 
+		
+		GridLayout g = new GridLayout();
+		g.numColumns = 3; //Количество столбцов
+		g.marginWidth = 5; //Расстояние от левого и правого краев окна
+		g.marginHeight = 5; //Расстояние от верхнего и нижненго краев окна
+		g.horizontalSpacing = 5; //Расстояние между соседними ячейками по горизонтали
+		g.verticalSpacing = 10; //Расстояние между соседними ячейками по вертикали
+		composite.setLayout(g); //Установка слоя на окно shell
 	}
 	
 	/**
@@ -280,6 +323,7 @@ public class Graphics {
 		text.setForeground(foreColor);
 		text.setFont(font);
 		text.addKeyListener(cancelPressingListener);
+		text.addKeyListener(doubleCancelPressingListener);
 	}
 		
 	/**
@@ -294,6 +338,7 @@ public class Graphics {
 		button.setForeground(foreColor);
 		button.setFont(font);
 		button.addKeyListener(cancelPressingListener);
+		button.addKeyListener(doubleCancelPressingListener);
 	}	
 	
 	/**
@@ -310,6 +355,7 @@ public class Graphics {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.addKeyListener(cancelPressingListener);
+		table.addKeyListener(doubleCancelPressingListener);
 	}
 	
 	/**
@@ -356,39 +402,51 @@ public class Graphics {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
 			
-			commandsExecuter.clearCommandsStack();//if (!isConnectionToDataBase) 
-			if (isConnection) {
-				storage.closeStorage();
-				/*if (!storage.getErrorMessage().equals("")) {
-					createMessageBox (SWT.ERROR, storage.getErrorMessage());
-					return;
-				} */
-			} else isConnection = true;
-			isConnectionToDataBase = true;
-			isConnectionToFileStorage = false;
-			setStorage();	
-			clearTextFields();
-			//shell.setText("Работа с базой данных");
-			shellPropertiesFactory.setShell(shell, null, "Работа с базой данных", "database.png", backColor);
-			if (table.getItemCount() != 0) shell.pack();
+			if (!combo.getText().equals("")) {
+				
+				boolean isContain = false;
+				for (int i = 0; i < combo.getItemCount(); i++) 
+					if (combo.getItem(i).equals(combo.getText())) isContain = true;
+				
+				if (!isContain) combo.add(combo.getText());
+				
+				if (isConnection) {
+					commandsExecuter.clearCommandsStack();//if (!isConnectionToDataBase) 
+					commandsExecuter.updateIndex();
+					storage.closeStorage();
+					/*if (!storage.getErrorMessage().equals("")) {
+						createMessageBox (SWT.ERROR, storage.getErrorMessage());
+						return;
+					} */
+				} else isConnection = true;
+				
+				//isConnectionToDataBase = true;
+				//isConnectionToFileStorage = false;
+				setStorage();	
+				clearTextFields();
+				//shell.setText("Работа с базой данных");
+				//shellPropertiesFactory.setShell(shell, null, "Работа с базой данных", "database.png", backColor);
+				if (table.getItemCount() != 0) shell.pack();
+			}
 		}
 	};
 	
-	/**
+	/*/**
 	 * Слушатель нажатия кнопки "Работать с файлом".
 	 */
-	SelectionAdapter isFileStorageSelection = new SelectionAdapter() {
+	/*SelectionAdapter isFileStorageSelection = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
 			
-			commandsExecuter.clearCommandsStack(); //if (!isConnectionToFileStorage) 
 			if (isConnection) {
+				commandsExecuter.clearCommandsStack(); //if (!isConnectionToFileStorage) 
+				commandsExecuter.updateIndex();
 				storage.closeStorage();
 				/*if (!storage.getErrorMessage().equals("")) {
 					createMessageBox (SWT.ERROR, storage.getErrorMessage());
 					return;
 				} */
-			} else isConnection = true;
+			/*} else isConnection = true;
 			isConnectionToFileStorage = true;
 			isConnectionToDataBase = false;
 			setStorage();
@@ -397,7 +455,7 @@ public class Graphics {
 			shellPropertiesFactory.setShell(shell, null, "Работа с текстовым файлом", "file.png", backColor);
 			if (table.getItemCount() != 0) shell.pack();
 		}
-	};
+	};*/
 	
 	/**
 	 * Слушатель нажатия кнопки "Добавить".
@@ -422,7 +480,7 @@ public class Graphics {
 				user.setIsActive(isActiveButton.getSelection());
 				
 				commandsExecuter.executeCommand(new CommandAdd (storage, user));
-		
+				
 				if (!isRightStorage()) return;
 				
 				int id = 0, age = 0;
@@ -431,7 +489,7 @@ public class Graphics {
 				
 				try {
 					
-					ArrayList <User> users = storage.getUsersDataSet(true);///////////////////////////////////////////////////////////////////////////////////////////////////////
+					ArrayList <User> users = storage.getUsersDataSet(true);
 					
 					if (!isRightStorage()) return;
 					
@@ -516,16 +574,28 @@ public class Graphics {
 		@Override
 		public void keyPressed (KeyEvent key) {
 			
-			if ((int)key.character == 0x1a) {
+			if ((int)key.character == 0x1a) { //Код комбинации Control + Z
 				if (commandsExecuter.getCommandsStackSize() != 0) {
-					//System.out.println();
-					//System.out.println(Integer.toString(commandsExecuter.getCommandsStackSize()));
 					commandsExecuter.undoLastCommand();
-					System.out.println();
-					if (table.getItemCount() == 0) storage.updateStorageObject();
-					//System.out.println(Integer.toString(commandsExecuter.getCommandsStackSize()));
 					clearTextFields();
 					showTable(true);
+					//if (table.getItemCount() == 0) storage.updateStorageObject();/////////////////////
+					shell.pack();
+				} else return;
+			}
+		}
+	};
+	
+	KeyAdapter doubleCancelPressingListener  = new KeyAdapter() {
+		@Override
+		public void keyPressed (KeyEvent key) {
+			
+			if ((int)key.character == 0x19) { //Код комбинации Control + Y
+				if (commandsExecuter.getCommandsStackSize() != 0) {
+					commandsExecuter.redoLastUndoing();
+					clearTextFields();
+					showTable(true);
+					//if (table.getItemCount() == 0) storage.updateStorageObject();/////////////////////
 					shell.pack();
 				} else return;
 			}
@@ -582,10 +652,20 @@ public class Graphics {
 	 * Метод для установки соединения с базой данных.
 	 */
 	private void setStorage() {
-		if (isConnectionToDataBase) storage = storageFactory.getStorage("jdbc:h2:~/test"); 
-		if (isConnectionToFileStorage) storage = storageFactory.getStorage("file.txt"); 
-		storage.setStorage(); 
-		if (!isRightStorage()) return;
+		//if (isConnectionToDataBase) storage = storageFactory.getStorage("jdbc:h2:~/test"); 
+		//if (isConnectionToFileStorage) storage = storageFactory.getStorage("file.txt"); 
+		storage = storageFactory.getStorage(combo.getText());
+		if (storage != null) {
+			storage.setStorage(); 
+			if (!isRightStorage()) return;
+		} else {
+			createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
+			isConnection = false;
+			combo.remove(combo.getItemCount() - 1);
+			combo.setText("");
+			return;
+		}
+		//shellPropertiesFactory.setShell(shell, null, "Работа с данными пользователей", "database.png", backColor);
 		storage.createStorageObject();
 		if (!isRightStorage()) return;
 		showTable(true);
