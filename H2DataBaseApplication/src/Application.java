@@ -10,3 +10,4 @@ public class Application {
 		graphics.createWindow();
 	}
 }
+//"jdbc:h2:~/test"

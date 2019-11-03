@@ -1,10 +1,7 @@
-import java.io.InputStream;
 
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 public class ShellPropertiesFactory {
 	
@@ -14,17 +11,36 @@ public class ShellPropertiesFactory {
 		this.display = display;
 	}
 	
-	public void setShell(Shell shell, Point point, String text, String imageName, Color backColor) {
-		try {
-			InputStream stream = Graphics.class.getResourceAsStream(imageName);
-			Image image = new Image (display, stream);
-			shell.setImage(image);
-			stream.close();
-		} catch (Exception e) {
-			shell.setImage(null);
-		}
-		if (point != null) shell.setMinimumSize(point); 
-		shell.setText (text);          			
-		shell.setBackground (backColor);   
+	public ShellProperties getShellProperties (Storage storage, Point size, Color backColor) {
+		ShellProperties shellProperties = null;
+		if (storage == null) shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "question.png", display).size(size).backColor(backColor).build(); else
+		if (storage.getStorageName().startsWith("jdbc:h2:")) shellProperties = new ShellProperties.Builder("Работа с базой данных", "database.png", display).size(size).backColor(backColor).build(); else
+		if (storage.getStorageName().endsWith(".txt")) shellProperties = new ShellProperties.Builder("Работа с файлом", "file.png", display).size(size).backColor(backColor).build();
+		return shellProperties;
+	}
+	
+	public ShellProperties getShellProperties (Storage storage, Point size) {
+		ShellProperties shellProperties = null;
+		if (storage == null) shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "question.png", display).size(size).build(); else
+		if (storage.getStorageName().startsWith("jdbc:h2:")) shellProperties = new ShellProperties.Builder("Работа с базой данных", "database.png", display).size(size).build(); else
+		if (storage.getStorageName().endsWith(".txt")) shellProperties = new ShellProperties.Builder("Работа с файлом", "file.png", display).size(size).build();
+		return shellProperties;
+	}
+	
+	public ShellProperties getShellProperties (Storage storage, Color backColor) {
+		ShellProperties shellProperties = null;
+		if (storage == null) shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "question.png", display).backColor(backColor).build(); else
+		if (storage.getStorageName().startsWith("jdbc:h2:")) shellProperties = new ShellProperties.Builder("Работа с базой данных", "database.png", display).backColor(backColor).build(); else
+		if (storage.getStorageName().endsWith(".txt")) shellProperties = new ShellProperties.Builder("Работа с файлом", "file.png", display).backColor(backColor).build();
+		return shellProperties;
+	}
+	
+	public ShellProperties getShellProperties (Storage storage) {
+		ShellProperties shellProperties = null;
+		if (storage == null) shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "question.png", display).build(); else
+		if (storage.getStorageName().startsWith("jdbc:h2:")) shellProperties = new ShellProperties.Builder("Работа с базой данных", "database.png", display).build(); else
+		if (storage.getStorageName().endsWith(".txt")) shellProperties = new ShellProperties.Builder("Работа с файлом", "file.png", display).build();
+		return shellProperties;
 	}
 }
+	

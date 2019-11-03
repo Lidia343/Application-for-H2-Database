@@ -59,4 +59,10 @@ public interface Storage {
 	 * Метод для закрытия хранилища без потерь данных, содержащихся в нём.
 	 */
 	void closeStorage() throws Exception;
+	
+	
+	/**
+	 * Возвращает имя хранилища.
+	 */
+	String getStorageName();
 }

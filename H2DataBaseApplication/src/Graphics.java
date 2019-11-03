@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 public class Graphics {
 	
 	private ShellPropertiesFactory shellPropertiesFactory;
+	private ShellProperties shellProperties;
 	private Display display; 
 	private Shell shell; 
 	private Color foreColor; //Цвет шрифта
@@ -84,10 +85,12 @@ public class Graphics {
 		backColor = new Color (display, 255, 252, 245);
 		font = new Font(display, "Courier New", 13, SWT.NORMAL);
 		
-		shellPropertiesFactory.setShell(shell, new Point (620, 422), "Работа с данными пользователей", "question.png", backColor);
+		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (620, 422), backColor);
+		setShell(shell);
 		
 		createGridLayout(shell); 
 		
+		//Композит для размещения choosingLabel с надписью "Имя хранилища", списка combo для временного хранения имён хранилищ и кнопки "Открыть" для открытия указанного хранилища:
 		Composite heightComposite = new Composite (shell, SWT.BORDER);
 		GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
 		heightComposite.setBackground(backColor);
@@ -227,6 +230,17 @@ public class Graphics {
 		foreColor.dispose();
 		font.dispose();
 		display.dispose(); 	
+	}
+	
+	/**
+	 * Метод для установки свойств компонента shell.
+	 * @param shell - объект класса Shell
+	 */
+	private void setShell (Shell shell) {
+		shell.setText (shellProperties.getTitle());
+		shell.setImage(shellProperties.getImage());
+		shell.setMinimumSize(shellProperties.getSize());
+		shell.setBackground(shellProperties.getBackColor());
 	}
 	
 	/**
@@ -395,12 +409,8 @@ public class Graphics {
 					} */
 				} else isConnection = true;
 				
-				//isConnectionToDataBase = true;
-				//isConnectionToFileStorage = false;
 				setStorage();	
 				clearTextFields();
-				//shell.setText("Работа с базой данных");
-				//shellPropertiesFactory.setShell(shell, null, "Работа с базой данных", "database.png", backColor);
 				if (table.getItemCount() != 0) shell.pack();
 			}
 		}
@@ -615,6 +625,8 @@ public class Graphics {
 		try {
 			if (storage != null) {
 				storage.setStorage(); 
+				shellProperties = shellPropertiesFactory.getShellProperties(storage);
+				setShell (shell);
 			} else {
 				createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
 				isConnection = false;
@@ -622,11 +634,11 @@ public class Graphics {
 				combo.setText("");
 				return;
 			}
-			//shellPropertiesFactory.setShell(shell, null, "Работа с данными пользователей", "database.png", backColor);
 			storage.createStorageObject();
 			showTable(true);
 		} catch (Exception e) {
 			createMessageBox(SWT.ERROR, e.getMessage());
+			return;
 		}
 	}
 	

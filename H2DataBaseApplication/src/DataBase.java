@@ -105,4 +105,9 @@ public class DataBase implements Storage {
 		statement.close(); 
 		connection.close();
 	}
+	
+	@Override
+	public String getStorageName() {
+		return databaseName;
+	}
 }

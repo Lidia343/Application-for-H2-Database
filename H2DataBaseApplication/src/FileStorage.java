@@ -287,4 +287,9 @@ public class FileStorage implements Storage {
 		idReader.close();
 		writer.close();
 	}
+	
+	@Override
+	public String getStorageName() {
+		return fileName;
+	}
 }
