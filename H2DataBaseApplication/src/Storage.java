@@ -8,30 +8,30 @@ public interface Storage {
 	/**
 	 * Метод для установки хранилища.
 	 */
-	void setStorage();
+	void setStorage () throws Exception;
 	
 	/**
 	 * Метод для создания объекта хранилища.
 	 */
-	void createStorageObject();
+	void createStorageObject() throws Exception;
 	
 	/**
 	 * Метод для сброса первичного ключа.
 	 */
-	void updateStorageObject();
+	void updateStorageObject() throws Exception;
 	
 	/**
 	 * Метод для добавления данных пользователя в хранилище.
 	 * @param user - объект, содержащий данные пользователя
 	 */
-	void addUser(User user);
+	void addUser(User user) throws Exception;
 	
 	/**
 	 * Метод для добавления данных пользователя в хранилище.
 	 * @param user - объект, содержащий данные пользователя
 	 * @param deletedUserId - код удалённого пользователя (передаётся при восстановлении удалённого пользователя)
 	 */
-	void addUser(User user, int deletedUserId);
+	void addUser(User user, int deletedUserId) throws Exception;
 	
 	/**
 	 * Метод для изменения данных пользователя в хранилище.
@@ -41,27 +41,22 @@ public interface Storage {
 	 * @param age - возраст
 	 * @param isActive - активен/неактивен
 	 */
-	void updateUser(User user);
+	void updateUser(User user) throws Exception;
+	
 	
 	/**
 	 * Метод для удаления данных пользователя из хранилища.
 	 * @param id - код пользователя
 	 */
-	void deleteUser(int id);
+	void deleteUser(int id) throws Exception;
 	
 	/**
 	 * Метод для возврата списка, содержащего данные всех пользователей хранилища.
 	 */
-	ArrayList <User> getUsersDataSet(boolean isSorted);
-	
-	/**
-	 * Метод для возврата сообщения об ошибке.
-	 * @return сообщение об ошибке, если она произошла, иначе - пустую строку  
-	 */
-	String getErrorMessage();
+	ArrayList <User> getUsersDataSet(boolean isSorted) throws Exception;
 	
 	/**
 	 * Метод для закрытия хранилища без потерь данных, содержащихся в нём.
 	 */
-	void closeStorage();
+	void closeStorage() throws Exception;
 }

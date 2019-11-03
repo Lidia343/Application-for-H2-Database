@@ -10,6 +10,7 @@ public class User {
 	private int age;
 	private boolean isActive;
 	
+	
 	/**
 	 * Конструктор класса User.
 	 */

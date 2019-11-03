@@ -14,6 +14,7 @@ public class ErrorChecker {
 	public ErrorChecker() {
 	}
 	
+	
 	/**
 	 *  Метод для определения ошибок ввода.
 	 */

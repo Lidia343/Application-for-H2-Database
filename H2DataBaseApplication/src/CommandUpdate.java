@@ -13,7 +13,7 @@ public class CommandUpdate implements Command{
 	}
 	
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		ArrayList<User> users = new ArrayList<User>();
 		users = storage.getUsersDataSet(false);
 		for (User temp : users) 
@@ -24,12 +24,12 @@ public class CommandUpdate implements Command{
 			}
 	}
 	
-	@Override public void undo() {
+	@Override public void undo() throws Exception {
 		storage.updateUser(prevUser);
 	}
 	
 	@Override
-	public void redo() {
+	public void redo() throws Exception {
 		storage.updateUser(nextUser);
 	}
 }

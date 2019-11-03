@@ -1,9 +1,10 @@
 
 public interface Command {
 	
-	void execute();
+	void execute() throws Exception;
 	
-	void undo();
+	void undo() throws Exception;
 	
-	void redo();
+	
+	void redo() throws Exception;
 }

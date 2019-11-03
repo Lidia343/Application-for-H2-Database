@@ -10,16 +10,16 @@ public class CommandDelete implements Command{
 	}
 	
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		storage.deleteUser(user.getId());
 	}
 	
-	@Override public void undo() {
+	@Override public void undo() throws Exception {
 		storage.addUser(user, user.getId());
 	}
 	
 	@Override
-	public void redo() {
+	public void redo() throws Exception {
 		storage.deleteUser(user.getId());
 	}
 }

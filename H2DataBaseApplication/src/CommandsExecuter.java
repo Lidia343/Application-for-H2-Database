@@ -16,13 +16,13 @@ public class CommandsExecuter {
 		commands.clear();
 	}
 	
-	public void executeCommand(Command command) {
+	public void executeCommand(Command command) throws Exception {
 		commands.add(command);
 		commands.get(commands.size() - 1).execute();
 		index++;
 	}
 	
-	public void undoLastCommand() {
+	public void undoLastCommand() throws Exception {
 		if ((index > -1) && (index < commands.size())) {
 			commands.get(index).undo();
 			undoingCounter++;
@@ -35,7 +35,7 @@ public class CommandsExecuter {
 		undoingCounter = 0;
 	}
 	
-	public void redoLastUndoing() {
+	public void redoLastUndoing() throws Exception {
 		if (undoingCounter > 0) { 
 			commands.get(index + 1).redo();
 			index++;

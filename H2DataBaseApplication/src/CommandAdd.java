@@ -11,7 +11,7 @@ public class CommandAdd implements Command{
 	}
 	
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		storage.addUser(user);	
 		/*Поскольку у поля user в данном классе не установлено значение ПК (оно устанавливается непосредственно в хранилище),
 		необходимо, предусматривая возможное восстановление пользователя в дальнейшем, после добавления user в хранилище
@@ -23,7 +23,7 @@ public class CommandAdd implements Command{
 		}
 	}
 	
-	@Override public void undo() {
+	@Override public void undo() throws Exception {
 		User user = null;
 		ArrayList<User> users = new ArrayList<User>();
 		users = storage.getUsersDataSet(false);
@@ -33,7 +33,7 @@ public class CommandAdd implements Command{
 	}
 	
 	@Override
-	public void redo() {
+	public void redo() throws Exception {
 		storage.addUser(user, user.getId());
 	}
 }

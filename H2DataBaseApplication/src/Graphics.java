@@ -53,9 +53,8 @@ public class Graphics {
 	private int selectedId;
 	private boolean rowIsNotSelected;
 	
-	private boolean isConnectionToDataBase;
-	private boolean isConnectionToFileStorage;
 	private boolean isConnection;
+	
 	
 	private CommandsExecuter commandsExecuter;
 	
@@ -67,8 +66,6 @@ public class Graphics {
 		shell = new Shell (display);
 		shellPropertiesFactory = new ShellPropertiesFactory(display);
 		storageFactory = new StorageFactory();
-		isConnectionToDataBase = false;
-		isConnectionToFileStorage = false;
 		isConnection = false;
 		commandsExecuter = new CommandsExecuter();
 	}
@@ -213,21 +210,7 @@ public class Graphics {
 		setButton(deletingUserButton, "Удалить"); 
 		
 		openingStorageButton.addSelectionListener(isDataBaseSelection);
-		/*isFileStorageButton = new Button (shell, SWT.PUSH);
-		gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 2);
-		isFileStorageButton.setLayoutData(gridData);
-		setButton(isFileStorageButton, "Работать с файлом"); */
-		
-		/*isDataBaseButton = new Button (shell, SWT.PUSH);
-		gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 2);
-		isDataBaseButton.setLayoutData(gridData);
-		setButton(isDataBaseButton, "Работать с базой данных")*/; 
-		
-		/*isFileStorageButton.addSelectionListener(isFileStorageSelection);
-		isDataBaseButton.addSelectionListener(isDataBaseSelection);*/
-		
 		deletingUserButton.addSelectionListener(deletingUserSelection);
-		
 		table.addSelectionListener(tableRowSelection);
 		
 		shell.pack(); //Установка оптимального размера окна под имеющиеся компоненты
@@ -372,19 +355,6 @@ public class Graphics {
 	}
 	
 	/**
-	 * Метод, возвращающий true, если при выполнении одного из методов
-	 * класса DataBase не произошло ошибок, иначе - false.
-	 * Выводит на экран сообщение пользователю в случае возникновения ошибки.
-	 */
-	private boolean isRightStorage() {
-		if (!storage.getErrorMessage().equals("")) {
-			createMessageBox (SWT.ERROR, storage.getErrorMessage());
-			return false;
-		} 
-		return true;
-	}
-	
-	/**
 	 * Метод создаёт объект класса ErrorChecker, вызывает его методы и возвращает изменённый объект.
 	 */
 	private ErrorChecker createErrorChecker() {
@@ -413,7 +383,12 @@ public class Graphics {
 				if (isConnection) {
 					commandsExecuter.clearCommandsStack();//if (!isConnectionToDataBase) 
 					commandsExecuter.updateIndex();
-					storage.closeStorage();
+					try {
+						storage.closeStorage();
+					} catch (Exception e) {
+						//createMessageBox (SWT.ERROR, e.getMessage());
+						//return;
+					}
 					/*if (!storage.getErrorMessage().equals("")) {
 						createMessageBox (SWT.ERROR, storage.getErrorMessage());
 						return;
@@ -430,32 +405,6 @@ public class Graphics {
 			}
 		}
 	};
-	
-	/*/**
-	 * Слушатель нажатия кнопки "Работать с файлом".
-	 */
-	/*SelectionAdapter isFileStorageSelection = new SelectionAdapter() {
-		@Override
-		public void widgetSelected(SelectionEvent event) {
-			
-			if (isConnection) {
-				commandsExecuter.clearCommandsStack(); //if (!isConnectionToFileStorage) 
-				commandsExecuter.updateIndex();
-				storage.closeStorage();
-				/*if (!storage.getErrorMessage().equals("")) {
-					createMessageBox (SWT.ERROR, storage.getErrorMessage());
-					return;
-				} */
-			/*} else isConnection = true;
-			isConnectionToFileStorage = true;
-			isConnectionToDataBase = false;
-			setStorage();
-			clearTextFields();
-			///shell.setText("Работа с текстовым файлом");
-			shellPropertiesFactory.setShell(shell, null, "Работа с текстовым файлом", "file.png", backColor);
-			if (table.getItemCount() != 0) shell.pack();
-		}
-	};*/
 	
 	/**
 	 * Слушатель нажатия кнопки "Добавить".
@@ -479,19 +428,14 @@ public class Graphics {
 				user.setAge(Integer.parseInt(ageText.getText()));
 				user.setIsActive(isActiveButton.getSelection());
 				
-				commandsExecuter.executeCommand(new CommandAdd (storage, user));
-				
-				if (!isRightStorage()) return;
-				
-				int id = 0, age = 0;
-				String name = "", surname = "";
-				boolean isActive = false;
-				
 				try {
-					
+					commandsExecuter.executeCommand(new CommandAdd (storage, user));
+				
+					int id = 0, age = 0;
+					String name = "", surname = "";
+					boolean isActive = false;
+				
 					ArrayList <User> users = storage.getUsersDataSet(true);
-					
-					if (!isRightStorage()) return;
 					
 					for (int i = 0; i < users.size(); i++) {
 						
@@ -510,7 +454,7 @@ public class Graphics {
 					rowIsNotSelected = true;
 				} catch(Exception e) { 		
 					createMessageBox (SWT.ERROR, e.getMessage());
-				  } 	
+				} 	
 			} else createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
 		}
 	};
@@ -539,8 +483,12 @@ public class Graphics {
 				user.setAge(Integer.parseInt(ageText.getText()));
 				user.setIsActive(isActiveButton.getSelection());
 				
-				commandsExecuter.executeCommand(new CommandUpdate(storage, user));
-				if (!isRightStorage()) return;
+				try {
+					commandsExecuter.executeCommand(new CommandUpdate(storage, user));
+				} catch (Exception e) {
+					createMessageBox(SWT.ERROR, e.getMessage());
+					return;
+				}
 
 				table.getItem(selectedRowIndex).setText(new String[] {Integer.toString(user.getId()), user.getName(), user.getSurname(), Integer.toString(user.getAge()), Boolean.toString(user.getIsActive())});
 			} else createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
@@ -576,10 +524,14 @@ public class Graphics {
 			
 			if ((int)key.character == 0x1a) { //Код комбинации Control + Z
 				if (commandsExecuter.getCommandsStackSize() != 0) {
-					commandsExecuter.undoLastCommand();
+					try {
+						commandsExecuter.undoLastCommand();
+					} catch (Exception e) {
+						createMessageBox(SWT.ERROR, e.getMessage());
+						return;
+					}
 					clearTextFields();
 					showTable(true);
-					//if (table.getItemCount() == 0) storage.updateStorageObject();/////////////////////
 					shell.pack();
 				} else return;
 			}
@@ -592,10 +544,14 @@ public class Graphics {
 			
 			if ((int)key.character == 0x19) { //Код комбинации Control + Y
 				if (commandsExecuter.getCommandsStackSize() != 0) {
-					commandsExecuter.redoLastUndoing();
+					try {
+						commandsExecuter.redoLastUndoing();
+					} catch (Exception e) {
+						createMessageBox(SWT.ERROR, e.getMessage());
+						return;
+					}
 					clearTextFields();
 					showTable(true);
-					//if (table.getItemCount() == 0) storage.updateStorageObject();/////////////////////
 					shell.pack();
 				} else return;
 			}
@@ -631,20 +587,23 @@ public class Graphics {
 			clearTextFields();
 			shell.pack();
 			
-			ArrayList<User> users = new ArrayList<User>();
-			users = storage.getUsersDataSet(false);
-			User user = null;
-			for (User temp : users) {
-				if (temp.getId() == selectedId) user = temp;
-			}
-			commandsExecuter.executeCommand(new CommandDelete (storage, user));
-			if (!isRightStorage()) return;
-				
-			titleLabel.setText("Добавление пользователя:");
-			rowIsNotSelected = true;
+			try {
+				ArrayList<User> users = new ArrayList<User>();
+				users = storage.getUsersDataSet(false);
+				User user = null;
+				for (User temp : users) {
+					if (temp.getId() == selectedId) user = temp;
+				}
+				commandsExecuter.executeCommand(new CommandDelete (storage, user));
 			
-			showTable(false);
-			if (table.getItemCount() == 0) storage.updateStorageObject();
+				titleLabel.setText("Добавление пользователя:");
+				rowIsNotSelected = true;
+			
+				showTable(false);
+				if (table.getItemCount() == 0) storage.updateStorageObject();
+			} catch (Exception e) {
+				createMessageBox(SWT.ERROR, e.getMessage());
+			}
 		}
 	};
 	
@@ -652,23 +611,23 @@ public class Graphics {
 	 * Метод для установки соединения с базой данных.
 	 */
 	private void setStorage() {
-		//if (isConnectionToDataBase) storage = storageFactory.getStorage("jdbc:h2:~/test"); 
-		//if (isConnectionToFileStorage) storage = storageFactory.getStorage("file.txt"); 
 		storage = storageFactory.getStorage(combo.getText());
-		if (storage != null) {
-			storage.setStorage(); 
-			if (!isRightStorage()) return;
-		} else {
-			createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
-			isConnection = false;
-			combo.remove(combo.getItemCount() - 1);
-			combo.setText("");
-			return;
+		try {
+			if (storage != null) {
+				storage.setStorage(); 
+			} else {
+				createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
+				isConnection = false;
+				combo.remove(combo.getItemCount() - 1);
+				combo.setText("");
+				return;
+			}
+			//shellPropertiesFactory.setShell(shell, null, "Работа с данными пользователей", "database.png", backColor);
+			storage.createStorageObject();
+			showTable(true);
+		} catch (Exception e) {
+			createMessageBox(SWT.ERROR, e.getMessage());
 		}
-		//shellPropertiesFactory.setShell(shell, null, "Работа с данными пользователей", "database.png", backColor);
-		storage.createStorageObject();
-		if (!isRightStorage()) return;
-		showTable(true);
 	}
 	
 	/**
@@ -683,7 +642,6 @@ public class Graphics {
 		boolean isActive;
 		try {
 			ArrayList <User> users = storage.getUsersDataSet(isAfterDeleteCanceling);
-			if (!isRightStorage()) return;
 			
 			for (int i = 0; i < users.size(); i++) {
 				id = users.get(i).getId();
