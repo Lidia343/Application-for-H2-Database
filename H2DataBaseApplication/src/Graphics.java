@@ -1,6 +1,8 @@
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleActionEvent;
+import org.eclipse.swt.accessibility.AccessibleActionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,6 +21,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,8 +35,11 @@ public class Graphics {
 	private ShellProperties shellProperties;
 	private Display display; 
 	private Shell shell; 
-	private Color foreColor; //Цвет шрифта
-	private Color backColor; //Цвет фона
+	private Color paleForeColor; 
+	private Color lightForeColor;
+	private Color whiteForeColor;
+	private Color darkForeColor;
+	private Color backColor; 
 	private Font font; 
 	
 	private Combo combo;
@@ -42,6 +48,7 @@ public class Graphics {
 	private Text nameText;
 	private Text surnameText;
 	private Text ageText;
+	private Button addingUserButton;
 	private Button isActiveButton;
 	
 	private StorageFactory storageFactory;
@@ -81,8 +88,11 @@ public class Graphics {
 		
 		rowIsNotSelected = true;
 		
-		foreColor = new Color (display, 45, 5, 5);
-		backColor = new Color (display, 255, 252, 245);
+		paleForeColor = new Color (display, 170, 250, 170); //foreColor = new Color (display, 45, 5, 5); - прошлый вариант
+		lightForeColor = new Color (display, 100, 250, 100);
+		whiteForeColor = new Color (display, 200, 200, 200);
+		darkForeColor = new Color (display, 30, 50, 30);
+		backColor = new Color (display, 83, 82, 82);   //backColor = new Color (display, 255, 252, 245); - прошлый вариант
 		font = new Font(display, "Courier New", 13, SWT.NORMAL);
 		
 		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (620, 422), backColor);
@@ -106,7 +116,8 @@ public class Graphics {
 		combo = new Combo (heightComposite, SWT.DROP_DOWN);
 		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
 		combo.setLayoutData(gridData);
-		combo.setForeground(foreColor);
+		combo.setBackground(backColor);
+		combo.setForeground(lightForeColor);
 		combo.setFont(font);
 		
 		openingStorageButton = new Button (heightComposite, SWT.PUSH);
@@ -160,7 +171,7 @@ public class Graphics {
 		isActiveButton.setLayoutData(gridData);
 		setButton(isActiveButton, ""); 
 		
-		Button addingUserButton = new Button (shell, SWT.PUSH);
+		addingUserButton = new Button (shell, SWT.PUSH);
 		gridData = createGridData (SWT.RIGHT, false, 120, 30, 50, 2);
 		gridData.widthHint = choosingButtonWidthHint;
 		addingUserButton.setLayoutData(gridData);
@@ -212,7 +223,7 @@ public class Graphics {
 		deletingUserButton.setLayoutData(gridData);
 		setButton(deletingUserButton, "Удалить"); 
 		
-		openingStorageButton.addSelectionListener(isDataBaseSelection);
+		openingStorageButton.addSelectionListener(isOpeningSelection);
 		deletingUserButton.addSelectionListener(deletingUserSelection);
 		table.addSelectionListener(tableRowSelection);
 		
@@ -227,7 +238,10 @@ public class Graphics {
 		
 		//Освобождение ресурсов:
 		backColor.dispose();
-		foreColor.dispose();
+		lightForeColor.dispose();
+		paleForeColor.dispose();
+		whiteForeColor.dispose();
+		darkForeColor.dispose();
 		font.dispose();
 		display.dispose(); 	
 	}
@@ -305,7 +319,7 @@ public class Graphics {
 		
 		label.setText(text); 
 		label.setBackground(backColor);
-		label.setForeground(foreColor);
+		label.setForeground(paleForeColor);
 		label.setFont(font); 
 	}
 	
@@ -317,7 +331,8 @@ public class Graphics {
 	private void setText (Text text, boolean editable) { 
 		
 		text.setEditable(editable); 
-		text.setForeground(foreColor);
+		text.setBackground(backColor);
+		text.setForeground(lightForeColor);
 		text.setFont(font);
 		text.addKeyListener(cancelPressingListener);
 		text.addKeyListener(doubleCancelPressingListener);
@@ -332,10 +347,11 @@ public class Graphics {
 		
 		button.setText(text);
 		button.setBackground(backColor);
-		button.setForeground(foreColor);
+		button.setForeground(paleForeColor);
 		button.setFont(font);
 		button.addKeyListener(cancelPressingListener);
 		button.addKeyListener(doubleCancelPressingListener);
+		button.addSelectionListener(isPressingSelection);
 	}	
 	
 	/**
@@ -347,7 +363,7 @@ public class Graphics {
 		GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
 		table.setLayoutData(gridData);
 		table.setBackground(backColor);
-		table.setForeground(foreColor);
+		table.setForeground(lightForeColor);
 		table.setFont(font);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -378,11 +394,58 @@ public class Graphics {
 		return errorChecker;
 	}
 	
+	private void setButtonsDefaultColor(Button b1, Button b2, Button b3) {
+		b1.setBackground(backColor);
+		b2.setBackground(backColor);
+		b3.setBackground(backColor);
+		b1.setForeground(paleForeColor);
+		b2.setForeground(paleForeColor);
+		b3.setForeground(paleForeColor);
+	}
 	
 	/**
-	 * Слушатель нажатия кнопки "Работать с базой данных".
+	 * Слушатель нажатия на любую кнопку.
 	 */
-	SelectionAdapter isDataBaseSelection = new SelectionAdapter() {
+	SelectionAdapter isPressingSelection = new SelectionAdapter() {
+		@Override
+		public void widgetSelected(SelectionEvent event) {
+			String buffer = "";
+			for (int i = 0; i < event.toString().length(); i++) {
+				
+				if (event.toString().charAt(i) == ' ') buffer = ""; else
+					buffer += Character.toString (event.toString().charAt(i));
+					if (buffer.equals("{Открыть}")) {
+						setButtonsDefaultColor(updatingUserButton, deletingUserButton, addingUserButton);
+						openingStorageButton.setBackground(whiteForeColor);
+						openingStorageButton.setForeground(darkForeColor);
+						break;
+					}
+					if (buffer.equals("{Добавить}")) {
+						setButtonsDefaultColor(updatingUserButton, deletingUserButton, openingStorageButton);
+						addingUserButton.setBackground(whiteForeColor);
+						addingUserButton.setForeground(darkForeColor);
+						break;
+					}
+					if (buffer.equals("{Изменить}")) {
+						setButtonsDefaultColor(addingUserButton, deletingUserButton, openingStorageButton);
+						updatingUserButton.setBackground(whiteForeColor);
+						updatingUserButton.setForeground(darkForeColor);
+						break;
+					}
+					if (buffer.equals("{Удалить}")) {
+						setButtonsDefaultColor(updatingUserButton, addingUserButton, openingStorageButton);
+						deletingUserButton.setBackground(whiteForeColor);
+						deletingUserButton.setForeground(darkForeColor);
+						break;
+					}
+			}
+		}
+	};
+	
+	/**
+	 * Слушатель нажатия кнопки "Открыть".
+	 */
+	SelectionAdapter isOpeningSelection = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
 			
@@ -412,7 +475,7 @@ public class Graphics {
 				setStorage();	
 				clearTextFields();
 				if (table.getItemCount() != 0) shell.pack();
-			}
+			} else createMessageBox (SWT.ICON_WARNING, "Введите/выберите имя хранилища.");
 		}
 	};
 	
@@ -511,7 +574,7 @@ public class Graphics {
 	SelectionAdapter tableRowSelection = new SelectionAdapter () {
 		@Override
 		public void widgetSelected(SelectionEvent event ) {
-			
+		
 			titleLabel.setText("Изменение данных:");
 			rowIsNotSelected = false;
 			selectedRowIndex = table.indexOf((TableItem)event.item);
