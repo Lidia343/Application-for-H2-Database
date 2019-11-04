@@ -34,32 +34,42 @@ public class Graphics {
 	private Shell shell; 
 	private Color paleForeColor; 
 	private Color lightForeColor;
-	private Color whiteForeColor;
-	private Color darkForeColor;
+	private Color buttonBackColor;
+	private Color buttonForeColor;
 	private Color backColor; 
 	private Font font; 
 	
+	private Button darkThemeButton;
+	private Button lightThemeButton;
+	private Composite heightComposite;
+	private Composite themeComposite;
+	private Composite tableComposite;
 	private Combo combo;
 	private Button openingStorageButton;
 	private Label titleLabel;
+	private Label lightThemeLabel;
+	private Label darkThemeLabel;
+	private Label choosingLabel;
+	private Label nameLabel;
+	private Label surnameLabel;
+	private Label ageLabel;
+	private Label isActiveLabel;
 	private Text nameText;
 	private Text surnameText;
 	private Text ageText;
 	private Button addingUserButton;
 	private Button isActiveButton;
-	
-	private StorageFactory storageFactory;
-	private Storage storage;
 	private Table table;
 	private Button updatingUserButton;
 	private Button deletingUserButton;
 	
+	private StorageFactory storageFactory;
+	private Storage storage;
+	
 	private int selectedRowIndex;
 	private int selectedId;
 	private boolean rowIsNotSelected;
-	
 	private boolean isConnection;
-	
 	
 	private CommandsExecuter commandsExecuter;
 	
@@ -85,27 +95,57 @@ public class Graphics {
 		
 		rowIsNotSelected = true;
 		
-		paleForeColor = new Color (display, 170, 250, 170); //foreColor = new Color (display, 45, 5, 5); - прошлый вариант
+		paleForeColor = new Color (display, 170, 250, 170); 
 		lightForeColor = new Color (display, 100, 250, 100);
-		whiteForeColor = new Color (display, 200, 200, 200);
-		darkForeColor = new Color (display, 30, 50, 30);
-		backColor = new Color (display, 83, 82, 82);   //backColor = new Color (display, 255, 252, 245); - прошлый вариант
+		buttonBackColor = new Color (display, 200, 200, 200);
+		buttonForeColor = new Color (display, 30, 50, 30);
+		backColor = new Color (display, 83, 82, 82);   
 		font = new Font(display, "Courier New", 13, SWT.NORMAL);
 		
-		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (620, 422), backColor);
+		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (620, 500), backColor);
 		setShell(shell);
 		
 		createGridLayout(shell); 
 		
-		//Композит для размещения choosingLabel с надписью "Имя хранилища", списка combo для временного хранения имён хранилищ и кнопки "Открыть" для открытия указанного хранилища:
-		Composite heightComposite = new Composite (shell, SWT.BORDER);
+		themeComposite = new Composite (shell, SWT.BORDER);
 		GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		themeComposite.setBackground(backColor);
+		themeComposite.setLayoutData(gridData);
+		createGridLayout (themeComposite, 4);
+		
+		darkThemeLabel = new Label (themeComposite, SWT.NONE);
+		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		darkThemeLabel.setLayoutData(gridData);
+		setLabel (darkThemeLabel, "Тёмная тема:");
+		
+		darkThemeButton = new Button (themeComposite, SWT.CHECK);
+		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
+		darkThemeButton.setLayoutData(gridData);
+		setButton(darkThemeButton, ""); 
+		darkThemeButton.setSelection(true);
+		
+		lightThemeLabel = new Label (themeComposite, SWT.NONE);
+		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		lightThemeLabel.setLayoutData(gridData);
+		setLabel (lightThemeLabel, "Светлая тема:");
+		
+		lightThemeButton = new Button (themeComposite, SWT.CHECK);
+		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
+		lightThemeButton.setLayoutData(gridData);
+		setButton(lightThemeButton, ""); 
+	
+		darkThemeButton.addSelectionListener(darkThemeSelection);
+		lightThemeButton.addSelectionListener(lightThemeSelection);
+		
+		//Композит для размещения choosingLabel с надписью "Имя хранилища", списка combo для временного хранения имён хранилищ и кнопки "Открыть" для открытия указанного хранилища:
+		heightComposite = new Composite (shell, SWT.BORDER);
+		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
 		heightComposite.setBackground(backColor);
 		heightComposite.setLayoutData(gridData);
 		
-		createGridLayout (heightComposite);
+		createGridLayout (heightComposite, 2);
 		
-		Label choosingLabel = new Label (heightComposite, SWT.NONE);
+		choosingLabel = new Label (heightComposite, SWT.NONE);
 		gridData = createGridData(SWT.LEFT, false, 0, 0, 0, 0);
 		choosingLabel.setLayoutData(gridData);
 		setLabel(choosingLabel, "Имя хранилища:");
@@ -113,12 +153,10 @@ public class Graphics {
 		combo = new Combo (heightComposite, SWT.DROP_DOWN);
 		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
 		combo.setLayoutData(gridData);
-		combo.setBackground(backColor);
-		combo.setForeground(lightForeColor);
-		combo.setFont(font);
+		setCombo (combo);
 		
 		openingStorageButton = new Button (heightComposite, SWT.PUSH);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 2);
 		int choosingButtonWidthHint = gridData.widthHint;
 		openingStorageButton.setLayoutData(gridData);
 		setButton(openingStorageButton, "Открыть"); 
@@ -128,7 +166,7 @@ public class Graphics {
 		titleLabel.setLayoutData(gridData);
 		setLabel(titleLabel, "Добавление пользователя:");
 		
-		Label nameLabel = new Label(shell, SWT.NONE);
+		nameLabel = new Label(shell, SWT.NONE);
 		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
 		nameLabel.setLayoutData(gridData);
 		setLabel(nameLabel, "Имя:");
@@ -138,7 +176,7 @@ public class Graphics {
 		nameText.setLayoutData(gridData);
 		setText(nameText, true);
 		
-		Label surnameLabel = new Label (shell, SWT.NONE);
+		surnameLabel = new Label (shell, SWT.NONE);
 		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
 		surnameLabel.setLayoutData(gridData);
 		setLabel (surnameLabel, "Фамилия:");
@@ -148,7 +186,7 @@ public class Graphics {
 		surnameText.setLayoutData(gridData);
 		setText(surnameText, true);
 		
-		Label ageLabel = new Label (shell, SWT.NONE);
+		ageLabel = new Label (shell, SWT.NONE);
 		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
 		ageLabel.setLayoutData(gridData);
 		setLabel (ageLabel, "Возраст:");
@@ -158,7 +196,7 @@ public class Graphics {
 		ageText.setLayoutData(gridData);
 		setText(ageText, true);
 		
-		Label isActiveLabel = new Label (shell, SWT.NONE);
+		isActiveLabel = new Label (shell, SWT.NONE);
 		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
 		isActiveLabel.setLayoutData(gridData);
 		setLabel (isActiveLabel, "Активен:");
@@ -174,24 +212,23 @@ public class Graphics {
 		addingUserButton.setLayoutData(gridData);
 		setButton(addingUserButton, "Добавить"); 
 		
-		shell.setDefaultButton(addingUserButton);
+		shell.setDefaultButton(openingStorageButton);
 		addingUserButton.addSelectionListener(addingUserSelection);
 		
-		//Композит для размещения Layout для таблицы:
-		Composite composite = new Composite (shell, SWT.BORDER);
+		tableComposite = new Composite (shell, SWT.BORDER);
 		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.grabExcessVerticalSpace = true;
-		composite.setLayoutData(gridData);
+		tableComposite.setLayoutData(gridData);
 		
-		table = new Table (composite, SWT.BORDER | SWT.FULL_SELECTION);
+		table = new Table (tableComposite, SWT.BORDER | SWT.FULL_SELECTION);
 		
-	    setTable(table);
+	    setTable(table, false);
 	    for (int i = 0; i < 5; i++) 
 	        new TableColumn(table, SWT.NONE);
 	    
 	    TableColumnLayout tableColumnLayout = new TableColumnLayout();
-	    composite.setLayout(tableColumnLayout);
+	    tableComposite.setLayout(tableColumnLayout);
 	    
 	    table.getColumn(0).setText("Код");
 	    table.getColumn(1).setText("Имя");
@@ -237,8 +274,8 @@ public class Graphics {
 		backColor.dispose();
 		lightForeColor.dispose();
 		paleForeColor.dispose();
-		whiteForeColor.dispose();
-		darkForeColor.dispose();
+		buttonBackColor.dispose();
+		buttonForeColor.dispose();
 		font.dispose();
 		display.dispose(); 	
 	}
@@ -272,11 +309,12 @@ public class Graphics {
 	/**
 	 * Создание таблицы из ячеек на composite для расположения в них графических компонентов.
 	 * @param composite - объект класса Composite
+	 * @param numColumns - количество столбцов
 	 */
-	private void createGridLayout(Composite composite) { 
+	private void createGridLayout(Composite composite, int numColumns) { 
 		
 		GridLayout g = new GridLayout();
-		g.numColumns = 3; //Количество столбцов
+		g.numColumns = numColumns; //Количество столбцов
 		g.marginWidth = 5; //Расстояние от левого и правого краев окна
 		g.marginHeight = 5; //Расстояние от верхнего и нижненго краев окна
 		g.horizontalSpacing = 5; //Расстояние между соседними ячейками по горизонтали
@@ -308,6 +346,16 @@ public class Graphics {
 	}
 	
 	/**
+	 * Метод для установки свойств компонента Combo.
+	 *  * @param combo - объект класса Combo
+	 */
+	private void setCombo  (Combo combo) {
+		combo.setBackground(backColor);
+		combo.setForeground(lightForeColor);
+		combo.setFont(font);
+	}
+	
+	/**
 	 * Метод установки свойств для компонента Label
 	 * @param label - компонент Label
 	 * @param text - текст
@@ -318,6 +366,15 @@ public class Graphics {
 		label.setBackground(backColor);
 		label.setForeground(paleForeColor);
 		label.setFont(font); 
+	}
+	
+	/**
+	 * Метод установки свойств для компонента Label
+	 * @param label - компонент Label
+	 */
+	private void setLabel(Label label) {
+		label.setBackground(backColor);
+		label.setForeground(paleForeColor);
 	}
 	
 	/**
@@ -334,14 +391,22 @@ public class Graphics {
 		text.addKeyListener(cancelPressingListener);
 		text.addKeyListener(doubleCancelPressingListener);
 	}
-		
+	
+	/**
+	 * Метод установки свойств для компонента Text.
+	 * @param text - компонент Text
+	 */
+	private void setText (Text text) { 
+		text.setBackground(backColor);
+		text.setForeground(lightForeColor);
+	}
+	
 	/**
 	 * Метод установки свойств для компонента Button.
 	 * @param button - компонент Button
 	 * @param text - название кнопки
 	 */
 	private void setButton(Button button, String text) { 
-		
 		button.setText(text);
 		button.setBackground(backColor);
 		button.setForeground(paleForeColor);
@@ -352,20 +417,40 @@ public class Graphics {
 	}	
 	
 	/**
+	 * Метод установки свойств для компонента Button.
+	 * @param button - компонент Button
+	 * @param isOnlyChoosingButtonColors - установить только цвета, соответствующие цветам последней нажатой кнопке / не устанавливать их
+	 */
+	private void setButton(Button button, boolean isOnlyChoosingButtonColors) { 
+		if (isOnlyChoosingButtonColors) {
+			button.setBackground(buttonBackColor);
+			button.setForeground(buttonForeColor);
+			return;
+		} 
+		button.setBackground(backColor);
+		button.setForeground(paleForeColor);
+	}	
+	
+	/**
 	 * Метод для устновки свойств компонента Table.
 	 * @param table - объект класса Table
+	 * @param isOnlyColors - установить только цвета таблицы / установить не только цвета таблицы
 	 */
-	private void setTable(Table table) {
+	private void setTable(Table table, boolean isOnlyColors) {
 		
-		GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
-		table.setLayoutData(gridData);
 		table.setBackground(backColor);
 		table.setForeground(lightForeColor);
-		table.setFont(font);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.addKeyListener(cancelPressingListener);
-		table.addKeyListener(doubleCancelPressingListener);
+		if (!isOnlyColors) {
+			GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+			table.setLayoutData(gridData);
+			table.setBackground(backColor);
+			table.setForeground(lightForeColor);
+			table.setFont(font);
+			table.setHeaderVisible(true);
+			table.setLinesVisible(true);
+			table.addKeyListener(cancelPressingListener);
+			table.addKeyListener(doubleCancelPressingListener);
+		}
 	}
 	
 	/**
@@ -391,9 +476,72 @@ public class Graphics {
 		return errorChecker;
 	}
 	
+	/**
+	 * Метод устанавливает цвета всех компонентов в зависимости от текущего хранилища.
+	 */
+	private void setComponentsColors() {
+		shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor);
+		setShell(shell);
+		setLabel(titleLabel); setLabel(lightThemeLabel); 
+		setLabel(darkThemeLabel); setLabel(choosingLabel);
+		setLabel(nameLabel); setLabel(surnameLabel);
+		setLabel(ageLabel); setLabel(isActiveLabel);
+		setText (nameText); setText (surnameText); setText (ageText);
+		setCombo (combo);
+		setButton(openingStorageButton, false); setButton(addingUserButton, false);
+		setButton(updatingUserButton, false); setButton(deletingUserButton, false);
+		setButton(isActiveButton, false); setButton(darkThemeButton, false);
+		setButton(lightThemeButton, false); 
+		setTable(table, true);		
+		heightComposite.setBackground(backColor); themeComposite.setBackground(backColor);
+		tableComposite.setBackground(backColor);
+	}
+	
+	/**
+	 * Слушатель нажатия кнопки выбора тёмной темы.
+	 */
+	SelectionAdapter darkThemeSelection = new SelectionAdapter () {
+		@Override
+		public void widgetSelected (SelectionEvent event) {
+			if (darkThemeButton.getSelection() == true) {
+				lightThemeButton.setSelection(false);
+				if (buttonForeColor.getRed() != 30) {
+					paleForeColor = new Color (display, 170, 250, 170);
+					lightForeColor = new Color (display, 100, 250, 100);
+					buttonBackColor = new Color (display, 200, 200, 200);
+					buttonForeColor = new Color (display, 30, 50, 30);
+					backColor = new Color (display, 83, 82, 82); 
+					setComponentsColors();
+				}
+			} else darkThemeButton.setSelection(true);
+		}
+	};
+	
+	/**
+	 * Слушатель нажатия кнопки выбора светлой темы.
+	 */
+	SelectionAdapter lightThemeSelection = new SelectionAdapter () {
+		@Override
+		public void widgetSelected (SelectionEvent event) {
+			if (lightThemeButton.getSelection() == true) {
+				darkThemeButton.setSelection(false);
+				if (buttonForeColor.getRed() != 20) {
+					paleForeColor = new Color (display, 45, 5, 5); 
+					lightForeColor = new Color (display, 105, 65, 65);
+					buttonBackColor = new Color (display, 223, 220, 215);
+					buttonForeColor = new Color (display, 65, 65, 65);
+					backColor = new Color (display, 255, 252, 245); 
+					setComponentsColors();
+				}
+			} else lightThemeButton.setSelection(true);
+		}
+	};
 	
 	/**
 	 * Метод для установки цветов на кнопках.
+	 * @param b1 - объект класса Button
+	 * @param b2 - объект класса Button
+	 * @param b3 - объект класса Button
 	 */
 	private void setButtonsDefaultColor(Button b1, Button b2, Button b3) {
 		b1.setBackground(backColor);
@@ -417,26 +565,22 @@ public class Graphics {
 					buffer += Character.toString (event.toString().charAt(i));
 					if (buffer.equals("{Открыть}")) {
 						setButtonsDefaultColor(updatingUserButton, deletingUserButton, addingUserButton);
-						openingStorageButton.setBackground(whiteForeColor);
-						openingStorageButton.setForeground(darkForeColor);
+						setButton (openingStorageButton, true);
 						break;
 					}
 					if (buffer.equals("{Добавить}")) {
 						setButtonsDefaultColor(updatingUserButton, deletingUserButton, openingStorageButton);
-						addingUserButton.setBackground(whiteForeColor);
-						addingUserButton.setForeground(darkForeColor);
+						setButton (addingUserButton, true);
 						break;
 					}
 					if (buffer.equals("{Изменить}")) {
 						setButtonsDefaultColor(addingUserButton, deletingUserButton, openingStorageButton);
-						updatingUserButton.setBackground(whiteForeColor);
-						updatingUserButton.setForeground(darkForeColor);
+						setButton (updatingUserButton, true);
 						break;
 					}
 					if (buffer.equals("{Удалить}")) {
 						setButtonsDefaultColor(updatingUserButton, addingUserButton, openingStorageButton);
-						deletingUserButton.setBackground(whiteForeColor);
-						deletingUserButton.setForeground(darkForeColor);
+						setButton (deletingUserButton, true);
 						break;
 					}
 			}
@@ -472,7 +616,12 @@ public class Graphics {
 				setStorage();	
 				clearTextFields();
 				if (table.getItemCount() != 0) shell.pack();
+				shell.setDefaultButton(addingUserButton);
 			} else createMessageBox (SWT.ICON_WARNING, "Введите/выберите имя хранилища.");
+			if (lightThemeButton.getSelection() == true) {
+				shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor);
+				setShell(shell);
+			}
 		}
 	};
 	
@@ -644,7 +793,7 @@ public class Graphics {
 		ageText.setText("");
 		isActiveButton.setSelection(false);
 	}
-	
+
 	/**
 	 * Слушатель нажатия кнопки "Удалить".
 	 */

@@ -9,6 +9,11 @@ public class CommandUpdate implements Command{
 	private User prevUser;
 	private User nextUser;
 	
+	/**
+	 * Конструктор класса CommandUpdate.
+	 * @param storage - хранилище данных пользователей
+	 * @param user - объект класса User
+	 */
 	public CommandUpdate (Storage storage, User user) {
 		this.storage = storage;
 		nextUser = user;

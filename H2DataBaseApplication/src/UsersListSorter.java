@@ -1,7 +1,7 @@
 import java.util.Comparator;
 
 /**
- * Класс предназначен для сортировки данных пользователей.
+ * Класс предназначен для сортировки данных пользователей по первичному ключу.
  */
 public class UsersListSorter implements Comparator <User>{
 	@Override

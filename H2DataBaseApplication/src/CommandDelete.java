@@ -7,6 +7,11 @@ public class CommandDelete implements Command{
 	private Storage storage;
 	private User user;
 	
+	/**
+	 * Конструктор класса CommandDelete.
+	 * @param storage - хранилище данных пользователей
+	 * @param user - объект класса User
+	 */
 	public CommandDelete (Storage storage, User user) {
 		this.storage = storage;
 		this.user = user;

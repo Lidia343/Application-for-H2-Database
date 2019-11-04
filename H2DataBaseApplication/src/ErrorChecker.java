@@ -11,10 +11,6 @@ public class ErrorChecker {
 	private String errorMessage;
 	private int messageCode;
 	
-	public ErrorChecker() {
-	}
-	
-	
 	/**
 	 *  Метод для определения ошибок ввода.
 	 */

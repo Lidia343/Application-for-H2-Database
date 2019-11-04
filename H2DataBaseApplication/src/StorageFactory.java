@@ -5,7 +5,7 @@
 public class StorageFactory {
 	
 	/**
-	 * Метод возвращает хранилище данных.
+	 * Метод возвращает хранилище данных пользователей.
 	 * @param storageName - имя хранилища
 	 */
 	public Storage getStorage(String storageName) {

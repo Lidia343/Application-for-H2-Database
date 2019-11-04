@@ -10,13 +10,6 @@ public class User {
 	private int age;
 	private boolean isActive;
 	
-	
-	/**
-	 * Конструктор класса User.
-	 */
-	public User() {
-	}
-	
 	/**
 	 * Метод устанавливает код пользователя.
 	 */
@@ -25,14 +18,14 @@ public class User {
 	}
 	
 	/**
-	 * Метод имя код пользователя.
+	 * Метод устанавливает имя пользователя.
 	 */
 	public void setName (String name) {
 		this.name = name;
 	}
 	
 	/**
-	 * Метод фамилию код пользователя.
+	 * Метод устанавливает фамилию пользователя.
 	 */
 	public void setSurname (String surname) {
 		this.surname = surname;

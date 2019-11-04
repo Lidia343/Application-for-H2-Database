@@ -29,6 +29,7 @@ public class FileStorage implements Storage {
 	
 	/**
 	 * Конструктор класса FileStorage.
+	 * @param fileName - имя файла
 	 */
 	public FileStorage(String fileName) {
 		this.fileName = fileName;
@@ -45,6 +46,7 @@ public class FileStorage implements Storage {
 	
 	/**
 	/* Метод обновляет файл, где хранится максимальный ПК.
+	 * @throws IOException 
 	 */
 	private void updateIdFile (String text) throws IOException {
 		idWriter = new FileWriter (maxIdFile, false);

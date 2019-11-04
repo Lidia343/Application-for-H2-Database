@@ -9,6 +9,9 @@ public class CommandsExecuter {
 	private int index;
 	private int undoingCounter;
 	
+	/**
+	 * Конструктор класса CommandsExecuter.
+	 */
 	public CommandsExecuter () {
 		commands = new ArrayList<Command>();
 		index = -1;

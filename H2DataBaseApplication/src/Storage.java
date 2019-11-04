@@ -62,7 +62,7 @@ public interface Storage {
 	
 	
 	/**
-	 * Возвращает имя хранилища.
+	 * Метод для возврата имени хранилища.
 	 */
 	String getStorageName();
 }

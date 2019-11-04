@@ -8,6 +8,11 @@ public class CommandAdd implements Command{
 	private Storage storage;
 	private User user;
 
+	/**
+	 * Конструктор класса CommandAdd.
+	 * @param storage - хранилище данных пользователей
+	 * @param user - объект класса User
+	 */
 	public CommandAdd (Storage storage, User user) {
 		this.storage = storage;
 		this.user = user;
