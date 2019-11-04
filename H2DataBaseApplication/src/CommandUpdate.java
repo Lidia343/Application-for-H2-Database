@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 
+/**
+ * Класс предназначен для реализации команды обновления пользователя.
+ */
 public class CommandUpdate implements Command{
 	
 	private Storage storage;

@@ -1,6 +1,6 @@
 
 /**
- * Класс предназначен для реализации временного хранения данных всех пользователей и возврата этих данных.
+ * Класс предназначен для реализации временного хранения данных пользователя и возврата этих данных.
  */
 public class User {
 	
@@ -17,22 +17,37 @@ public class User {
 	public User() {
 	}
 	
+	/**
+	 * Метод устанавливает код пользователя.
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 	
+	/**
+	 * Метод имя код пользователя.
+	 */
 	public void setName (String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * Метод фамилию код пользователя.
+	 */
 	public void setSurname (String surname) {
 		this.surname = surname;
 	}
 	
+	/**
+	 * Метод устанавливает возраст пользователя.
+	 */
 	public void setAge (int age) {
 		this.age = age;
 	}
 	
+	/**
+	 * Метод устанавливает состояние активен/неактивен пользователя.
+	 */
 	public void setIsActive (boolean isActive) {
 		this.isActive = isActive;
 	}
@@ -44,18 +59,30 @@ public class User {
 		return id;
 	}
 	
+	/**
+	 * Метод возвращает имя пользователя.
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Метод возвращает фамилию пользователя.
+	 */
 	public String getSurname() {
 		return surname;
 	}
 	
+	/**
+	 * Метод возвращает возраст пользователя.
+	 */
 	public int getAge() {
 		return age;
 	}
 	
+	/**
+	 * Метод возвращает состояние активен/неактивен пользователя.
+	 */
 	public boolean getIsActive() {
 		return isActive;
 	}

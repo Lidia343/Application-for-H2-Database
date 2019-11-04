@@ -1,4 +1,7 @@
 
+/**
+ * Класс предназначен для реализации команды удаления пользователя.
+ */
 public class CommandDelete implements Command{
 	
 	private Storage storage;

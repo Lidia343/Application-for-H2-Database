@@ -43,6 +43,9 @@ public class FileStorage implements Storage {
 		file = new File (fileName);
 	}
 	
+	/**
+	/* Метод обновляет файл, где хранится максимальный ПК.
+	 */
 	private void updateIdFile (String text) throws IOException {
 		idWriter = new FileWriter (maxIdFile, false);
 		idWriter.write(text);
@@ -152,6 +155,13 @@ public class FileStorage implements Storage {
 		}
 	}
 	
+	/**
+	 * Метод записывает пользователя в файл.
+	 * @param user - объект класса User
+	 * @param id - (код пользователя - 1)
+	 * @param isUpdated - обновлять файл с максимальным ПК/не обновлять
+	 * @throws IOException
+	 */
 	private void writeUserInFile(User user, int id, boolean isUpdated) throws IOException {
 		calculateTabForUserData(user.getName(), user.getSurname());
 		writer = new FileWriter (file, true); 
@@ -174,6 +184,10 @@ public class FileStorage implements Storage {
 		writeUserInFile (user, id, true);
 	}
 	
+	/**
+	 * Метод находит максимальный ПК пользователей списка и записывает его в файл. Если список пуст, записывает "-1".
+	 * @throws IOException
+	 */
 	private void findMaxUserId() throws IOException {
 		if (usersDataList.size() != 0) {
 			int[] indexes = new int[usersDataList.size()];

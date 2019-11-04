@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 
+/**
+ * Класс предназначен для реализации команды добавления пользователя.
+ */
 public class CommandAdd implements Command{
 	
 	private Storage storage;

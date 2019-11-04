@@ -1,8 +1,6 @@
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.accessibility.AccessibleActionEvent;
-import org.eclipse.swt.accessibility.AccessibleActionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
@@ -21,7 +19,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -394,6 +391,10 @@ public class Graphics {
 		return errorChecker;
 	}
 	
+	
+	/**
+	 * Метод для установки цветов на кнопках.
+	 */
 	private void setButtonsDefaultColor(Button b1, Button b2, Button b3) {
 		b1.setBackground(backColor);
 		b2.setBackground(backColor);
@@ -404,7 +405,7 @@ public class Graphics {
 	}
 	
 	/**
-	 * Слушатель нажатия на любую кнопку.
+	 * Слушатель нажатия на любую кнопку (изменяет её цвета).
 	 */
 	SelectionAdapter isPressingSelection = new SelectionAdapter() {
 		@Override
@@ -458,7 +459,7 @@ public class Graphics {
 				if (!isContain) combo.add(combo.getText());
 				
 				if (isConnection) {
-					commandsExecuter.clearCommandsStack();//if (!isConnectionToDataBase) 
+					commandsExecuter.clearCommandsStack();
 					commandsExecuter.updateIndex();
 					try {
 						storage.closeStorage();
@@ -466,10 +467,6 @@ public class Graphics {
 						//createMessageBox (SWT.ERROR, e.getMessage());
 						//return;
 					}
-					/*if (!storage.getErrorMessage().equals("")) {
-						createMessageBox (SWT.ERROR, storage.getErrorMessage());
-						return;
-					} */
 				} else isConnection = true;
 				
 				setStorage();	
@@ -591,12 +588,16 @@ public class Graphics {
 		}
 	};
 	
+	
+	/**
+	 * Слушатель нажатия "cntrl+z".
+	 */
 	KeyAdapter cancelPressingListener  = new KeyAdapter() {
 		@Override
 		public void keyPressed (KeyEvent key) {
 			
 			if ((int)key.character == 0x1a) { //Код комбинации Control + Z
-				if (commandsExecuter.getCommandsStackSize() != 0) {
+				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
 						commandsExecuter.undoLastCommand();
 					} catch (Exception e) {
@@ -611,12 +612,15 @@ public class Graphics {
 		}
 	};
 	
+	/**
+	 * Слушатель нажатия "cntrl+y".
+	 */
 	KeyAdapter doubleCancelPressingListener  = new KeyAdapter() {
 		@Override
 		public void keyPressed (KeyEvent key) {
 			
 			if ((int)key.character == 0x19) { //Код комбинации Control + Y
-				if (commandsExecuter.getCommandsStackSize() != 0) {
+				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
 						commandsExecuter.redoLastUndoing();
 					} catch (Exception e) {

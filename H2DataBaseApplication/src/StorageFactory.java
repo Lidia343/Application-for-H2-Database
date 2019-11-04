@@ -1,6 +1,13 @@
 
+/**
+ * Фабрика для создания объектов классов, реализующих интерфейс Storage.
+ */
 public class StorageFactory {
 	
+	/**
+	 * Метод возвращает хранилище данных.
+	 * @param storageName - имя хранилища
+	 */
 	public Storage getStorage(String storageName) {
 		Storage storage = null;
 		if (storageName.startsWith("jdbc:h2:")) storage = new DataBase(storageName); else 

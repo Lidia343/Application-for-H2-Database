@@ -49,6 +49,9 @@ public class DataBase implements Storage {
 		createStorageObject();
 	}
 	
+	/**
+	 * Метод отправляет запрос к БД.
+	 */
 	private void sendAddingRequest(String request) throws SQLException {
 		statement.executeUpdate(request);
 	}

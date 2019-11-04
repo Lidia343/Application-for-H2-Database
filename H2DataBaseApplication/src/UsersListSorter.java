@@ -1,5 +1,8 @@
 import java.util.Comparator;
 
+/**
+ * Класс предназначен для сортировки данных пользователей.
+ */
 public class UsersListSorter implements Comparator <User>{
 	@Override
 	public int compare (User user1, User user2) {
