@@ -55,7 +55,6 @@ public class UsersDataGenerator {
 		}
 		for (int i = 0; i < generatedUsersData.size(); i++) {
 			if (Math.floorMod(i, 2) == 0) System.out.println ();
-			System.out.print (generatedUsersData.get(i) + " ");
 		}
 		return generatedUsersData;
 	}
