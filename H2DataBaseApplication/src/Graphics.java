@@ -42,8 +42,10 @@ public class Graphics {
 	private Button darkThemeButton;
 	private Button lightThemeButton;
 	private Composite heightComposite;
+	private Composite genAndAddComposite;
 	private Composite themeComposite;
 	private Composite tableComposite;
+	private Composite downComposite;
 	private Combo combo;
 	private Button openingStorageButton;
 	private Label titleLabel;
@@ -54,14 +56,18 @@ public class Graphics {
 	private Label surnameLabel;
 	private Label ageLabel;
 	private Label isActiveLabel;
+	private Label userChoosingLabel;
 	private Text nameText;
 	private Text surnameText;
 	private Text ageText;
+	private Text userNumbersText;
+	private Button generatingButton;
 	private Button addingUserButton;
 	private Button isActiveButton;
 	private Table table;
 	private Button updatingUserButton;
 	private Button deletingUserButton;
+	private Button deletingAllUsersButton;
 	
 	private StorageFactory storageFactory;
 	private Storage storage;
@@ -102,7 +108,7 @@ public class Graphics {
 		backColor = new Color (display, 83, 82, 82);   
 		font = new Font(display, "Courier New", 13, SWT.NORMAL);
 		
-		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (620, 500), backColor);
+		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (860, 550), backColor);
 		setShell(shell);
 		
 		createGridLayout(shell); 
@@ -212,6 +218,31 @@ public class Graphics {
 		addingUserButton.setLayoutData(gridData);
 		setButton(addingUserButton, "Добавить"); 
 		
+		genAndAddComposite = new Composite (shell, SWT.NONE);
+		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		genAndAddComposite.setBackground(backColor);
+		genAndAddComposite.setLayoutData(gridData);
+		createGridLayout (genAndAddComposite, 3);
+		
+		generatingButton = new Button (genAndAddComposite, SWT.PUSH);
+		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
+		generatingButton.setLayoutData(gridData);
+		setButton (generatingButton, "Сгенерировать случайных пользователей");
+		
+		generatingButton.addSelectionListener(generatingSelection);
+		
+		userChoosingLabel = new Label (genAndAddComposite, SWT.NONE);
+		gridData = createGridData(SWT.RIGHT, true, 0, 0, 0, 0);
+		userChoosingLabel.setLayoutData(gridData);
+		setLabel (userChoosingLabel, "Количество пользователей:");
+		userChoosingLabel.setVisible(false);
+		
+		userNumbersText = new Text (genAndAddComposite, SWT.BORDER);
+		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
+		userNumbersText.setLayoutData(gridData);
+		setText(userNumbersText, true);
+		userNumbersText.setVisible(false);
+		
 		shell.setDefaultButton(openingStorageButton);
 		addingUserButton.addSelectionListener(addingUserSelection);
 		
@@ -245,17 +276,29 @@ public class Graphics {
 	    tableColumnLayout.setColumnData(table.getColumn(3), columnWeightData);
 	    tableColumnLayout.setColumnData(table.getColumn(4), columnWeightData);
 	   	
-		updatingUserButton = new Button (shell, SWT.PUSH);
+	    downComposite = new Composite (shell, SWT.BORDER);
+		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		downComposite.setBackground(backColor);
+		downComposite.setLayoutData(gridData);
+		createGridLayout (downComposite, 3);
+	    
+		updatingUserButton = new Button (downComposite, SWT.PUSH);
 		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
 		updatingUserButton.setLayoutData(gridData);
 		setButton(updatingUserButton, "Изменить"); 
 		
 		updatingUserButton.addSelectionListener(updatingUserSelection); 
 		
-		deletingUserButton = new Button (shell, SWT.PUSH);
-		gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 0);
+		deletingUserButton = new Button (downComposite, SWT.PUSH);
+		gridData = createGridData (SWT.RIGHT, true, 0, 0, 500, 0);
 		deletingUserButton.setLayoutData(gridData);
 		setButton(deletingUserButton, "Удалить"); 
+		
+		deletingAllUsersButton = new Button (downComposite, SWT.PUSH);
+		gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 0);
+		deletingAllUsersButton.setLayoutData(gridData);
+		setButton(deletingAllUsersButton, "Удалить всех"); 
+		deletingAllUsersButton.addSelectionListener(deletingAllUsersSelection);
 		
 		openingStorageButton.addSelectionListener(isOpeningSelection);
 		deletingUserButton.addSelectionListener(deletingUserSelection);
@@ -469,10 +512,15 @@ public class Graphics {
 	/**
 	 * Метод создаёт объект класса ErrorChecker, вызывает его методы и возвращает изменённый объект.
 	 */
-	private ErrorChecker createErrorChecker() {
+	private ErrorChecker createErrorChecker(boolean isOnlyUserNumbers) {
 		ErrorChecker errorChecker = new ErrorChecker();
+		if (isOnlyUserNumbers) {
+			errorChecker.setConfig(userNumbersText.getText());
+			errorChecker.checkUserInput(true);
+			return errorChecker;
+		} 
 		errorChecker.setConfig(nameText.getText(), surnameText.getText(), ageText.getText());
-		errorChecker.checkUserInput();
+		errorChecker.checkUserInput(false);
 		return errorChecker;
 	}
 	
@@ -485,16 +533,17 @@ public class Graphics {
 		setLabel(titleLabel); setLabel(lightThemeLabel); 
 		setLabel(darkThemeLabel); setLabel(choosingLabel);
 		setLabel(nameLabel); setLabel(surnameLabel);
-		setLabel(ageLabel); setLabel(isActiveLabel);
-		setText (nameText); setText (surnameText); setText (ageText);
-		setCombo (combo);
+		setLabel(ageLabel); setLabel(isActiveLabel); setLabel(userChoosingLabel);
+		setText (nameText); setText (surnameText); setText (ageText); setText (userNumbersText);
+		setCombo (combo); 
 		setButton(openingStorageButton, false); setButton(addingUserButton, false);
 		setButton(updatingUserButton, false); setButton(deletingUserButton, false);
 		setButton(isActiveButton, false); setButton(darkThemeButton, false);
-		setButton(lightThemeButton, false); 
-		setTable(table, true);		
+		setButton(lightThemeButton, false);  setButton (generatingButton, false);
+		setButton (deletingAllUsersButton, false); setTable(table, true);		
 		heightComposite.setBackground(backColor); themeComposite.setBackground(backColor);
-		tableComposite.setBackground(backColor);
+		tableComposite.setBackground(backColor); genAndAddComposite.setBackground(backColor);
+		downComposite.setBackground(backColor);
 	}
 	
 	/**
@@ -626,6 +675,48 @@ public class Graphics {
 	};
 	
 	/**
+	 * Слушатель нажатия кнопки "Сгенерировать случайных пользователей"
+	 */
+	SelectionAdapter generatingSelection = new SelectionAdapter () {
+		@Override
+		public void widgetSelected (SelectionEvent event) {
+			if (! ((userChoosingLabel.getVisible() == true) || (userNumbersText.getVisible() == true))) {
+				userChoosingLabel.setVisible(true);
+				userNumbersText.setVisible (true);
+				return;
+			}
+			if (!isConnection) {
+				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
+				return;
+			}
+			ErrorChecker errorChecker = createErrorChecker (true);
+			errorChecker.setConfig(userNumbersText.getText());
+			errorChecker.checkUserInput(true);
+			if (errorChecker.getMessageCode() != SWT.OK) {
+				createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
+				return;
+			}
+			int userNumbers = Integer.parseInt(userNumbersText.getText());
+			UsersDataGenerator generator = new UsersDataGenerator (userNumbers);
+			ArrayList <String> generatedUsersData = generator.generateUsersData();
+			for (int i = 0; i < generatedUsersData.size() - 3; i+=4) {
+				User user = new User();
+				user.setName(generatedUsersData.get(i));
+				user.setSurname(generatedUsersData.get(i + 1));
+				user.setAge(Integer.parseInt(generatedUsersData.get(i + 2)));
+				user.setIsActive(Boolean.parseBoolean(generatedUsersData.get(i + 3)));
+				try {
+					commandsExecuter.executeCommand(new CommandAdd (storage, user));
+				} catch (Exception e) {
+					createMessageBox (SWT.ERROR, e.getMessage());
+				}
+			}
+			showTable(false);
+			shell.pack();
+		}
+	};
+	
+	/**
 	 * Слушатель нажатия кнопки "Добавить".
 	 */
 	SelectionAdapter addingUserSelection = new SelectionAdapter() {
@@ -637,7 +728,7 @@ public class Graphics {
 				return;
 			}
 			titleLabel.setText("Добавление пользователя:");
-			ErrorChecker errorChecker = createErrorChecker();
+			ErrorChecker errorChecker = createErrorChecker(false);
 			
 			if (errorChecker.getMessageCode() == SWT.OK) {
 				
@@ -693,7 +784,7 @@ public class Graphics {
 				createMessageBox(SWT.ICON_WARNING, "Пользователь не выбран.");
 				return;
 			}
-			ErrorChecker errorChecker = createErrorChecker();
+			ErrorChecker errorChecker = createErrorChecker(false);
 			if (errorChecker.getMessageCode() == SWT.OK) {
 				User user = new User();
 				user.setId(selectedId);
@@ -805,7 +896,7 @@ public class Graphics {
 				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
 				return;
 			}
-			ErrorChecker errorChecker = createErrorChecker();
+			ErrorChecker errorChecker = createErrorChecker(false);
 			if (errorChecker.getMessageCode() != SWT.OK) {
 				createMessageBox(SWT.ICON_WARNING, "Пользователь не выбран.");
 				return;
@@ -827,6 +918,36 @@ public class Graphics {
 			
 				showTable(false);
 				if (table.getItemCount() == 0) storage.updateStorageObject();
+			} catch (Exception e) {
+				createMessageBox(SWT.ERROR, e.getMessage());
+			}
+		}
+	};
+	
+	/**
+	 * Слушатель нажатия кнопки "Удалить всех".
+	 */
+	SelectionAdapter deletingAllUsersSelection = new SelectionAdapter() {
+		@Override
+		public void widgetSelected (SelectionEvent event) {
+			
+			if (!isConnection) {
+				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
+				return;
+			}
+			if (table.getItemCount() == 0) {
+				createMessageBox(SWT.ICON_WARNING, "Нет данных для удаления.");
+				return;
+			}
+			clearTextFields();
+			try {
+				//System.out.println(storage.getUsersDataSet(true).toString());
+				commandsExecuter.executeCommand(new CommandDeleteAll (storage));
+				titleLabel.setText("Добавление пользователя:");
+				rowIsNotSelected = true;
+				showTable(false);
+				shell.pack();
+				storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
 			}

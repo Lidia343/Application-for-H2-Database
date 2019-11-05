@@ -8,14 +8,37 @@ public class ErrorChecker {
 	private String name;
 	private String surname;
 	private String age;
+	private String userNumbers;
 	private String errorMessage;
 	private int messageCode;
 	
+	public ErrorChecker () {
+		name = "";
+		surname = "";
+		age = "";
+		userNumbers = "";
+	}
+	
 	/**
 	 *  Метод для определения ошибок ввода.
+	 *  @param isOnlyUserNumbers - проверять только ввод количества пользователей / не проверять ввод количества пользователей
 	 */
-	public void checkUserInput() {
-		
+	public void checkUserInput(boolean isOnlyUserNumbers) {
+		if (isOnlyUserNumbers) {
+			if (userNumbers.equals("")) {
+				messageCode = SWT.ICON_WARNING;
+				errorMessage = "Все поля должны быть заполнены";
+				return;
+			}
+			try { 
+				Integer.parseInt(userNumbers);
+			} catch (NumberFormatException e) {
+				messageCode = SWT.ICON_WARNING; 
+				errorMessage = "Введите целое число";
+				return;
+			}
+			return;
+		}
 		if (name.equals("") || surname.equals("") || age.equals("")) {
 			messageCode = SWT.ICON_WARNING;
 			errorMessage = "Все поля должны быть заполнены";
@@ -76,6 +99,16 @@ public class ErrorChecker {
 		this.name = name;
 		this.surname = surname;
 		this.age = age;
+		errorMessage = "";
+		messageCode = SWT.OK;
+	}
+	
+	/**
+	 * Метод устанавливает конфигурацию класса.
+	 * @param userNumbers - количество пользователей
+	 */
+	public void setConfig(String userNumbers) {
+		this.userNumbers = userNumbers;
 		errorMessage = "";
 		messageCode = SWT.OK;
 	}

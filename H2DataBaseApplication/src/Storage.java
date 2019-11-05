@@ -52,6 +52,7 @@ public interface Storage {
 	
 	/**
 	 * Метод для возврата списка, содержащего данные всех пользователей хранилища.
+	 * @param isSorted - сортировать данные пользователей по коду / не сортировать
 	 */
 	ArrayList <User> getUsersDataSet(boolean isSorted) throws Exception;
 	
