@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс предназначен для реализации команды добавления пользователя.
@@ -24,7 +25,7 @@ public class CommandAdd implements Command{
 		/*Поскольку у поля user в данном классе не установлено значение ПК (оно устанавливается непосредственно в хранилище),
 		необходимо, предусматривая возможное восстановление пользователя в дальнейшем, после добавления user в хранилище
 		присвоить полю user аналогичное значение из текущего хранилища, но с установленным ПК:*/
-		ArrayList<User> users = new ArrayList<User>();
+		List<User> users = new ArrayList<>();
 		users = storage.getUsersDataSet(false);
 		for (User temp : users) {
 			user = temp;
@@ -33,7 +34,7 @@ public class CommandAdd implements Command{
 	
 	@Override public void undo() throws Exception {
 		User user = null;
-		ArrayList<User> users = new ArrayList<User>();
+		List<User> users = new ArrayList<>();
 		users = storage.getUsersDataSet(false);
 		for (User temp : users) user = temp;
 		if (users.size() != 0)

@@ -22,21 +22,18 @@ public class ShellProperties {
 		//Обязательные для передачи в конструктор параметры:
 		private final String title;
 		private final String imageName;
-		private final Display display;
 		
 		//Необязательные для передачи в конструктор параметры:
 		private Image image;
 		private Point size;
 		private Color backColor;
 		
-		public Builder (String title, String imageName, Display display) {
+		public Builder (String title, String imageName) {
 			this.title = title;
 			this.imageName = imageName;
-			this.display = display;
-			setImage ();
 			//Инициализация значениями по умолчанию:
-			size = new Point (800, 550);
-			backColor = new Color (display, 83, 82, 82);//backColor = new Color (display, 255, 252, 245); - прошлый вариант
+			size = new Point (900, 550);
+			backColor = new Color (Display.getDefault(), 83, 82, 82);
 		}
 		
 		/**
@@ -45,7 +42,7 @@ public class ShellProperties {
 		private void setImage () {
 			try {
 				InputStream stream = Graphics.class.getResourceAsStream(imageName);
-				image = new Image (display, stream);
+				image = new Image (Display.getDefault(), stream);
 				stream.close();
 			} catch (Exception e) {
 				image = null;
@@ -56,6 +53,7 @@ public class ShellProperties {
 		 * Метод устанавливает размер.
 		 */
 		public Builder size (Point size) {
+			if (size != null)
 			this.size = size;
 			return this;
 		}
@@ -64,6 +62,7 @@ public class ShellProperties {
 		 * Метод устанавливает цвет фона.
 		 */
 		public Builder backColor (Color backColor) {
+			if (backColor != null)
 			this.backColor = backColor;
 			return this;
 		}
@@ -72,6 +71,7 @@ public class ShellProperties {
 		 * Метод возвращает объект класса ShellProperties.
 		 */
 		public ShellProperties build () {
+			setImage ();
 			return new ShellProperties (this);
 		}
 	}

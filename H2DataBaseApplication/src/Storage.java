@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Интерфейс, необходимый для определения методов, которые должны содержать классы, реализующие хранение данных.
@@ -51,19 +51,18 @@ public interface Storage {
 	void deleteUser(int id) throws Exception;
 	
 	/**
+	 * Метод для удаления данных всех пользователей из хранилища.
+	 */
+	void deleteAllUsers () throws Exception;
+	
+	/**
 	 * Метод для возврата списка, содержащего данные всех пользователей хранилища.
 	 * @param isSorted - сортировать данные пользователей по коду / не сортировать
 	 */
-	ArrayList <User> getUsersDataSet(boolean isSorted) throws Exception;
+	List <User> getUsersDataSet(boolean isSorted) throws Exception;
 	
 	/**
 	 * Метод для закрытия хранилища без потерь данных, содержащихся в нём.
 	 */
 	void closeStorage() throws Exception;
-	
-	
-	/**
-	 * Метод для возврата имени хранилища.
-	 */
-	String getStorageName();
 }

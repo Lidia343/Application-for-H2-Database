@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс предназначен для реализации команды обновления пользователя.
@@ -22,7 +23,7 @@ public class CommandUpdate implements Command{
 	
 	@Override
 	public void execute() throws Exception {
-		ArrayList<User> users = new ArrayList<User>();
+		List<User> users = new ArrayList<>();
 		users = storage.getUsersDataSet(false);
 		for (User temp : users) 
 			if (temp.getId() == nextUser.getId()) {

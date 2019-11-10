@@ -3,7 +3,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;  
+import java.util.ArrayList;
+import java.util.List;  
 
 /**
  * Класс предназначен для работы с базой данных.
@@ -64,6 +65,7 @@ public class DataBase implements Storage {
 	
 	@Override
 	public void addUser(User user, int deletedId) throws SQLException {
+		System.out.println("yes");
 		String sql = "INSERT INTO Users VALUES (" + deletedId + ", '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.getIsActive() + ")"; 
 	    sendAddingRequest (sql);
 	}
@@ -81,9 +83,16 @@ public class DataBase implements Storage {
 	  }
 	
 	@Override
-	public ArrayList <User> getUsersDataSet(boolean isSorted) throws SQLException {
+	public void deleteAllUsers() throws SQLException { 
+		String sql = "DELETE FROM Users";
+		statement.executeUpdate(sql);
+	}
+	
+	
+	@Override
+	public List <User> getUsersDataSet(boolean isSorted) throws SQLException {
 
-		ArrayList <User> users = new ArrayList <User>();
+		List <User> users = new ArrayList <>();
 		
 		if (isSorted)  resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users order by id"); else
 		resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users");
@@ -107,10 +116,5 @@ public class DataBase implements Storage {
 		resultSet.close();
 		statement.close(); 
 		connection.close();
-	}
-	
-	@Override
-	public String getStorageName() {
-		return databaseName;
 	}
 }

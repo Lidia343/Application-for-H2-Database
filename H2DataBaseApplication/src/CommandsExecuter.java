@@ -1,66 +1,62 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс предназначен для управления списком команд.
  */
 public class CommandsExecuter {
 	
-	private ArrayList<Command> commands;
+	private List<Command> commands;
 	private int index;
-	private int undoingCounter;
+	//private int undoingCounter;
 	
 	/**
 	 * Конструктор класса CommandsExecuter.
 	 */
 	public CommandsExecuter () {
-		commands = new ArrayList<Command>();
+		commands = new ArrayList<>();
 		index = -1;
-		undoingCounter = 0;
+		//undoingCounter = 0;
 	}
 	
 	/**
-	 * Метод очищает список команд.
+	 * Метод очищает список команд и сбрасывает указатель списка команд и счётчик отмен команд.
 	 */
-	public void clearCommandsStack() {
+	public void reset () {
 		commands.clear();
+		index = -1;
+		//undoingCounter = 0;
 	}
 	
 	/**
 	 * Метод выполняет переданную команду.
 	 */
-	public void executeCommand(Command command) throws Exception {
+	public void execute(Command command) throws Exception {
 		commands.add(command);
-		commands.get(commands.size() - 1).execute();
+		command.execute();
 		index++;
 	}
 	
 	/**
 	 * Метод отменяет последнюю команду.
 	 */
-	public void undoLastCommand() throws Exception {
+	public void undo() throws Exception {
 		if ((index > -1) && (index < commands.size())) {
 			commands.get(index).undo();
-			undoingCounter++;
+			//undoingCounter++;
 			index--; 
 		} 
 	}
 	
 	/**
-	 * Метод сбрасывает указатель списка команд и счётчик отмен команд.
-	 */
-	public void updateIndex() {
-		index = -1;
-		undoingCounter = 0;
-	}
-	
-	/**
 	 * Метод отменяет отмену команды.
 	 */
-	public void redoLastUndoing() throws Exception {
-		if (undoingCounter > 0) { 
+	public void redo() throws Exception {
+		if ((index >= -1) && (index < commands.size() - 1)) {
+		//if (undoingCounter > 0) { 
 			commands.get(index + 1).redo();
 			index++;
-			undoingCounter--;
+			//undoingCounter--;
 		}
 	}
 	

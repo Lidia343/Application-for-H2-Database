@@ -9,9 +9,10 @@ public class StorageFactory {
 	 * @param storageName - имя хранилища
 	 */
 	public Storage getStorage(String storageName) {
-		Storage storage = null;
+		Storage storage;
 		if (storageName.startsWith("jdbc:h2:")) storage = new DataBase(storageName); else 
-			if (storageName.endsWith(".txt")) storage = new FileStorage(storageName);
+			if (storageName.endsWith(".txt")) storage = new FileStorage(storageName); else
+				storage = new DataBase("jdbc:h2:~/test");
 		return storage;
 	}
 }

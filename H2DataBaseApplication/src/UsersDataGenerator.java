@@ -1,21 +1,22 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class UsersDataGenerator {
 	
-	private ArrayList<String> femaleNames;
-	private ArrayList<String> maleNames;
-	private ArrayList<String> femaleSurnames;
-	private ArrayList<String> maleSurnames;
-	private ArrayList<String> generatedUsersData;
+	private List<String> femaleNames;
+	private List<String> maleNames;
+	private List<String> femaleSurnames;
+	private List<String> maleSurnames;
+	private List<String> generatedUsersData;
 	private int userNumbers;
 	
 	public UsersDataGenerator (int userNumbers) {
 		this.userNumbers = userNumbers;
-		femaleNames = new ArrayList<String>();
-		maleNames = new ArrayList<String>();
-		femaleSurnames = new ArrayList<String>();
-		maleSurnames = new ArrayList<String>();
-		generatedUsersData = new ArrayList<String>();
+		femaleNames = new ArrayList<>();
+		maleNames = new ArrayList<>();
+		femaleSurnames = new ArrayList<>();
+		maleSurnames = new ArrayList<>();
+		generatedUsersData = new ArrayList<>();
 		setUsersData();
 	}
 	
@@ -38,7 +39,7 @@ public class UsersDataGenerator {
 		maleSurnames.add("Фролов"); maleSurnames.add("Дмитриев");	
 	}
 	
-	public ArrayList <String> generateUsersData(){
+	public List <String> generateUsersData(){
 		for (int i = 0; i < userNumbers; i++) {
 			int isMale = (int)Math.round(Math.random());
 			if (isMale == 0){

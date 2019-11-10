@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Класс предназначен для работы с файлом, в котором должна храниться информация о пользователях.
@@ -19,10 +20,12 @@ public class FileStorage implements Storage {
 	private FileWriter idWriter;
 	private BufferedReader reader;
 	private BufferedReader idReader;
+	private boolean allUsersDeleted;
 
-	private ArrayList<User> usersDataList; //Список для всех пользователей, занесённых в файл
-	private ArrayList<String> prevUsersDataList; //Список для пользователей, занесённых в файл и расположенных до выбранного для удаления/изменения пользователя
-	private ArrayList<String> nextUsersDataList; //Список для пользователей, занесённых в файл и расположенных после выбранного для удаления/изменения пользователя
+	private List<User> usersDataList; //Список для всех пользователей, занесённых в файл
+	private List<User> deletedUsersDataList;
+	private List<String> prevUsersDataList; //Список для пользователей, занесённых в файл и расположенных до выбранного для удаления/изменения пользователя
+	private List<String> nextUsersDataList; //Список для пользователей, занесённых в файл и расположенных после выбранного для удаления/изменения пользователя
 	
 	private String afterNameTab; //Строка, содержащая необходимый отступ после имени пользователя для текущей строки в файле
 	private String afterSurnameTab; //Строка, содержащая необходимый отступ после фамилии пользователя для текущей строки в файле
@@ -34,14 +37,16 @@ public class FileStorage implements Storage {
 	public FileStorage(String fileName) {
 		this.fileName = fileName;
 		id = 0;
-		usersDataList = new ArrayList<User>();
-		prevUsersDataList = new ArrayList<String>();
-		nextUsersDataList = new ArrayList<String>();
+		usersDataList = new ArrayList<>();
+		prevUsersDataList = new ArrayList<>();
+		nextUsersDataList = new ArrayList<>();
+		allUsersDeleted = false;
 	}
 	
 	@Override
 	public void setStorage() {
 		file = new File (fileName);
+		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -100,7 +105,7 @@ public class FileStorage implements Storage {
 				i++;
 			}
 			j = 0;
-			usersDataList.add(user);
+			if (!usersDataList.contains(user)) usersDataList.add(user);
 			line = reader.readLine();
 		}
 		findMaxUserId();
@@ -130,11 +135,13 @@ public class FileStorage implements Storage {
 			updateIdFile();
 		}
 		writer = new FileWriter (file, true);
+		deletedUsersDataList = usersDataList;
 	}
 	
 	@Override
 	public void updateStorageObject() throws IOException { 
 		updateIdFile ();
+		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -172,18 +179,25 @@ public class FileStorage implements Storage {
 		writer.close();
 			
 		user.setId(id + 1);
-		usersDataList.add(user);
+		if (!usersDataList.contains(user)) usersDataList.add(user);
 			
 		if (isUpdated) updateIdFile (Integer.toString(id + 1));
 	}
 	
 	@Override
 	public void addUser (User user) throws IOException{
+		if (allUsersDeleted) {
+			
+			usersDataList.clear();
+			allUsersDeleted = false;
+		}
 		String idLine;
 		idReader = new BufferedReader (new FileReader (maxIdFile));
 		idLine = idReader.readLine();
 		id = Integer.parseInt(idLine);
 		writeUserInFile (user, id, true);
+		//SallUsersDeleted = false;
+		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -208,10 +222,45 @@ public class FileStorage implements Storage {
 		} else updateIdFile ("-1");
 	}
 	
+	private void addDeletedUser () throws IOException {
+		/*
+		if (deletedUsersDataList.get(usersDataList.size() - 1).getId() == deletedId)
+		
+		
+		reader = new BufferedReader (new FileReader (file));
+		reader.readLine();
+		reader.readLine();
+		if (reader.readLine() == null) {
+			writer.close();
+			writer = new FileWriter (file, false); 
+			writer.write("Код:" + "\t" + "Имя:    " +  "\t\t\t\t\t\t\t" + "Фамилия:" + "\t\t\t\t\t\t\t" + "Возраст:" + "\t" + "Активен:" + "\r\n\r\n");
+		} else writer = new FileWriter (file, true); 
+		
+		String userLine = deletedId + "\t" + user.getName() + afterNameTab + user.getSurname() + afterSurnameTab + user.getAge() + "\t\t" + user.getIsActive() + "\r\n";
+		writer.append(userLine); 
+		writer.close();*/
+	}
+	
 	@Override
 	public void addUser (User user, int deletedId) throws IOException {
+		if (allUsersDeleted) {
+			//addDeletedUser();
+			usersDataList.clear();
+			allUsersDeleted = false;
+			//return;
+		}
+		
+		/*if (allUsersDeleted) {
+			addDeletedUser(user, deletedId);
+			return;
+		}*/
+		
 		writeUserInFile (user, deletedId - 1, false);
+		//System.out.println("yes");
 		findMaxUserId();
+		//System.out.println("yes");
+		//System.out.println("yes");
+		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -277,6 +326,7 @@ public class FileStorage implements Storage {
 		for (User temp : usersDataList)
 			if (temp.getId() == user.getId()) dataIndex = usersDataList.indexOf(temp);
 		usersDataList.set(dataIndex, user);
+		deletedUsersDataList = usersDataList;
 	}
 	
 	@Override
@@ -289,10 +339,28 @@ public class FileStorage implements Storage {
 			if (temp.getId() == id) dataIndex = usersDataList.indexOf(temp);
 		usersDataList.remove(dataIndex); 
 		findMaxUserId();
+		deletedUsersDataList = usersDataList;
 	}
 	
 	@Override
-	public ArrayList <User> getUsersDataSet(boolean isSorted) {
+	public void deleteAllUsers() throws IOException {
+		writer.close();
+		writer = new FileWriter (file, false); 
+		writer.write("Код:" + "\t" + "Имя:    " +  "\t\t\t\t\t\t\t" + "Фамилия:" + "\t\t\t\t\t\t\t" + "Возраст:" + "\t" + "Активен:" + "\r\n\r\n");
+		reader = new BufferedReader (new FileReader (file));
+		int i = 0;
+		String line = reader.readLine();
+		while (line != null) {
+			writer.write("\r\n");
+		}
+		writer.close();
+		allUsersDeleted = true;
+		deletedUsersDataList = usersDataList;
+		updateIdFile();
+	}
+	
+	@Override
+	public List <User> getUsersDataSet(boolean isSorted) {
 		if (isSorted) Collections.sort(usersDataList, new UsersListSorter());
 		return usersDataList;
 	}
@@ -302,10 +370,5 @@ public class FileStorage implements Storage {
 		reader.close();
 		idReader.close();
 		writer.close();
-	}
-	
-	@Override
-	public String getStorageName() {
-		return fileName;
 	}
 }

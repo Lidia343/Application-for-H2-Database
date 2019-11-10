@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -19,8 +21,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 
 /**
@@ -71,6 +77,7 @@ public class Graphics {
 	
 	private StorageFactory storageFactory;
 	private Storage storage;
+	private boolean isDarkColor;
 	
 	private int selectedRowIndex;
 	private int selectedId;
@@ -85,10 +92,11 @@ public class Graphics {
 	public Graphics() {
 		display = new Display();
 		shell = new Shell (display);
-		shellPropertiesFactory = new ShellPropertiesFactory(display);
+		shellPropertiesFactory = new ShellPropertiesFactory();
 		storageFactory = new StorageFactory();
 		isConnection = false;
 		commandsExecuter = new CommandsExecuter();
+		isDarkColor = true;
 	}
 	
 	/**
@@ -108,7 +116,7 @@ public class Graphics {
 		backColor = new Color (display, 83, 82, 82);   
 		font = new Font(display, "Courier New", 13, SWT.NORMAL);
 		
-		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (860, 550), backColor);
+		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (900, 550), backColor, isDarkColor);
 		setShell(shell);
 		
 		createGridLayout(shell); 
@@ -124,7 +132,7 @@ public class Graphics {
 		darkThemeLabel.setLayoutData(gridData);
 		setLabel (darkThemeLabel, "Тёмная тема:");
 		
-		darkThemeButton = new Button (themeComposite, SWT.CHECK);
+		darkThemeButton = new Button (themeComposite, SWT.RADIO);
 		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
 		darkThemeButton.setLayoutData(gridData);
 		setButton(darkThemeButton, ""); 
@@ -135,7 +143,7 @@ public class Graphics {
 		lightThemeLabel.setLayoutData(gridData);
 		setLabel (lightThemeLabel, "Светлая тема:");
 		
-		lightThemeButton = new Button (themeComposite, SWT.CHECK);
+		lightThemeButton = new Button (themeComposite, SWT.RADIO);
 		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
 		lightThemeButton.setLayoutData(gridData);
 		setButton(lightThemeButton, ""); 
@@ -160,6 +168,9 @@ public class Graphics {
 		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
 		combo.setLayoutData(gridData);
 		setCombo (combo);
+		combo.add("jdbc:h2:~/test");
+		combo.add("file.txt");
+		combo.addModifyListener(comboModification);
 		
 		openingStorageButton = new Button (heightComposite, SWT.PUSH);
 		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 2);
@@ -242,6 +253,8 @@ public class Graphics {
 		userNumbersText.setLayoutData(gridData);
 		setText(userNumbersText, true);
 		userNumbersText.setVisible(false);
+		userNumbersText.setText("5");
+		userNumbersText.addFocusListener(numberTextFocusing);
 		
 		shell.setDefaultButton(openingStorageButton);
 		addingUserButton.addSelectionListener(addingUserSelection);
@@ -528,7 +541,7 @@ public class Graphics {
 	 * Метод устанавливает цвета всех компонентов в зависимости от текущего хранилища.
 	 */
 	private void setComponentsColors() {
-		shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor);
+		shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor, isDarkColor);
 		setShell(shell);
 		setLabel(titleLabel); setLabel(lightThemeLabel); 
 		setLabel(darkThemeLabel); setLabel(choosingLabel);
@@ -554,7 +567,9 @@ public class Graphics {
 		public void widgetSelected (SelectionEvent event) {
 			if (darkThemeButton.getSelection() == true) {
 				lightThemeButton.setSelection(false);
-				if (buttonForeColor.getRed() != 30) {
+				//if (buttonForeColor.getRed() != 30) {
+				if (isDarkColor == false) {
+					isDarkColor = true;
 					paleForeColor = new Color (display, 170, 250, 170);
 					lightForeColor = new Color (display, 100, 250, 100);
 					buttonBackColor = new Color (display, 200, 200, 200);
@@ -562,7 +577,7 @@ public class Graphics {
 					backColor = new Color (display, 83, 82, 82); 
 					setComponentsColors();
 				}
-			} else darkThemeButton.setSelection(true);
+			} 
 		}
 	};
 	
@@ -574,7 +589,8 @@ public class Graphics {
 		public void widgetSelected (SelectionEvent event) {
 			if (lightThemeButton.getSelection() == true) {
 				darkThemeButton.setSelection(false);
-				if (buttonForeColor.getRed() != 20) {
+				if (isDarkColor == true) {
+					isDarkColor = false;
 					paleForeColor = new Color (display, 45, 5, 5); 
 					lightForeColor = new Color (display, 105, 65, 65);
 					buttonBackColor = new Color (display, 223, 220, 215);
@@ -582,7 +598,25 @@ public class Graphics {
 					backColor = new Color (display, 255, 252, 245); 
 					setComponentsColors();
 				}
-			} else lightThemeButton.setSelection(true);
+			} 
+		}
+	};
+	
+	ModifyListener comboModification = new ModifyListener () {
+		@Override
+		public void modifyText(ModifyEvent event) {
+			shell.setDefaultButton(openingStorageButton);
+		}
+		
+	};
+	
+	FocusListener numberTextFocusing = new FocusListener () {
+		@Override
+		public void focusGained(FocusEvent arg0) {
+			shell.setDefaultButton(generatingButton);
+		}
+		@Override
+		public void focusLost(FocusEvent arg0) {
 		}
 	};
 	
@@ -643,17 +677,19 @@ public class Graphics {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
 			
-			if (!combo.getText().equals("")) {
-				
-				boolean isContain = false;
+			//if (!combo.getText().equals("")) {
+			
+			if (!(combo.getText().equals(combo.getItem(0))) && !(combo.getText().equals(combo.getItem(1))) && !(combo.getText().equals("")))
+				createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
+
+				/*boolean isContain = false;
 				for (int i = 0; i < combo.getItemCount(); i++) 
 					if (combo.getItem(i).equals(combo.getText())) isContain = true;
 				
-				if (!isContain) combo.add(combo.getText());
+				if (!isContain) combo.add(combo.getText());*/
 				
 				if (isConnection) {
-					commandsExecuter.clearCommandsStack();
-					commandsExecuter.updateIndex();
+					commandsExecuter.reset();
 					try {
 						storage.closeStorage();
 					} catch (Exception e) {
@@ -664,11 +700,11 @@ public class Graphics {
 				
 				setStorage();	
 				clearTextFields();
-				if (table.getItemCount() != 0) shell.pack();
+				if (table.getItemCount() < 8) shell.pack();
 				shell.setDefaultButton(addingUserButton);
-			} else createMessageBox (SWT.ICON_WARNING, "Введите/выберите имя хранилища.");
+			//} else createMessageBox (SWT.ICON_WARNING, "Введите/выберите имя хранилища.");
 			if (lightThemeButton.getSelection() == true) {
-				shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor);
+				shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor, isDarkColor);
 				setShell(shell);
 			}
 		}
@@ -696,9 +732,10 @@ public class Graphics {
 				createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
 				return;
 			}
+			int tableItemCount = table.getItemCount();
 			int userNumbers = Integer.parseInt(userNumbersText.getText());
 			UsersDataGenerator generator = new UsersDataGenerator (userNumbers);
-			ArrayList <String> generatedUsersData = generator.generateUsersData();
+			List <String> generatedUsersData = generator.generateUsersData();
 			for (int i = 0; i < generatedUsersData.size() - 3; i+=4) {
 				User user = new User();
 				user.setName(generatedUsersData.get(i));
@@ -706,13 +743,13 @@ public class Graphics {
 				user.setAge(Integer.parseInt(generatedUsersData.get(i + 2)));
 				user.setIsActive(Boolean.parseBoolean(generatedUsersData.get(i + 3)));
 				try {
-					commandsExecuter.executeCommand(new CommandAdd (storage, user));
+					commandsExecuter.execute(new CommandAdd (storage, user));
 				} catch (Exception e) {
 					createMessageBox (SWT.ERROR, e.getMessage());
 				}
 			}
 			showTable(false);
-			shell.pack();
+			if ((tableItemCount + userNumbers) < 9) shell.pack();
 		}
 	};
 	
@@ -739,13 +776,13 @@ public class Graphics {
 				user.setIsActive(isActiveButton.getSelection());
 				
 				try {
-					commandsExecuter.executeCommand(new CommandAdd (storage, user));
+					commandsExecuter.execute(new CommandAdd (storage, user));
 				
 					int id = 0, age = 0;
 					String name = "", surname = "";
 					boolean isActive = false;
 				
-					ArrayList <User> users = storage.getUsersDataSet(true);
+					List <User> users = storage.getUsersDataSet(true);
 					
 					for (int i = 0; i < users.size(); i++) {
 						
@@ -759,7 +796,8 @@ public class Graphics {
 					TableItem item = new TableItem(table, SWT.NONE);
 					item.setText(new String[] {Integer.toString(id), name, surname, Integer.toString(age), Boolean.toString(isActive)});
 					clearTextFields();
-					shell.pack();
+					//shell.setDefaultButton(openingStorageButton);
+					if ((table.getItemCount() + 1) < 9) shell.pack();
 					
 					rowIsNotSelected = true;
 				} catch(Exception e) { 		
@@ -794,7 +832,7 @@ public class Graphics {
 				user.setIsActive(isActiveButton.getSelection());
 				
 				try {
-					commandsExecuter.executeCommand(new CommandUpdate(storage, user));
+					commandsExecuter.execute(new CommandUpdate(storage, user));
 				} catch (Exception e) {
 					createMessageBox(SWT.ERROR, e.getMessage());
 					return;
@@ -825,6 +863,7 @@ public class Graphics {
 			surnameText.setText(surname);
 			ageText.setText("" + age);
 			isActiveButton.setSelection(isActive);
+			shell.setDefaultButton(addingUserButton);
 		}
 	};
 	
@@ -839,14 +878,14 @@ public class Graphics {
 			if ((int)key.character == 0x1a) { //Код комбинации Control + Z
 				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
-						commandsExecuter.undoLastCommand();
+						commandsExecuter.undo();
 					} catch (Exception e) {
 						createMessageBox(SWT.ERROR, e.getMessage());
 						return;
 					}
 					clearTextFields();
 					showTable(true);
-					shell.pack();
+					//shell.pack();
 				} else return;
 			}
 		}
@@ -862,14 +901,14 @@ public class Graphics {
 			if ((int)key.character == 0x19) { //Код комбинации Control + Y
 				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
-						commandsExecuter.redoLastUndoing();
+						commandsExecuter.redo();
 					} catch (Exception e) {
 						createMessageBox(SWT.ERROR, e.getMessage());
 						return;
 					}
 					clearTextFields();
 					showTable(true);
-					shell.pack();
+					//shell.pack();
 				} else return;
 			}
 		}
@@ -902,16 +941,16 @@ public class Graphics {
 				return;
 			}
 			clearTextFields();
-			shell.pack();
+			//shell.pack();
 			
 			try {
-				ArrayList<User> users = new ArrayList<User>();
+				List<User> users = new ArrayList<User>();
 				users = storage.getUsersDataSet(false);
 				User user = null;
 				for (User temp : users) {
 					if (temp.getId() == selectedId) user = temp;
 				}
-				commandsExecuter.executeCommand(new CommandDelete (storage, user));
+				commandsExecuter.execute(new CommandDelete (storage, user));
 			
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;
@@ -930,7 +969,6 @@ public class Graphics {
 	SelectionAdapter deletingAllUsersSelection = new SelectionAdapter() {
 		@Override
 		public void widgetSelected (SelectionEvent event) {
-			
 			if (!isConnection) {
 				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
 				return;
@@ -942,11 +980,13 @@ public class Graphics {
 			clearTextFields();
 			try {
 				//System.out.println(storage.getUsersDataSet(true).toString());
-				commandsExecuter.executeCommand(new CommandDeleteAll (storage));
+				commandsExecuter.execute(new CommandDeleteAll (storage));
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;
-				showTable(false);
-				shell.pack();
+				table.removeAll();
+				//table.getItem(0).SE
+				
+				//shell.pack();
 				storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
@@ -960,17 +1000,18 @@ public class Graphics {
 	private void setStorage() {
 		storage = storageFactory.getStorage(combo.getText());
 		try {
-			if (storage != null) {
+			//if (storage != null) {
 				storage.setStorage(); 
 				shellProperties = shellPropertiesFactory.getShellProperties(storage);
 				setShell (shell);
-			} else {
-				createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
-				isConnection = false;
-				combo.remove(combo.getItemCount() - 1);
-				combo.setText("");
-				return;
-			}
+			//} else {
+				//createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
+				//isConnection = false;
+				
+				//combo.remove(combo.getItemCount() - 1);
+				//combo.setText("");
+			//	return;
+			//}
 			storage.createStorageObject();
 			showTable(true);
 		} catch (Exception e) {
@@ -990,7 +1031,7 @@ public class Graphics {
 		String name, surname;
 		boolean isActive;
 		try {
-			ArrayList <User> users = storage.getUsersDataSet(isAfterDeleteCanceling);
+			List <User> users = storage.getUsersDataSet(isAfterDeleteCanceling);
 			
 			for (int i = 0; i < users.size(); i++) {
 				id = users.get(i).getId();
