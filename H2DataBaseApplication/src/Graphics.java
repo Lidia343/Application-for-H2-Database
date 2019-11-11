@@ -734,7 +734,13 @@ public class Graphics {
 			}
 			int tableItemCount = table.getItemCount();
 			int userNumbers = Integer.parseInt(userNumbersText.getText());
-			UsersDataGenerator generator = new UsersDataGenerator (userNumbers);
+			
+			try {
+				commandsExecuter.execute (new CommandGenerate (storage, userNumbers));
+			} catch (Exception e) {
+				createMessageBox (SWT.ERROR, e.getMessage());
+			}
+			/*UsersDataGenerator generator = new UsersDataGenerator (userNumbers);
 			List <String> generatedUsersData = generator.generateUsersData();
 			for (int i = 0; i < generatedUsersData.size() - 3; i+=4) {
 				User user = new User();
@@ -747,7 +753,7 @@ public class Graphics {
 				} catch (Exception e) {
 					createMessageBox (SWT.ERROR, e.getMessage());
 				}
-			}
+			}*/
 			showTable(false);
 			if ((tableItemCount + userNumbers) < 9) shell.pack();
 		}

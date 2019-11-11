@@ -33,11 +33,11 @@ public class CommandAdd implements Command{
 	}
 	
 	@Override public void undo() throws Exception {
-		User user = null;
+		/*User user = null;
 		List<User> users = new ArrayList<>();
 		users = storage.getUsersDataSet(false, false);
 		for (User temp : users) user = temp;
-		if (users.size() != 0)
+		if (users.size() != 0)*/
 		storage.deleteUser(user.getId());
 	}
 	
