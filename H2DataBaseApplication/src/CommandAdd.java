@@ -26,7 +26,7 @@ public class CommandAdd implements Command{
 		необходимо, предусматривая возможное восстановление пользователя в дальнейшем, после добавления user в хранилище
 		присвоить полю user аналогичное значение из текущего хранилища, но с установленным ПК:*/
 		List<User> users = new ArrayList<>();
-		users = storage.getUsersDataSet(false);
+		users = storage.getUsersDataSet(false, false);
 		for (User temp : users) {
 			user = temp;
 		}
@@ -35,7 +35,7 @@ public class CommandAdd implements Command{
 	@Override public void undo() throws Exception {
 		User user = null;
 		List<User> users = new ArrayList<>();
-		users = storage.getUsersDataSet(false);
+		users = storage.getUsersDataSet(false, false);
 		for (User temp : users) user = temp;
 		if (users.size() != 0)
 		storage.deleteUser(user.getId());

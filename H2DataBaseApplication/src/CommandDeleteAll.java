@@ -20,13 +20,15 @@ public class CommandDeleteAll implements Command{
 	
 	@Override
 	public void execute() throws Exception {
-		users = storage.getUsersDataSet(false);
+		users = storage.getUsersDataSet(false, true);
 		storage.deleteAllUsers();
+		System.out.println(users.toString());
 	}
 	
 	@Override public void undo() throws Exception {
 		for (User user : users) {
 			storage.addUser(user, user.getId());	
+			
 		}
 	}
 	

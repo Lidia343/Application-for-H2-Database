@@ -782,7 +782,7 @@ public class Graphics {
 					String name = "", surname = "";
 					boolean isActive = false;
 				
-					List <User> users = storage.getUsersDataSet(true);
+					List <User> users = storage.getUsersDataSet(true, false);
 					
 					for (int i = 0; i < users.size(); i++) {
 						
@@ -879,6 +879,7 @@ public class Graphics {
 				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
 						commandsExecuter.undo();
+						System.out.println("yes");
 					} catch (Exception e) {
 						createMessageBox(SWT.ERROR, e.getMessage());
 						return;
@@ -945,7 +946,7 @@ public class Graphics {
 			
 			try {
 				List<User> users = new ArrayList<User>();
-				users = storage.getUsersDataSet(false);
+				users = storage.getUsersDataSet(false, false);
 				User user = null;
 				for (User temp : users) {
 					if (temp.getId() == selectedId) user = temp;
@@ -983,6 +984,7 @@ public class Graphics {
 				commandsExecuter.execute(new CommandDeleteAll (storage));
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;
+				//showTable(false);
 				table.removeAll();
 				//table.getItem(0).SE
 				
@@ -1031,7 +1033,7 @@ public class Graphics {
 		String name, surname;
 		boolean isActive;
 		try {
-			List <User> users = storage.getUsersDataSet(isAfterDeleteCanceling);
+			List <User> users = storage.getUsersDataSet(isAfterDeleteCanceling, false);
 			
 			for (int i = 0; i < users.size(); i++) {
 				id = users.get(i).getId();

@@ -23,7 +23,7 @@ public class FileStorage implements Storage {
 	private boolean allUsersDeleted;
 
 	private List<User> usersDataList; //Список для всех пользователей, занесённых в файл
-	private List<User> deletedUsersDataList;
+	private final List<User> deletedUsersDataList;
 	private List<String> prevUsersDataList; //Список для пользователей, занесённых в файл и расположенных до выбранного для удаления/изменения пользователя
 	private List<String> nextUsersDataList; //Список для пользователей, занесённых в файл и расположенных после выбранного для удаления/изменения пользователя
 	
@@ -38,6 +38,7 @@ public class FileStorage implements Storage {
 		this.fileName = fileName;
 		id = 0;
 		usersDataList = new ArrayList<>();
+		deletedUsersDataList = new ArrayList<>();
 		prevUsersDataList = new ArrayList<>();
 		nextUsersDataList = new ArrayList<>();
 		allUsersDeleted = false;
@@ -46,7 +47,6 @@ public class FileStorage implements Storage {
 	@Override
 	public void setStorage() {
 		file = new File (fileName);
-		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class FileStorage implements Storage {
 				i++;
 			}
 			j = 0;
-			if (!usersDataList.contains(user)) usersDataList.add(user);
+			usersDataList.add(user);
 			line = reader.readLine();
 		}
 		findMaxUserId();
@@ -135,13 +135,11 @@ public class FileStorage implements Storage {
 			updateIdFile();
 		}
 		writer = new FileWriter (file, true);
-		deletedUsersDataList = usersDataList;
 	}
 	
 	@Override
 	public void updateStorageObject() throws IOException { 
 		updateIdFile ();
-		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -179,7 +177,7 @@ public class FileStorage implements Storage {
 		writer.close();
 			
 		user.setId(id + 1);
-		if (!usersDataList.contains(user)) usersDataList.add(user);
+		usersDataList.add(user);
 			
 		if (isUpdated) updateIdFile (Integer.toString(id + 1));
 	}
@@ -197,7 +195,6 @@ public class FileStorage implements Storage {
 		id = Integer.parseInt(idLine);
 		writeUserInFile (user, id, true);
 		//SallUsersDeleted = false;
-		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -222,33 +219,14 @@ public class FileStorage implements Storage {
 		} else updateIdFile ("-1");
 	}
 	
-	private void addDeletedUser () throws IOException {
-		/*
-		if (deletedUsersDataList.get(usersDataList.size() - 1).getId() == deletedId)
-		
-		
-		reader = new BufferedReader (new FileReader (file));
-		reader.readLine();
-		reader.readLine();
-		if (reader.readLine() == null) {
-			writer.close();
-			writer = new FileWriter (file, false); 
-			writer.write("Код:" + "\t" + "Имя:    " +  "\t\t\t\t\t\t\t" + "Фамилия:" + "\t\t\t\t\t\t\t" + "Возраст:" + "\t" + "Активен:" + "\r\n\r\n");
-		} else writer = new FileWriter (file, true); 
-		
-		String userLine = deletedId + "\t" + user.getName() + afterNameTab + user.getSurname() + afterSurnameTab + user.getAge() + "\t\t" + user.getIsActive() + "\r\n";
-		writer.append(userLine); 
-		writer.close();*/
-	}
-	
 	@Override
 	public void addUser (User user, int deletedId) throws IOException {
-		if (allUsersDeleted) {
+		/*if (allUsersDeleted) {
 			//addDeletedUser();
 			usersDataList.clear();
 			allUsersDeleted = false;
 			//return;
-		}
+		}*/
 		
 		/*if (allUsersDeleted) {
 			addDeletedUser(user, deletedId);
@@ -260,7 +238,6 @@ public class FileStorage implements Storage {
 		findMaxUserId();
 		//System.out.println("yes");
 		//System.out.println("yes");
-		deletedUsersDataList = usersDataList;
 	}
 	
 	/**
@@ -326,7 +303,6 @@ public class FileStorage implements Storage {
 		for (User temp : usersDataList)
 			if (temp.getId() == user.getId()) dataIndex = usersDataList.indexOf(temp);
 		usersDataList.set(dataIndex, user);
-		deletedUsersDataList = usersDataList;
 	}
 	
 	@Override
@@ -339,28 +315,36 @@ public class FileStorage implements Storage {
 			if (temp.getId() == id) dataIndex = usersDataList.indexOf(temp);
 		usersDataList.remove(dataIndex); 
 		findMaxUserId();
-		deletedUsersDataList = usersDataList;
 	}
 	
 	@Override
 	public void deleteAllUsers() throws IOException {
-		writer.close();
+		//writer.close();
 		writer = new FileWriter (file, false); 
 		writer.write("Код:" + "\t" + "Имя:    " +  "\t\t\t\t\t\t\t" + "Фамилия:" + "\t\t\t\t\t\t\t" + "Возраст:" + "\t" + "Активен:" + "\r\n\r\n");
 		reader = new BufferedReader (new FileReader (file));
-		int i = 0;
+		//int i = 0;
 		String line = reader.readLine();
 		while (line != null) {
 			writer.write("\r\n");
 		}
 		writer.close();
 		allUsersDeleted = true;
-		deletedUsersDataList = usersDataList;
-		updateIdFile();
+		deletedUsersDataList.clear();
+		for (int i = 0; i < usersDataList.size(); i++) {
+			deletedUsersDataList.add(usersDataList.get(i));
+		}
+		usersDataList.clear();
+		//System.out.println(deletedUsersDataList.toString());
+		//updateIdFile();
 	}
 	
 	@Override
-	public List <User> getUsersDataSet(boolean isSorted) {
+	public List <User> getUsersDataSet(boolean isSorted, boolean deletedUsers) {
+		if (deletedUsers) {
+			if (isSorted) Collections.sort(deletedUsersDataList, new UsersListSorter());
+			return deletedUsersDataList;
+		}
 		if (isSorted) Collections.sort(usersDataList, new UsersListSorter());
 		return usersDataList;
 	}

@@ -90,7 +90,7 @@ public class DataBase implements Storage {
 	
 	
 	@Override
-	public List <User> getUsersDataSet(boolean isSorted) throws SQLException {
+	public List <User> getUsersDataSet(boolean isSorted, boolean deletedUsers) throws SQLException {
 
 		List <User> users = new ArrayList <>();
 		

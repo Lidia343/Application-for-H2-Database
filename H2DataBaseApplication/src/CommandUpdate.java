@@ -24,7 +24,7 @@ public class CommandUpdate implements Command{
 	@Override
 	public void execute() throws Exception {
 		List<User> users = new ArrayList<>();
-		users = storage.getUsersDataSet(false);
+		users = storage.getUsersDataSet(false, false);
 		for (User temp : users) 
 			if (temp.getId() == nextUser.getId()) {
 				storage.updateUser(nextUser);
