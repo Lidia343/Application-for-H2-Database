@@ -8,7 +8,6 @@ public class CommandsExecuter {
 	
 	private List<Command> commands;
 	private int index;
-	//private int undoingCounter;
 	
 	/**
 	 * Конструктор класса CommandsExecuter.
@@ -16,7 +15,6 @@ public class CommandsExecuter {
 	public CommandsExecuter () {
 		commands = new ArrayList<>();
 		index = -1;
-		//undoingCounter = 0;
 	}
 	
 	/**
@@ -25,7 +23,6 @@ public class CommandsExecuter {
 	public void reset () {
 		commands.clear();
 		index = -1;
-		//undoingCounter = 0;
 	}
 	
 	/**
@@ -43,7 +40,6 @@ public class CommandsExecuter {
 	public void undo() throws Exception {
 		if ((index > -1) && (index < commands.size())) {
 			commands.get(index).undo();
-			//undoingCounter++;
 			index--; 
 		} 
 	}
@@ -53,10 +49,8 @@ public class CommandsExecuter {
 	 */
 	public void redo() throws Exception {
 		if ((index >= -1) && (index < commands.size() - 1)) {
-		//if (undoingCounter > 0) { 
 			commands.get(index + 1).redo();
 			index++;
-			//undoingCounter--;
 		}
 	}
 	

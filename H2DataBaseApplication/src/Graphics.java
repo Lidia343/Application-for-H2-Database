@@ -585,7 +585,6 @@ public class Graphics {
 	 * @param message - сообщение для пользователя
 	 */
 	private void createMessageBox (int messageCode, String message) {
-		
 		MessageBox messageBox = new MessageBox (shell, messageCode);
 		messageBox.setText("Сообщение");
 		messageBox.setMessage(message);
@@ -1011,7 +1010,6 @@ public class Graphics {
 			}
 			clearTextFields();
 			try {
-				//System.out.println(storage.getUsersDataSet(true).toString());
 				commandsExecuter.execute(new CommandDeleteAll (storage));
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;

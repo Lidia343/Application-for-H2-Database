@@ -10,30 +10,32 @@ public class AgeEditingSupport extends EditingSupport {
 
 	public AgeEditingSupport(TableViewer viewer) {
 		super(viewer);
-	    this.viewer = viewer;
-	    this.editor = new TextCellEditor(viewer.getTable());
+		this.viewer = viewer;
+		this.editor = new TextCellEditor(viewer.getTable());
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-	    return editor;
+		return editor;
 	}
 
 	@Override
 	protected boolean canEdit(Object element) {
-	    return true;
+		return true;
 	}
 
 	@Override
 	protected Object getValue(Object element) {
-	    return ((User) element).getAge();
+		return ((User) element).getAge();
 	}
 
 	@Override
 	protected void setValue(Object element, Object userInputValue) {
-		/*String temp = String.valueOf(userInputValue);
-		((User) element).setAge(Integer.parseInt(temp));*/
-		((User) element).setAge((Integer)userInputValue);
-	    viewer.update(element, null);
+		/*
+		 * String temp = String.valueOf(userInputValue); ((User)
+		 * element).setAge(Integer.parseInt(temp));
+		 */
+		((User) element).setAge((Integer) userInputValue);
+		viewer.update(element, null);
 	}
 }

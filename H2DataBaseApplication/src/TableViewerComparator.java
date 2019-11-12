@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 
 public class TableViewerComparator extends ViewerComparator {
 	 private int propertyIndex;
-	    private static final int DESCENDING = 1;
+	    private static final int DESCENDING = 1; //нисходящее направление
 	    private int direction = DESCENDING;
 
 	    public TableViewerComparator() {
@@ -18,10 +18,8 @@ public class TableViewerComparator extends ViewerComparator {
 
 	    public void setColumn(int column) {
 	        if (column == this.propertyIndex) {
-	            // Same column as last sort; toggle the direction
 	            direction = 1 - direction;
 	        } else {
-	            // New column; do an ascending sort
 	            this.propertyIndex = column;
 	            direction = DESCENDING;
 	        }
@@ -60,7 +58,6 @@ public class TableViewerComparator extends ViewerComparator {
 	        default:
 	            rc = 0;
 	        }
-	        // If descending order, flip the direction
 	        if (direction == DESCENDING) {
 	            rc = -rc;
 	        }
