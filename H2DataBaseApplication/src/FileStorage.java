@@ -172,7 +172,7 @@ public class FileStorage implements Storage {
 	private void writeUserInFile(User user, int id, boolean isUpdated) throws IOException {
 		calculateTabForUserData(user.getName(), user.getSurname());
 		writer = new FileWriter (file, true); 
-		String userLine = (id + 1) + "\t" + user.getName() + afterNameTab + user.getSurname() + afterSurnameTab + user.getAge() + "\t\t" + user.getIsActive() + "\r\n";
+		String userLine = (id + 1) + "\t" + user.getName() + afterNameTab + user.getSurname() + afterSurnameTab + user.getAge() + "\t\t" + user.isActive() + "\r\n";
 		writer.append(userLine); 
 		writer.close();
 			
@@ -296,7 +296,7 @@ public class FileStorage implements Storage {
 	public void updateUser (User user) throws IOException {
 		calculateTabForUserData(user.getName(), user.getSurname());
 		updateTextBeforeUser (user.getId());
-		writer.write(user.getId() + "\t" + user.getName() + afterNameTab + user.getSurname() + afterSurnameTab + user.getAge() + "\t\t" + user.getIsActive() + "\r\n");
+		writer.write(user.getId() + "\t" + user.getName() + afterNameTab + user.getSurname() + afterSurnameTab + user.getAge() + "\t\t" + user.isActive() + "\r\n");
 		updateTextAfterUser ();
 		
 		int dataIndex = 0;

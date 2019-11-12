@@ -76,7 +76,7 @@ public class User {
 	/**
 	 * Метод возвращает состояние активен/неактивен пользователя.
 	 */
-	public boolean getIsActive() {
+	public boolean isActive() {
 		return isActive;
 	}
 }

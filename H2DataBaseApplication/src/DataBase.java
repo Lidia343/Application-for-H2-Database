@@ -59,20 +59,20 @@ public class DataBase implements Storage {
 	
 	@Override
 	public void addUser(User user) throws SQLException {
-		String sql = "INSERT INTO Users VALUES (DEFAULT, '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.getIsActive() + ")"; 
+		String sql = "INSERT INTO Users VALUES (DEFAULT, '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
 		sendAddingRequest (sql);
 	}
 	
 	@Override
 	public void addUser(User user, int deletedId) throws SQLException {
 		System.out.println("yes");
-		String sql = "INSERT INTO Users VALUES (" + deletedId + ", '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.getIsActive() + ")"; 
+		String sql = "INSERT INTO Users VALUES (" + deletedId + ", '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
 	    sendAddingRequest (sql);
 	}
 	  
 	@Override
 	public void updateUser(User user) throws SQLException {
-		String sql = "UPDATE Users SET NAME='" + user.getName() + "', SURNAME = '" + user.getSurname() +  "', AGE = " + user.getAge() + ", ISACTIVE = " + user.getIsActive() + " WHERE ID=" + user.getId();
+		String sql = "UPDATE Users SET NAME='" + user.getName() + "', SURNAME = '" + user.getSurname() +  "', AGE = " + user.getAge() + ", ISACTIVE = " + user.isActive() + " WHERE ID=" + user.getId();
 		statement.executeUpdate(sql);
 	  }
 	  
