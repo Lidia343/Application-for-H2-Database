@@ -86,6 +86,12 @@ public class Graphics {
 	private Button deletingUserButton;
 	private Button deletingAllUsersButton;
 	
+	private AgeEditingSupport ageEditingSupport;
+	private TableViewerColumn nameColumn;
+	private TableViewerColumn surnameColumn;
+	private TableViewerColumn ageColumn;
+	private TableViewerColumn isActiveColumn;
+	
 	private StorageFactory storageFactory;
 	private Storage storage;
 	private boolean isDarkColor;
@@ -284,7 +290,7 @@ public class Graphics {
 	    tableViewer.addSelectionChangedListener(rowChangeSelection);
 	    
 	    
-	    tableViewer.setContentProvider(new ArrayContentProvider());
+	    tableViewer.setContentProvider(new UsersContentProvider());
 	   
 	    TableColumnLayout tableColumnLayout = new TableColumnLayout();
 	    tableComposite.setLayout(tableColumnLayout);
@@ -344,6 +350,11 @@ public class Graphics {
 		display.dispose(); 	
 	}
 	
+	private void setEditingSupportForColumns() {
+		ageEditingSupport = new AgeEditingSupport (tableViewer);
+		ageColumn.setEditingSupport(ageEditingSupport);
+	}
+	
 	private void createColumns() {
 		TableViewerColumn viewerColumn = createTableViewerColumn ("Код", 0);
 		viewerColumn.setLabelProvider(new CellLabelProvider() {
@@ -353,41 +364,40 @@ public class Graphics {
             }
         });
 		
-		viewerColumn = createTableViewerColumn ("Имя", 1);
-		viewerColumn.setLabelProvider(new CellLabelProvider() {
+		nameColumn = createTableViewerColumn ("Имя", 1);
+		nameColumn.setLabelProvider(new CellLabelProvider() {
             @Override
             public void update(ViewerCell cell) {
                 cell.setText(((User) cell.getElement()).getName());
             }
         });
-		viewerColumn.setEditingSupport(new NameEditingSupport(tableViewer));
+		nameColumn.setEditingSupport(new NameEditingSupport(tableViewer));
 		
-		viewerColumn = createTableViewerColumn ("Фамилия", 2);
-		viewerColumn.setLabelProvider(new CellLabelProvider() {
+		surnameColumn = createTableViewerColumn ("Фамилия", 2);
+		surnameColumn.setLabelProvider(new CellLabelProvider() {
             @Override
             public void update(ViewerCell cell) {
                 cell.setText(((User) cell.getElement()).getSurname());
             }
         });
-		viewerColumn.setEditingSupport(new SurnameEditingSupport(tableViewer));
+		surnameColumn.setEditingSupport(new SurnameEditingSupport(tableViewer));
 		
-		viewerColumn = createTableViewerColumn ("Возраст", 3);
-		viewerColumn.setLabelProvider(new CellLabelProvider() {
+		ageColumn = createTableViewerColumn ("Возраст", 3);
+		ageColumn.setLabelProvider(new CellLabelProvider() {
             @Override
             public void update(ViewerCell cell) {
                 cell.setText(Integer.toString((((User) cell.getElement()).getAge())));
             }
         });
-		viewerColumn.setEditingSupport(new AgeEditingSupport(tableViewer));
 		
-		viewerColumn = createTableViewerColumn ("Активен", 4);
-		viewerColumn.setLabelProvider(new CellLabelProvider() {
+		isActiveColumn = createTableViewerColumn ("Активен", 4);
+		isActiveColumn.setLabelProvider(new CellLabelProvider() {
             @Override
             public void update(ViewerCell cell) {
                 cell.setText(Boolean.toString((((User) cell.getElement()).isActive())));
             }
         });
-		viewerColumn.setEditingSupport(new IsActiveEditingSupport(tableViewer));
+		isActiveColumn.setEditingSupport(new IsActiveEditingSupport(tableViewer));
 	}
 	
 	/**
@@ -562,7 +572,7 @@ public class Graphics {
 	        };
 	        return selectionAdapter;
 	    }
-	
+	 
 	/**
 	 * Метод для устновки свойств компонента Table.
 	 * @param table - объект класса Table
@@ -623,10 +633,20 @@ public class Graphics {
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
 			}*/
+        	commandsExecuter = ageEditingSupport.getCommandsExecuter();
+			storage = ageEditingSupport.getStorage();
         }
     };
 
-	
+    KeyAdapter enterListener = new KeyAdapter() {
+		@Override
+		public void keyPressed (KeyEvent key) {
+			if ((int)key.character == 13) {
+				commandsExecuter = ageEditingSupport.getCommandsExecuter();
+				storage = ageEditingSupport.getStorage();
+			}
+		}
+	};
 	
 	/**
 	 * Метод устанавливает цвета всех компонентов в зависимости от текущего хранилища.
@@ -774,8 +794,8 @@ public class Graphics {
 					try {
 						storage.closeStorage();
 					} catch (Exception e) {
-						//createMessageBox (SWT.ERROR, e.getMessage());
-						//return;
+						createMessageBox (SWT.ERROR, e.getMessage());
+						return;
 					}
 				} else isConnection = true;
 				
@@ -1056,8 +1076,11 @@ public class Graphics {
 			storage.createStorageObject();
 			ModelProvider modelProvider = new ModelProvider(storage);
 			//tableViewer.setInput(storage.getUsersDataSet(true, false));
-			tableViewer.setInput(modelProvider.getUsersData());
+			tableViewer.setInput(modelProvider);
 			tableViewer.setComparator(comparator);
+			setEditingSupportForColumns();
+			ageEditingSupport.setCommandsExecuter(commandsExecuter);
+			ageEditingSupport.setStorage(storage);
 			
 			showTable(true);
 		} catch (Exception e) {

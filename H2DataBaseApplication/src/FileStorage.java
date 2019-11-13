@@ -352,7 +352,7 @@ public class FileStorage implements Storage {
 	@Override
 	public void closeStorage() throws IOException {
 		reader.close();
-		idReader.close();
+		if (idReader != null) idReader.close();
 		writer.close();
 	}
 }

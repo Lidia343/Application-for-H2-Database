@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.core.commands_3.9.400.v20190516-1358.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.10.400.v20190516-1504.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.jface_3.16.0.v20190528-0922.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jface_3.16.0.v20190528-0922.jar" sourcepath="D:/jdk8/javafx-src.zip"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.osgi_3.14.0.v20190517-1309.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.ui.workbench_3.115.0.v20190521-1602.jar"/>
 	<classpathentry kind="lib" path="lib/swt.jar"/>
