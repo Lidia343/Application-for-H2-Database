@@ -378,7 +378,7 @@ public class Graphics {
                 cell.setText(Integer.toString((((User) cell.getElement()).getAge())));
             }
         });
-		//viewerColumn.setEditingSupport(new AgeEditingSupport(tableViewer));
+		viewerColumn.setEditingSupport(new AgeEditingSupport(tableViewer));
 		
 		viewerColumn = createTableViewerColumn ("Активен", 4);
 		viewerColumn.setLabelProvider(new CellLabelProvider() {
@@ -820,7 +820,8 @@ public class Graphics {
 			} catch (Exception e) {
 				createMessageBox (SWT.ERROR, e.getMessage());
 			}
-			tableViewer.refresh();
+			//tableViewer.refresh();
+			showTable(false);
 			if ((tableItemCount + userNumbers) < 9) shell.pack();
 		}
 	};
@@ -849,7 +850,7 @@ public class Graphics {
 				
 				try {
 					commandsExecuter.execute(new CommandAdd (storage, user));
-					tableViewer.refresh();
+					showTable(false);
 					//tableViewer.refresh();
 					clearTextFields();
 					if ((table.getItemCount() + 1) < 9) shell.pack();
@@ -936,7 +937,7 @@ public class Graphics {
 						return;
 					}
 					clearTextFields();
-					tableViewer.refresh();
+					showTable(true);
 					//tableViewer.refresh();
 				} else return;
 			}
@@ -959,7 +960,7 @@ public class Graphics {
 						return;
 					}
 					clearTextFields();
-					tableViewer.refresh();
+					showTable(true);
 					//tableViewer.refresh();
 				} else return;
 			}
@@ -1006,7 +1007,8 @@ public class Graphics {
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;
 			
-				tableViewer.refresh();
+				//tableViewer.refresh();
+				showTable(false);
 				if (table.getItemCount() == 0) storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
@@ -1033,7 +1035,8 @@ public class Graphics {
 				commandsExecuter.execute(new CommandDeleteAll (storage));
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;
-				tableViewer.refresh();
+				showTable(false);
+				//tableViewer.refresh();
 				storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
@@ -1052,12 +1055,26 @@ public class Graphics {
 			setShell (shell);
 			storage.createStorageObject();
 			ModelProvider modelProvider = new ModelProvider(storage);
+			//tableViewer.setInput(storage.getUsersDataSet(true, false));
 			tableViewer.setInput(modelProvider.getUsersData());
 			tableViewer.setComparator(comparator);
-			tableViewer.refresh();
+			
+			showTable(true);
 		} catch (Exception e) {
 			createMessageBox(SWT.ERROR, e.getMessage());
 			return;
 		}
+	}
+	
+	/**
+	 * Метод для вывода таблицы с текущими значениями строк в БД.
+	 */
+	private void showTable(boolean isAfterDeleteCanceling) {
+		tableViewer.refresh();
+		/*try {
+			tableViewer.setInput(storage.getUsersDataSet(isAfterDeleteCanceling, false));
+		} catch (Exception e) {
+			createMessageBox (SWT.ERROR, e.getMessage());
+		}*/
 	}
 }

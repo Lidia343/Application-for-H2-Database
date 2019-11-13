@@ -26,16 +26,12 @@ public class AgeEditingSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(Object element) {
-		return ((User) element).getAge();
+		return Integer.toString(((User) element).getAge());
 	}
 
 	@Override
 	protected void setValue(Object element, Object userInputValue) {
-		/*
-		 * String temp = String.valueOf(userInputValue); ((User)
-		 * element).setAge(Integer.parseInt(temp));
-		 */
-		((User) element).setAge((Integer) userInputValue);
+		((User) element).setAge(Integer.parseInt(String.valueOf(userInputValue)));
 		viewer.update(element, null);
 	}
 }

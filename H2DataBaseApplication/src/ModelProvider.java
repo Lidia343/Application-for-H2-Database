@@ -1,14 +1,14 @@
 import java.util.List;
 
 public class ModelProvider {
-
-	private List<User> usersData;
 	
-	public ModelProvider(Storage storage) throws Exception {
-		usersData = storage.getUsersDataSet(false, false);
+	private Storage storage;
+	
+	public ModelProvider(Storage storage) {
+		this.storage = storage;
 	}
 	
-	public List<User> getUsersData(){
-		return usersData;
+	public List<User> getUsersData() throws Exception {
+		return storage.getUsersDataSet(false, false);
 	}
 }
