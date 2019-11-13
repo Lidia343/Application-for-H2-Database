@@ -2,6 +2,9 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -32,6 +35,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
+
 
 /**
  * Класс предназначен для создания интерфейса программы и реализации взаимодействия с пользователем через данный интерфейс.
@@ -277,6 +281,8 @@ public class Graphics {
 		createColumns();
 	    table = tableViewer.getTable();
 	    setTable(table, false);
+	    tableViewer.addSelectionChangedListener(rowChangeSelection);
+	    
 	    
 	    tableViewer.setContentProvider(new ArrayContentProvider());
 	   
@@ -383,7 +389,7 @@ public class Graphics {
         });
 		viewerColumn.setEditingSupport(new IsActiveEditingSupport(tableViewer));
 	}
-
+	
 	/**
 	 * Метод для установки свойств компонента shell.
 	 * @param shell - объект класса Shell
@@ -606,6 +612,22 @@ public class Graphics {
 		return errorChecker;
 	}
 	
+	ISelectionChangedListener rowChangeSelection = new ISelectionChangedListener() {
+        @Override
+        public void selectionChanged(SelectionChangedEvent event) {
+            /*IStructuredSelection selection = tableViewer.getStructuredSelection();
+            User user = (User) selection.getFirstElement();
+            System.out.println(user.getSurname());
+			try {
+				commandsExecuter.execute(new CommandUpdate(storage, user));
+			} catch (Exception e) {
+				createMessageBox(SWT.ERROR, e.getMessage());
+			}*/
+        }
+    };
+
+	
+	
 	/**
 	 * Метод устанавливает цвета всех компонентов в зависимости от текущего хранилища.
 	 */
@@ -798,8 +820,7 @@ public class Graphics {
 			} catch (Exception e) {
 				createMessageBox (SWT.ERROR, e.getMessage());
 			}
-			//tableViewer.refresh();
-			showTable(false);
+			tableViewer.refresh();
 			if ((tableItemCount + userNumbers) < 9) shell.pack();
 		}
 	};
@@ -828,7 +849,7 @@ public class Graphics {
 				
 				try {
 					commandsExecuter.execute(new CommandAdd (storage, user));
-					showTable(false);
+					tableViewer.refresh();
 					//tableViewer.refresh();
 					clearTextFields();
 					if ((table.getItemCount() + 1) < 9) shell.pack();
@@ -915,7 +936,7 @@ public class Graphics {
 						return;
 					}
 					clearTextFields();
-					showTable(true);
+					tableViewer.refresh();
 					//tableViewer.refresh();
 				} else return;
 			}
@@ -938,7 +959,7 @@ public class Graphics {
 						return;
 					}
 					clearTextFields();
-					showTable(true);
+					tableViewer.refresh();
 					//tableViewer.refresh();
 				} else return;
 			}
@@ -985,8 +1006,7 @@ public class Graphics {
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;
 			
-				//tableViewer.refresh();
-				showTable(false);
+				tableViewer.refresh();
 				if (table.getItemCount() == 0) storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
@@ -1013,8 +1033,7 @@ public class Graphics {
 				commandsExecuter.execute(new CommandDeleteAll (storage));
 				titleLabel.setText("Добавление пользователя:");
 				rowIsNotSelected = true;
-				showTable(false);
-				//tableViewer.refresh();
+				tableViewer.refresh();
 				storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
@@ -1032,24 +1051,13 @@ public class Graphics {
 			shellProperties = shellPropertiesFactory.getShellProperties(storage);
 			setShell (shell);
 			storage.createStorageObject();
-			tableViewer.setInput(storage.getUsersDataSet(true, false));
+			ModelProvider modelProvider = new ModelProvider(storage);
+			tableViewer.setInput(modelProvider.getUsersData());
 			tableViewer.setComparator(comparator);
-			//tableViewer.refresh();
-			showTable(true);
+			tableViewer.refresh();
 		} catch (Exception e) {
 			createMessageBox(SWT.ERROR, e.getMessage());
 			return;
-		}
-	}
-	
-	/**
-	 * Метод для вывода таблицы с текущими значениями строк в БД.
-	 */
-	private void showTable(boolean isAfterDeleteCanceling) {
-		try {
-			tableViewer.setInput(storage.getUsersDataSet(isAfterDeleteCanceling, false));
-		} catch (Exception e) {
-			createMessageBox (SWT.ERROR, e.getMessage());
 		}
 	}
 }
