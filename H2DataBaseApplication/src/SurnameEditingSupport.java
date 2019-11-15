@@ -1,27 +1,9 @@
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 
-public class SurnameEditingSupport extends EditingSupport {
+public class SurnameEditingSupport extends UserEditingSupport {
 	
-	private final TableViewer viewer;
-	private final CellEditor editor;
-
-	public SurnameEditingSupport(TableViewer viewer) {
-		super(viewer);
-	    this.viewer = viewer;
-	    this.editor = new TextCellEditor(viewer.getTable());
-	}
-
-	@Override
-	protected CellEditor getCellEditor(Object element) {
-	    return editor;
-	}
-
-	@Override
-	protected boolean canEdit(Object element) {
-	    return true;
+	public SurnameEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
+		super(viewer, userEditingListener, errorInputListener);
 	}
 
 	@Override
@@ -31,7 +13,16 @@ public class SurnameEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object userInputValue) {
-	    ((User) element).setSurname(String.valueOf(userInputValue));
-	    viewer.update(element, null);
+		ErrorChecker surnameChecker = new ErrorChecker();
+		surnameChecker.checkName(String.valueOf(userInputValue));
+		if (!surnameChecker.getErrorMesssage().equals("")) {
+			errorInputListener.createErrorMessage(surnameChecker.getErrorMesssage());
+			return;
+		}
+		User prevUser = (User)element;
+		User nextUser = (User)element;
+		nextUser.setSurname(String.valueOf(userInputValue));
+	    userEditingListener.changeUserInStorage(prevUser, nextUser);
+	    viewer.update(nextUser, null);
 	}
 }

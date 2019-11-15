@@ -1,27 +1,9 @@
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 
-public class NameEditingSupport extends EditingSupport {
+public class NameEditingSupport extends UserEditingSupport {
 	
-	private final TableViewer viewer;
-	private final CellEditor editor;
-
-	public NameEditingSupport(TableViewer viewer) {
-		super(viewer);
-	    this.viewer = viewer;
-	    this.editor = new TextCellEditor(viewer.getTable());
-	}
-
-	@Override
-	protected CellEditor getCellEditor(Object element) {
-	    return editor;
-	}
-
-	@Override
-	protected boolean canEdit(Object element) {
-	    return true;
+	public NameEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
+		super(viewer, userEditingListener, errorInputListener);
 	}
 
 	@Override
@@ -31,7 +13,16 @@ public class NameEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object userInputValue) {
-	    ((User) element).setName(String.valueOf(userInputValue));
-	    viewer.update(element, null);
+		ErrorChecker nameChecker = new ErrorChecker();
+		nameChecker.checkName(String.valueOf(userInputValue));
+		if (!nameChecker.getErrorMesssage().equals("")) {
+			errorInputListener.createErrorMessage(nameChecker.getErrorMesssage());
+			return;
+		}
+		User prevUser = (User)element;
+		User nextUser = (User)element;
+	    nextUser.setName(String.valueOf(userInputValue));
+	    userEditingListener.changeUserInStorage(prevUser, nextUser);
+	    viewer.update((Object)nextUser, null);
 	}
 }

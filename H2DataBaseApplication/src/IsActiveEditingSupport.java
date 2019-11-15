@@ -1,26 +1,17 @@
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 
-public class IsActiveEditingSupport extends EditingSupport {
+public class IsActiveEditingSupport extends UserEditingSupport {
 
-	private final TableViewer viewer;
-
-	public IsActiveEditingSupport(TableViewer viewer) {
-		super(viewer);
-	    this.viewer = viewer;
+	public IsActiveEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener) {
+		super(viewer, userEditingListener, null);
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
 		return new CheckboxCellEditor(null, SWT.CHECK | SWT.READ_ONLY);
-	}
-
-	@Override
-	protected boolean canEdit(Object element) {
-		return true;
 	}
 
 	@Override
@@ -31,8 +22,10 @@ public class IsActiveEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		User user = (User) element;
-	    user.setIsActive((Boolean) value);
-	    viewer.update(element, null);
+		User prevUser = (User)element;
+		User nextUser = (User)element;
+		nextUser.setIsActive((Boolean) value);
+		userEditingListener.changeUserInStorage(prevUser, nextUser);
+	    viewer.update((Object)nextUser, null);
 	}
 }

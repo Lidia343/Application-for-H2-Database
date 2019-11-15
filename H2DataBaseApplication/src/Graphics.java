@@ -1,13 +1,12 @@
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -82,11 +81,16 @@ public class Graphics {
 	private Button addingUserButton;
 	private Button isActiveButton;
 	private Table table;
-	private Button updatingUserButton;
 	private Button deletingUserButton;
 	private Button deletingAllUsersButton;
 	
+	private final String defaultDatabaseName = "jdbc:h2:~/test";
+	private final String defaultFileName = "file.txt";
+	
 	private AgeEditingSupport ageEditingSupport;
+	private NameEditingSupport nameEditingSupport;
+	private SurnameEditingSupport surnameEditingSupport;
+	private IsActiveEditingSupport isActiveEditingSupport;
 	private TableViewerColumn nameColumn;
 	private TableViewerColumn surnameColumn;
 	private TableViewerColumn ageColumn;
@@ -98,7 +102,6 @@ public class Graphics {
 	
 	private int selectedRowIndex;
 	private int selectedId;
-	private boolean rowIsNotSelected;
 	private boolean isConnection;
 	
 	private CommandsExecuter commandsExecuter;
@@ -124,8 +127,6 @@ public class Graphics {
 		
 		shell.addKeyListener(cancelPressingListener);
 		shell.addKeyListener(doubleCancelPressingListener);
-		
-		rowIsNotSelected = true;
 		
 		paleForeColor = new Color (display, 170, 250, 170); 
 		lightForeColor = new Color (display, 100, 250, 100);
@@ -186,8 +187,8 @@ public class Graphics {
 		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
 		combo.setLayoutData(gridData);
 		setCombo (combo);
-		combo.add("jdbc:h2:~/test");
-		combo.add("file.txt");
+		combo.add(defaultDatabaseName);
+		combo.add(defaultFileName);
 		combo.addModifyListener(comboModification);
 		
 		openingStorageButton = new Button (heightComposite, SWT.PUSH);
@@ -287,11 +288,10 @@ public class Graphics {
 		createColumns();
 	    table = tableViewer.getTable();
 	    setTable(table, false);
-	    tableViewer.addSelectionChangedListener(rowChangeSelection);
-	    
 	    
 	    tableViewer.setContentProvider(new UsersContentProvider());
-	   
+	    tableViewer.addSelectionChangedListener(rowSelection);
+	    
 	    TableColumnLayout tableColumnLayout = new TableColumnLayout();
 	    tableComposite.setLayout(tableColumnLayout);
 	    	
@@ -308,13 +308,7 @@ public class Graphics {
 		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
 		downComposite.setBackground(backColor);
 		downComposite.setLayoutData(gridData);
-		createGridLayout (downComposite, 3);
-	    
-		updatingUserButton = new Button (downComposite, SWT.PUSH);
-		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
-		updatingUserButton.setLayoutData(gridData);
-		setButton(updatingUserButton, "Изменить"); 
-		updatingUserButton.addSelectionListener(updatingUserSelection);
+		createGridLayout (downComposite, 2);
 		
 		deletingUserButton = new Button (downComposite, SWT.PUSH);
 		gridData = createGridData (SWT.RIGHT, true, 0, 0, 500, 0);
@@ -353,13 +347,22 @@ public class Graphics {
 	private void setEditingSupportForColumns() {
 		ageEditingSupport = new AgeEditingSupport (tableViewer, userEditingListener, errorInputListener);
 		ageColumn.setEditingSupport(ageEditingSupport);
+		
+		nameEditingSupport = new NameEditingSupport(tableViewer, userEditingListener, errorInputListener);
+		nameColumn.setEditingSupport(nameEditingSupport);
+		
+		surnameEditingSupport = new SurnameEditingSupport(tableViewer, userEditingListener, errorInputListener);
+		surnameColumn.setEditingSupport(surnameEditingSupport);
+		
+		isActiveEditingSupport = new IsActiveEditingSupport(tableViewer, userEditingListener);
+		isActiveColumn.setEditingSupport(isActiveEditingSupport);
 	}
 	
 	private TableViewerUserEditingListener userEditingListener = new TableViewerUserEditingListener () {
 		@Override
-		public void changeUserInStorage(User user) {
+		public void changeUserInStorage(User prevUser, User nextUser) {
 			try {
-				commandsExecuter.execute(new CommandUpdate (storage, user));
+				commandsExecuter.execute(new CommandUpdate (storage, prevUser, nextUser));//Убрать prev!!!!!!!!!!!!
 			} catch (Exception e) {
 				createMessageBox (SWT.ERROR, e.getMessage());
 			}
@@ -389,7 +392,6 @@ public class Graphics {
                 cell.setText(((User) cell.getElement()).getName());
             }
         });
-		nameColumn.setEditingSupport(new NameEditingSupport(tableViewer));
 		
 		surnameColumn = createTableViewerColumn ("Фамилия", 2);
 		surnameColumn.setLabelProvider(new CellLabelProvider() {
@@ -398,7 +400,6 @@ public class Graphics {
                 cell.setText(((User) cell.getElement()).getSurname());
             }
         });
-		surnameColumn.setEditingSupport(new SurnameEditingSupport(tableViewer));
 		
 		ageColumn = createTableViewerColumn ("Возраст", 3);
 		ageColumn.setLabelProvider(new CellLabelProvider() {
@@ -415,7 +416,6 @@ public class Graphics {
                 cell.setText(Boolean.toString((((User) cell.getElement()).isActive())));
             }
         });
-		isActiveColumn.setEditingSupport(new IsActiveEditingSupport(tableViewer));
 	}
 	
 	/**
@@ -521,7 +521,6 @@ public class Graphics {
 	 * @param editable - редактируемость
 	 */
 	private void setText (Text text, boolean editable) { 
-		
 		text.setEditable(editable); 
 		text.setBackground(backColor);
 		text.setForeground(lightForeColor);
@@ -640,32 +639,6 @@ public class Graphics {
 		return errorChecker;
 	}
 	
-	ISelectionChangedListener rowChangeSelection = new ISelectionChangedListener() {
-        @Override
-        public void selectionChanged(SelectionChangedEvent event) {
-            /*IStructuredSelection selection = tableViewer.getStructuredSelection();
-            User user = (User) selection.getFirstElement();
-            System.out.println(user.getSurname());
-			try {
-				commandsExecuter.execute(new CommandUpdate(storage, user));
-			} catch (Exception e) {
-				createMessageBox(SWT.ERROR, e.getMessage());
-			}*/
-        	/*commandsExecuter = ageEditingSupport.getCommandsExecuter();
-			storage = ageEditingSupport.getStorage();*/
-        }
-    };
-
-    KeyAdapter enterListener = new KeyAdapter() {
-		@Override
-		public void keyPressed (KeyEvent key) {
-			if ((int)key.character == 13) {
-				/*commandsExecuter = ageEditingSupport.getCommandsExecuter();
-				storage = ageEditingSupport.getStorage();*/
-			}
-		}
-	};
-	
 	/**
 	 * Метод устанавливает цвета всех компонентов в зависимости от текущего хранилища.
 	 */
@@ -679,7 +652,7 @@ public class Graphics {
 		setText (nameText); setText (surnameText); setText (ageText); setText (userNumbersText);
 		setCombo (combo); 
 		setButton(openingStorageButton, false); setButton(addingUserButton, false);
-		setButton(updatingUserButton, false); setButton(deletingUserButton, false);
+		setButton(deletingUserButton, false);
 		setButton(isActiveButton, false); setButton(darkThemeButton, false);
 		setButton(lightThemeButton, false);  setButton (generatingButton, false);
 		setButton (deletingAllUsersButton, false); setTable(table, true);		
@@ -754,13 +727,11 @@ public class Graphics {
 	 * @param b2 - объект класса Button
 	 * @param b3 - объект класса Button
 	 */
-	private void setButtonsDefaultColor(Button b1, Button b2, Button b3) {
+	private void setButtonsDefaultColor(Button b1, Button b2) {
 		b1.setBackground(backColor);
 		b2.setBackground(backColor);
-		b3.setBackground(backColor);
 		b1.setForeground(paleForeColor);
 		b2.setForeground(paleForeColor);
-		b3.setForeground(paleForeColor);
 	}
 	
 	/**
@@ -775,22 +746,17 @@ public class Graphics {
 				if (event.toString().charAt(i) == ' ') buffer = ""; else
 					buffer += Character.toString (event.toString().charAt(i));
 					if (buffer.equals("{Открыть}")) {
-						setButtonsDefaultColor(updatingUserButton, deletingUserButton, addingUserButton);
+						setButtonsDefaultColor(deletingUserButton, addingUserButton);
 						setButton (openingStorageButton, true);
 						break;
 					}
 					if (buffer.equals("{Добавить}")) {
-						setButtonsDefaultColor(updatingUserButton, deletingUserButton, openingStorageButton);
+						setButtonsDefaultColor(deletingUserButton, openingStorageButton);
 						setButton (addingUserButton, true);
 						break;
 					}
-					if (buffer.equals("{Изменить}")) {
-						setButtonsDefaultColor(addingUserButton, deletingUserButton, openingStorageButton);
-						setButton (updatingUserButton, true);
-						break;
-					}
 					if (buffer.equals("{Удалить}")) {
-						setButtonsDefaultColor(updatingUserButton, addingUserButton, openingStorageButton);
+						setButtonsDefaultColor(addingUserButton, openingStorageButton);
 						setButton (deletingUserButton, true);
 						break;
 					}
@@ -805,7 +771,7 @@ public class Graphics {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
 			
-			if (!(combo.getText().equals(combo.getItem(0))) && !(combo.getText().equals(combo.getItem(1))) && !(combo.getText().equals("")))
+			if (!(combo.getText().equals(defaultDatabaseName)) && !(combo.getText().equals(defaultFileName)) && !(combo.getText().equals("")))
 				createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
 				if (isConnection) {
 					commandsExecuter.reset();
@@ -827,6 +793,27 @@ public class Graphics {
 			}
 		}
 	};
+	
+	private IStructuredSelection selection;
+	private User user;
+	
+	private ISelectionChangedListener rowSelection = new ISelectionChangedListener() {
+		
+		@Override
+		public void selectionChanged(SelectionChangedEvent item) {
+			selection = tableViewer.getStructuredSelection();
+			user = (User) selection.getFirstElement();
+			//if (user != null) System.out.println(user.getName());
+		}
+	};
+	
+	private SelectionChangedListener selectionChanged = new SelectionChangedListener() {
+		@Override
+		public User getPrevUser() {
+			
+			return null;
+		}
+	}; 
 	
 	/**
 	 * Слушатель нажатия кнопки "Сгенерировать случайных пользователей"
@@ -856,8 +843,7 @@ public class Graphics {
 			} catch (Exception e) {
 				createMessageBox (SWT.ERROR, e.getMessage());
 			}
-			//tableViewer.refresh();
-			showTable(false);
+			tableViewer.refresh();
 			if ((tableItemCount + userNumbers) < 9) shell.pack();
 		}
 	};
@@ -888,50 +874,12 @@ public class Graphics {
 				
 				try {
 					commandsExecuter.execute(new CommandAdd (storage, user));
-					showTable(false);
-					//tableViewer.refresh();
+					tableViewer.refresh();
 					clearTextFields();
 					if ((table.getItemCount() + 1) < 9) shell.pack();
-					rowIsNotSelected = true;
 				} catch(Exception e) { 		
 					createMessageBox (SWT.ERROR, e.getMessage());
 				} 	
-			} else createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
-		}
-	};
-	
-	/**
-	 * Слушатель нажатия кнопки "Изменить".
-	 */
-	SelectionAdapter updatingUserSelection = new SelectionAdapter() {
-		@Override
-		public void widgetSelected(SelectionEvent event) {
-			
-			if (!isConnection) {
-				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
-				return;
-			}
-			if (rowIsNotSelected) {
-				createMessageBox(SWT.ICON_WARNING, "Пользователь не выбран.");
-				return;
-			}
-			ErrorChecker errorChecker = createErrorChecker(false);
-			if (errorChecker.getMessageCode() == SWT.OK) {
-				User user = new User();
-				user.setId(selectedId);
-				user.setName(nameText.getText());
-				user.setSurname(surnameText.getText());
-				user.setAge(Integer.parseInt(ageText.getText()));
-				user.setIsActive(isActiveButton.getSelection());
-				
-				try {
-					commandsExecuter.execute(new CommandUpdate(storage, user));
-				} catch (Exception e) {
-					createMessageBox(SWT.ERROR, e.getMessage());
-					return;
-				}
-
-				table.getItem(selectedRowIndex).setText(new String[] {Integer.toString(user.getId()), user.getName(), user.getSurname(), Integer.toString(user.getAge()), Boolean.toString(user.isActive())});
 			} else createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
 		}
 	};
@@ -943,7 +891,6 @@ public class Graphics {
 		@Override
 		public void widgetSelected(SelectionEvent event ) {
 		
-			rowIsNotSelected = false;
 			selectedRowIndex = table.indexOf((TableItem)event.item);
 			selectedId = Integer.parseInt(table.getItem(selectedRowIndex).getText(0));
 			String name = table.getItem(selectedRowIndex).getText(1), 
@@ -975,8 +922,7 @@ public class Graphics {
 						return;
 					}
 					clearTextFields();
-					showTable(true);
-					//tableViewer.refresh();
+					tableViewer.refresh();
 				} else return;
 			}
 		}
@@ -998,8 +944,7 @@ public class Graphics {
 						return;
 					}
 					clearTextFields();
-					showTable(true);
-					//tableViewer.refresh();
+					tableViewer.refresh();
 				} else return;
 			}
 		}
@@ -1043,10 +988,8 @@ public class Graphics {
 				commandsExecuter.execute(new CommandDelete (storage, user));
 			
 				titleLabel.setText("Добавление пользователя:");
-				rowIsNotSelected = true;
 			
-				//tableViewer.refresh();
-				showTable(false);
+				tableViewer.refresh();
 				if (table.getItemCount() == 0) storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
@@ -1072,9 +1015,7 @@ public class Graphics {
 			try {
 				commandsExecuter.execute(new CommandDeleteAll (storage));
 				titleLabel.setText("Добавление пользователя:");
-				rowIsNotSelected = true;
-				showTable(false);
-				//tableViewer.refresh();
+				tableViewer.refresh();
 				storage.updateStorageObject();
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
@@ -1088,34 +1029,19 @@ public class Graphics {
 	private void setStorage() {
 		storage = storageFactory.getStorage(combo.getText());
 		try {
+			if (combo.getText().equals("")) combo.setText(defaultDatabaseName);
 			storage.setStorage(); 
 			shellProperties = shellPropertiesFactory.getShellProperties(storage);
 			setShell (shell);
 			storage.createStorageObject();
 			ModelProvider modelProvider = new ModelProvider(storage);
-			//tableViewer.setInput(storage.getUsersDataSet(true, false));
 			tableViewer.setInput(modelProvider);
 			tableViewer.setComparator(comparator);
 			setEditingSupportForColumns();
-			//ageEditingSupport.setCommandsExecuter(commandsExecuter);
-			//ageEditingSupport.setStorage(storage);
-			
-			showTable(true);
+			tableViewer.refresh();
 		} catch (Exception e) {
 			createMessageBox(SWT.ERROR, e.getMessage());
 			return;
 		}
-	}
-	
-	/**
-	 * Метод для вывода таблицы с текущими значениями строк в БД.
-	 */
-	private void showTable(boolean isAfterDeleteCanceling) {
-		tableViewer.refresh();
-		/*try {
-			tableViewer.setInput(storage.getUsersDataSet(isAfterDeleteCanceling, false));
-		} catch (Exception e) {
-			createMessageBox (SWT.ERROR, e.getMessage());
-		}*/
 	}
 }

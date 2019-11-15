@@ -4,7 +4,7 @@ import java.util.List;
 /**
  * Класс предназначен для реализации команды обновления пользователя.
  */
-public class CommandUpdate implements Command{
+public class CommandUpdate implements Command {
 	
 	private Storage storage;
 	private User prevUser;
@@ -15,22 +15,24 @@ public class CommandUpdate implements Command{
 	 * @param storage - хранилище данных пользователей
 	 * @param user - объект класса User
 	 */
-	public CommandUpdate (Storage storage, User user) {
+	public CommandUpdate (Storage storage, User prevUser, User nextUser) {
 		this.storage = storage;
-		nextUser = user;
-		prevUser = null;
+		this.prevUser = prevUser;
+		this.nextUser = nextUser;
 	}
 	
 	@Override
 	public void execute() throws Exception {
-		List<User> users = new ArrayList<>();
-		users = storage.getUsersDataSet(false, false);
-		for (User temp : users) 
-			if (temp.getId() == nextUser.getId()) {
+		//List<User> users = new ArrayList<>();
+		//users = storage.getUsersDataSet(false, false);
+		//for (User temp : users) 
+			//if (temp.getId() == nextUser.getId()) {
 				storage.updateUser(nextUser);
-				prevUser = temp;
-				break;
-			}
+				//prevUser = temp;
+				//prevUser = selectionChangedListener.getPrevUser();
+				//System.out.println(prevUser.getName());
+				//break;
+			//}
 	}
 	
 	@Override public void undo() throws Exception {

@@ -1,31 +1,9 @@
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 
-public class AgeEditingSupport extends EditingSupport {
-
-	private final TableViewer viewer;
-	private final CellEditor editor;
-	private TableViewerUserEditingListener userEditingListener;
-	private ErrorInputListener errorInputListener;
+public class AgeEditingSupport extends UserEditingSupport {
 
 	public AgeEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
-		super(viewer);
-		this.viewer = viewer;
-		this.editor = new TextCellEditor(viewer.getTable());
-		this.userEditingListener = userEditingListener;
-		this.errorInputListener = errorInputListener;
-	}
-
-	@Override
-	protected CellEditor getCellEditor(Object element) {
-		return editor;
-	}
-
-	@Override
-	protected boolean canEdit(Object element) {
-		return true;
+		super(viewer, userEditingListener, errorInputListener);
 	}
 
 	@Override
@@ -41,8 +19,10 @@ public class AgeEditingSupport extends EditingSupport {
 			errorInputListener.createErrorMessage(ageChecker.getErrorMesssage());
 			return;
 		}
-		((User) element).setAge(Integer.parseInt(String.valueOf(userInputValue)));
-		userEditingListener.changeUserInStorage((User) element);
-		viewer.update(element, null);
+		User prevUser = (User) element;
+		User nextUser = (User) element;
+		nextUser.setAge(Integer.parseInt(String.valueOf(userInputValue)));
+		userEditingListener.changeUserInStorage(prevUser, nextUser);
+		viewer.update((Object)nextUser, null);
 	}
 }
