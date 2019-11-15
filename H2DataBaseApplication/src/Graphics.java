@@ -624,12 +624,12 @@ public class Graphics {
 	private ErrorChecker createErrorChecker(boolean isOnlyUserNumbers) {
 		ErrorChecker errorChecker = new ErrorChecker();
 		if (isOnlyUserNumbers) {
-			errorChecker.setConfig(userNumbersText.getText());
-			errorChecker.checkUserInput(true);
+			errorChecker.checkUserNumbers((userNumbersText.getText()));
 			return errorChecker;
 		} 
-		errorChecker.setConfig(nameText.getText(), surnameText.getText(), ageText.getText());
-		errorChecker.checkUserInput(false);
+		errorChecker.checkName(nameText.getText());
+		errorChecker.checkName(surnameText.getText());
+		errorChecker.checkAge(ageText.getText());
 		return errorChecker;
 	}
 	
@@ -837,8 +837,6 @@ public class Graphics {
 				return;
 			}
 			ErrorChecker errorChecker = createErrorChecker (true);
-			errorChecker.setConfig(userNumbersText.getText());
-			errorChecker.checkUserInput(true);
 			if (errorChecker.getMessageCode() != SWT.OK) {
 				createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
 				return;

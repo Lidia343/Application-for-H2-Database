@@ -5,54 +5,23 @@ import org.eclipse.swt.SWT;
  */
 public class ErrorChecker {
 
-	private String name;
-	private String surname;
-	private String age;
-	private String userNumbers;
 	private String errorMessage;
 	private int messageCode;
 	
 	public ErrorChecker () {
-		name = "";
-		surname = "";
-		age = "";
-		userNumbers = "";
+		errorMessage = "";
+		messageCode = SWT.OK;
 	}
 	
-	/**
-	 *  Метод для определения ошибок ввода.
-	 *  @param isOnlyUserNumbers - проверять только ввод количества пользователей / не проверять ввод количества пользователей
-	 */
-	public void checkUserInput(boolean isOnlyUserNumbers) {
-		if (isOnlyUserNumbers) {
-			if (userNumbers.equals("")) {
-				messageCode = SWT.ICON_WARNING;
-				errorMessage = "Все поля должны быть заполнены";
-				return;
-			}
-			try { 
-				Integer.parseInt(userNumbers);
-			} catch (NumberFormatException e) {
-				messageCode = SWT.ICON_WARNING; 
-				errorMessage = "Введите целое число";
-				return;
-			}
-			return;
-		}
-		if (name.equals("") || surname.equals("") || age.equals("")) {
-			messageCode = SWT.ICON_WARNING;
-			errorMessage = "Все поля должны быть заполнены";
-			return;
-		}
-		if (!isName(name)) {
-			errorMessage = "Значение поля \"Имя\" должно содержать только символы русского или английского алфавита. Длина имени не должна превышать 50 символов и быть менее 2 символов.";
-			return;
-		}
-		if (!isName(surname)) {
-			errorMessage = "Значение поля \"Фамилия\" должно содержать только символы русского или английского алфавита. Длина фамилии не должна превышать 50 символов и быть менее 2 символов.";
-			return;
-		}
-		
+	public void checkName(String name) {
+		if (isEmptyInput (name)) return;
+		if (name != null) 
+			if (!isName(name)) 
+				errorMessage = "Значение поля \"Имя\"/\"Фамилия\" должно содержать только символы русского или английского алфавита. Длина имени/фамилии не должна превышать 50 символов и быть менее 2 символов.";
+	}
+	
+	public void checkAge (String age) {
+		if (isEmptyInput (age)) return;
 		int intAge = 18;
 		try { 
 			intAge = Integer.parseInt(age);
@@ -64,8 +33,28 @@ public class ErrorChecker {
 		if (!((intAge >= 18) && (intAge <= 200))){ 
 			messageCode = SWT.ICON_WARNING;
 			errorMessage = "Значение поля \"Возраст\" должно быть целым числом в пределах от 18 до 200.";
-			return;
 		}
+	}
+	
+	public void checkUserNumbers(String userNumbers) {
+		if (isEmptyInput (userNumbers)) return;
+		if (userNumbers != null) {
+			try { 
+				Integer.parseInt(userNumbers);
+			} catch (NumberFormatException e) {
+				messageCode = SWT.ICON_WARNING; 
+				errorMessage = "Введите целое число";
+			}
+		}
+	}
+	
+	private boolean isEmptyInput(String input) {
+		if (input != null && input.equals("")) {
+			messageCode = SWT.ICON_WARNING;
+			errorMessage = "Все поля должны быть заполнены";
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -87,30 +76,6 @@ public class ErrorChecker {
 				return false;
 			}
 		return true;
-	}
-	
-	/**
-	 * Метод устанавливает конфигурацию класса.
-	 * @param name - имя
-	 * @param surname - фамилия
-	 * @param age - возраст
-	 */
-	public void setConfig(String name, String surname, String age) {
-		this.name = name;
-		this.surname = surname;
-		this.age = age;
-		errorMessage = "";
-		messageCode = SWT.OK;
-	}
-	
-	/**
-	 * Метод устанавливает конфигурацию класса.
-	 * @param userNumbers - количество пользователей
-	 */
-	public void setConfig(String userNumbers) {
-		this.userNumbers = userNumbers;
-		errorMessage = "";
-		messageCode = SWT.OK;
 	}
 	
 	/**

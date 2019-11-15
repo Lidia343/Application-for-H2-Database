@@ -33,6 +33,7 @@ public class AgeEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object userInputValue) {
+		boolean correctAge = true;
 		((User) element).setAge(Integer.parseInt(String.valueOf(userInputValue)));
 		userEditingListener.changeUserInStorage((User) element);
 		viewer.update(element, null);
