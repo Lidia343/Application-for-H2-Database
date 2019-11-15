@@ -7,13 +7,15 @@ public class AgeEditingSupport extends EditingSupport {
 
 	private final TableViewer viewer;
 	private final CellEditor editor;
-	private ITableViewerUserEditingListener userEditingListener;
+	private TableViewerUserEditingListener userEditingListener;
+	private ErrorInputListener errorInputListener;
 
-	public AgeEditingSupport(TableViewer viewer, ITableViewerUserEditingListener userEditingListener) {
+	public AgeEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
 		super(viewer);
 		this.viewer = viewer;
 		this.editor = new TextCellEditor(viewer.getTable());
 		this.userEditingListener = userEditingListener;
+		this.errorInputListener = errorInputListener;
 	}
 
 	@Override
@@ -33,7 +35,12 @@ public class AgeEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object userInputValue) {
-		boolean correctAge = true;
+		ErrorChecker ageChecker = new ErrorChecker();
+		ageChecker.checkAge(String.valueOf(userInputValue));
+		if (!ageChecker.getErrorMesssage().equals("")) {
+			errorInputListener.createErrorMessage(ageChecker.getErrorMesssage());
+			return;
+		}
 		((User) element).setAge(Integer.parseInt(String.valueOf(userInputValue)));
 		userEditingListener.changeUserInStorage((User) element);
 		viewer.update(element, null);

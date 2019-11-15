@@ -351,11 +351,11 @@ public class Graphics {
 	}
 	
 	private void setEditingSupportForColumns() {
-		ageEditingSupport = new AgeEditingSupport (tableViewer, userEditingListener);
+		ageEditingSupport = new AgeEditingSupport (tableViewer, userEditingListener, errorInputListener);
 		ageColumn.setEditingSupport(ageEditingSupport);
 	}
 	
-	private ITableViewerUserEditingListener userEditingListener = new TableViewerUserEditingListener () {
+	private TableViewerUserEditingListener userEditingListener = new TableViewerUserEditingListener () {
 		@Override
 		public void changeUserInStorage(User user) {
 			try {
@@ -363,6 +363,13 @@ public class Graphics {
 			} catch (Exception e) {
 				createMessageBox (SWT.ERROR, e.getMessage());
 			}
+		}
+	};
+	
+	private ErrorInputListener errorInputListener = new ErrorInputListener() {
+		@Override
+		public void createErrorMessage(String message) {
+			createMessageBox (SWT.ERROR, message);
 		}
 	};
 	
@@ -854,6 +861,8 @@ public class Graphics {
 			if ((tableItemCount + userNumbers) < 9) shell.pack();
 		}
 	};
+	
+	
 	
 	/**
 	 * Слушатель нажатия кнопки "Добавить".
