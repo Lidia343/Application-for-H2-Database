@@ -351,9 +351,20 @@ public class Graphics {
 	}
 	
 	private void setEditingSupportForColumns() {
-		ageEditingSupport = new AgeEditingSupport (tableViewer);
+		ageEditingSupport = new AgeEditingSupport (tableViewer, userEditingListener);
 		ageColumn.setEditingSupport(ageEditingSupport);
 	}
+	
+	private ITableViewerUserEditingListener userEditingListener = new TableViewerUserEditingListener () {
+		@Override
+		public void changeUserInStorage(User user) {
+			try {
+				commandsExecuter.execute(new CommandUpdate (storage, user));
+			} catch (Exception e) {
+				createMessageBox (SWT.ERROR, e.getMessage());
+			}
+		}
+	};
 	
 	private void createColumns() {
 		TableViewerColumn viewerColumn = createTableViewerColumn ("Код", 0);
@@ -633,8 +644,8 @@ public class Graphics {
 			} catch (Exception e) {
 				createMessageBox(SWT.ERROR, e.getMessage());
 			}*/
-        	commandsExecuter = ageEditingSupport.getCommandsExecuter();
-			storage = ageEditingSupport.getStorage();
+        	/*commandsExecuter = ageEditingSupport.getCommandsExecuter();
+			storage = ageEditingSupport.getStorage();*/
         }
     };
 
@@ -642,8 +653,8 @@ public class Graphics {
 		@Override
 		public void keyPressed (KeyEvent key) {
 			if ((int)key.character == 13) {
-				commandsExecuter = ageEditingSupport.getCommandsExecuter();
-				storage = ageEditingSupport.getStorage();
+				/*commandsExecuter = ageEditingSupport.getCommandsExecuter();
+				storage = ageEditingSupport.getStorage();*/
 			}
 		}
 	};
@@ -1079,8 +1090,8 @@ public class Graphics {
 			tableViewer.setInput(modelProvider);
 			tableViewer.setComparator(comparator);
 			setEditingSupportForColumns();
-			ageEditingSupport.setCommandsExecuter(commandsExecuter);
-			ageEditingSupport.setStorage(storage);
+			//ageEditingSupport.setCommandsExecuter(commandsExecuter);
+			//ageEditingSupport.setStorage(storage);
 			
 			showTable(true);
 		} catch (Exception e) {

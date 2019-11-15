@@ -7,13 +7,13 @@ public class AgeEditingSupport extends EditingSupport {
 
 	private final TableViewer viewer;
 	private final CellEditor editor;
-	private CommandsExecuter commandsExecuter;
-	private Storage storage;
+	private ITableViewerUserEditingListener userEditingListener;
 
-	public AgeEditingSupport(TableViewer viewer) {
+	public AgeEditingSupport(TableViewer viewer, ITableViewerUserEditingListener userEditingListener) {
 		super(viewer);
 		this.viewer = viewer;
 		this.editor = new TextCellEditor(viewer.getTable());
+		this.userEditingListener = userEditingListener;
 	}
 
 	@Override
@@ -33,30 +33,8 @@ public class AgeEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object userInputValue) {
-		try {
-			if (storage != null && commandsExecuter != null)
-			commandsExecuter.execute(new CommandUpdate (storage, (User) element));
-			System.out.println("" + commandsExecuter.getCommandsListSize());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		((User) element).setAge(Integer.parseInt(String.valueOf(userInputValue)));
+		userEditingListener.changeUserInStorage((User) element);
 		viewer.update(element, null);
-	}
-	
-	public void setCommandsExecuter(CommandsExecuter commandsExecuter) {
-		this.commandsExecuter = commandsExecuter;
-	}
-	
-	public void setStorage (Storage storage) {
-		this.storage = storage;
-	}
-	
-	public CommandsExecuter getCommandsExecuter() {
-		return commandsExecuter;
-	}
-	
-	public Storage getStorage() {
-		return storage;
 	}
 }
