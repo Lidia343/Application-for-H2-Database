@@ -19,10 +19,6 @@ public class AgeEditingSupport extends UserEditingSupport {
 			errorInputListener.createErrorMessage(ageChecker.getErrorMesssage());
 			return;
 		}
-		User prevUser = (User) element;
-		User nextUser = (User) element;
-		nextUser.setAge(Integer.parseInt(String.valueOf(userInputValue)));
-		userEditingListener.changeUserInStorage(prevUser, nextUser);
-		viewer.update((Object)nextUser, null);
+		userEditingListener.changeUserAgeInStorage((User) element, Integer.parseInt(String.valueOf(userInputValue)));
 	}
 }

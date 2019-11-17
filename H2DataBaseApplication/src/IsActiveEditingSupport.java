@@ -22,10 +22,6 @@ public class IsActiveEditingSupport extends UserEditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		User prevUser = (User)element;
-		User nextUser = (User)element;
-		nextUser.setIsActive((Boolean) value);
-		userEditingListener.changeUserInStorage(prevUser, nextUser);
-	    viewer.update((Object)nextUser, null);
+		userEditingListener.changeUserIsActiveInStorage((User)element, Boolean.parseBoolean(String.valueOf(value)));
 	}
 }

@@ -360,13 +360,42 @@ public class Graphics {
 	
 	private TableViewerUserEditingListener userEditingListener = new TableViewerUserEditingListener () {
 		@Override
-		public void changeUserInStorage(User prevUser, User nextUser) {
+		public void changeUserNameInStorage(User user, String name) {
 			try {
-				commandsExecuter.execute(new CommandUpdate (storage, prevUser, nextUser));//Убрать prev!!!!!!!!!!!!
+				commandsExecuter.execute(new CommandUpdate (storage, user, name, UserData.FIRSTNAME));
+				tableViewer.refresh();
 			} catch (Exception e) {
 				createMessageBox (SWT.ERROR, e.getMessage());
 			}
 		}
+		@Override
+		public void changeUserSurnameInStorage(User user, String surname) {
+			try {
+				commandsExecuter.execute(new CommandUpdate (storage, user, surname, UserData.LASTNAME));
+				tableViewer.refresh();
+			} catch (Exception e) {
+				createMessageBox (SWT.ERROR, e.getMessage());
+			}
+		}
+		@Override
+		public void changeUserAgeInStorage(User user, int age) {
+			try {
+				commandsExecuter.execute(new CommandUpdate (storage, user, age, UserData.AGE));
+				tableViewer.refresh();
+			} catch (Exception e) {
+				createMessageBox (SWT.ERROR, e.getMessage());
+			}
+		}
+		@Override
+		public void changeUserIsActiveInStorage(User user, boolean isActive) {
+			try {
+				commandsExecuter.execute(new CommandUpdate (storage, user, isActive, UserData.ISACTIVE));
+				tableViewer.refresh();
+			} catch (Exception e) {
+				createMessageBox (SWT.ERROR, e.getMessage());
+			}
+		}
+		
 	};
 	
 	private ErrorInputListener errorInputListener = new ErrorInputListener() {
@@ -693,7 +722,7 @@ public class Graphics {
 				if (isDarkColor == true) {
 					isDarkColor = false;
 					paleForeColor = new Color (display, 45, 5, 5); 
-					lightForeColor = new Color (display, 105, 65, 65);
+					lightForeColor = new Color (display, 115, 5, 5);
 					buttonBackColor = new Color (display, 223, 220, 215);
 					buttonForeColor = new Color (display, 65, 65, 65);
 					backColor = new Color (display, 255, 252, 245); 

@@ -19,10 +19,6 @@ public class SurnameEditingSupport extends UserEditingSupport {
 			errorInputListener.createErrorMessage(surnameChecker.getErrorMesssage());
 			return;
 		}
-		User prevUser = (User)element;
-		User nextUser = (User)element;
-		nextUser.setSurname(String.valueOf(userInputValue));
-	    userEditingListener.changeUserInStorage(prevUser, nextUser);
-	    viewer.update(nextUser, null);
+		userEditingListener.changeUserSurnameInStorage((User)element, String.valueOf(userInputValue));
 	}
 }

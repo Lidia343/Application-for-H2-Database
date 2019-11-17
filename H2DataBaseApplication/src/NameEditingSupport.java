@@ -19,10 +19,6 @@ public class NameEditingSupport extends UserEditingSupport {
 			errorInputListener.createErrorMessage(nameChecker.getErrorMesssage());
 			return;
 		}
-		User prevUser = (User)element;
-		User nextUser = (User)element;
-	    nextUser.setName(String.valueOf(userInputValue));
-	    userEditingListener.changeUserInStorage(prevUser, nextUser);
-	    viewer.update((Object)nextUser, null);
+	    userEditingListener.changeUserNameInStorage((User)element, String.valueOf(userInputValue));
 	}
 }

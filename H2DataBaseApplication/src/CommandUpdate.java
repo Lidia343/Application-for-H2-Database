@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Класс предназначен для реализации команды обновления пользователя.
  */
@@ -9,30 +6,34 @@ public class CommandUpdate implements Command {
 	private Storage storage;
 	private User prevUser;
 	private User nextUser;
+	private Object value;
+	private int valueInformation;
 	
 	/**
 	 * Конструктор класса CommandUpdate.
 	 * @param storage - хранилище данных пользователей
 	 * @param user - объект класса User
 	 */
-	public CommandUpdate (Storage storage, User prevUser, User nextUser) {
+	public CommandUpdate (Storage storage, User user, Object value, int valueInformation) {
 		this.storage = storage;
-		this.prevUser = prevUser;
-		this.nextUser = nextUser;
+		this.prevUser = user;
+		this.value = value;
+		this.valueInformation = valueInformation;
 	}
 	
 	@Override
 	public void execute() throws Exception {
-		//List<User> users = new ArrayList<>();
-		//users = storage.getUsersDataSet(false, false);
-		//for (User temp : users) 
-			//if (temp.getId() == nextUser.getId()) {
-				storage.updateUser(nextUser);
-				//prevUser = temp;
-				//prevUser = selectionChangedListener.getPrevUser();
-				//System.out.println(prevUser.getName());
-				//break;
-			//}
+		nextUser = new User();
+		nextUser.setId(prevUser.getId());
+		nextUser.setName(prevUser.getName());
+		nextUser.setSurname(prevUser.getSurname());
+		nextUser.setAge(prevUser.getAge());
+		nextUser.setIsActive(prevUser.isActive());
+		if (valueInformation == UserData.FIRSTNAME) nextUser.setName(String.valueOf(value));
+		if (valueInformation == UserData.LASTNAME) nextUser.setSurname(String.valueOf(value));
+		if (valueInformation == UserData.AGE) nextUser.setAge(Integer.parseInt(String.valueOf(value)));
+		if (valueInformation == UserData.ISACTIVE) nextUser.setIsActive(Boolean.parseBoolean(String.valueOf(value)));
+		storage.updateUser(nextUser);
 	}
 	
 	@Override public void undo() throws Exception {
