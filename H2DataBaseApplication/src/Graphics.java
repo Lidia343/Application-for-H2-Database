@@ -4,6 +4,9 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -14,7 +17,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.graphics.Point;
@@ -98,7 +100,6 @@ public class Graphics {
 	private Storage storage;
 	
 	private boolean isDarkColor;
-	private int selectedRowIndex;
 	private int selectedId;
 	private boolean isConnection;
 	
@@ -287,7 +288,8 @@ public class Graphics {
 	    setTable(table, false);
 	    
 	    tableViewer.setContentProvider(new UsersContentProvider());
-	   // table.setSortDirection(SWT.UP);
+	    tableViewer.addSelectionChangedListener(tableRowSelection);
+	    // table.setSortDirection(SWT.UP);
 	    
 	    TableColumnLayout tableColumnLayout = new TableColumnLayout();
 	    tableComposite.setLayout(tableColumnLayout);
@@ -320,7 +322,6 @@ public class Graphics {
 		
 		openingStorageButton.addSelectionListener(isOpeningSelection);
 		deletingUserButton.addSelectionListener(deletingUserSelection);
-		table.addSelectionListener(tableRowSelection);
 		
 		shell.pack(); //Установка оптимального размера окна под имеющиеся компоненты
 		shell.open(); //Открытие окна
@@ -612,7 +613,7 @@ public class Graphics {
         //createMenuItem(contextMenu, column);
         return viewerColumn;
 	}
-	
+
 	 /**
 	  * Метод для возврата слушателя нажатия на столбец таблицы.
 	 * @param column - столбец таблицы
@@ -911,24 +912,21 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия на строки таблицы.
 	 */
-	SelectionAdapter tableRowSelection = new SelectionAdapter () {
-		@Override
-		public void widgetSelected(SelectionEvent event ) {
-		
-			selectedRowIndex = table.indexOf((TableItem)event.item);
-			selectedId = Integer.parseInt(table.getItem(selectedRowIndex).getText(0));
-			String name = table.getItem(selectedRowIndex).getText(1), 
-			surname = table.getItem(selectedRowIndex).getText(2);
-			int age = Integer.parseInt(table.getItem(selectedRowIndex).getText(3)); 
-			boolean isActive = Boolean.parseBoolean(table.getItem(selectedRowIndex).getText(4));
-					
-			nameText.setText(name);
-			surnameText.setText(surname);
-			ageText.setText("" + age);
-			isActiveButton.setSelection(isActive);
-			shell.setDefaultButton(addingUserButton);
-		}
-	};
+	ISelectionChangedListener tableRowSelection = new ISelectionChangedListener() {
+        @Override
+        public void selectionChanged(SelectionChangedEvent event) {
+            IStructuredSelection selection = tableViewer.getStructuredSelection();
+            User user = (User) selection.getFirstElement();
+            if (user != null) {
+            	selectedId = user.getId();
+            	nameText.setText(user.getName());
+    			surnameText.setText(user.getSurname());
+    			ageText.setText(Integer.toString(user.getAge()));
+    			isActiveButton.setSelection(user.isActive());
+    			shell.setDefaultButton(addingUserButton);
+            }
+        }
+    };
 	
 	/**
 	 * Слушатель нажатия "Control + z".
