@@ -50,7 +50,8 @@ public class FileStorage implements Storage {
 	}
 	
 	/**
-	/* Метод обновляет файл, где хранится максимальный ПК.
+	 * Метод обновляет файл, где хранится максимальный ПК.
+	 * @param text - строка, которую необходимо записать в файл
 	 * @throws IOException 
 	 */
 	private void updateIdFile (String text) throws IOException {
@@ -68,7 +69,7 @@ public class FileStorage implements Storage {
 	}
 	
 	/**
-	 * Метод записывает из файла в список данные всех пользователей.
+	 * Метод записывает из файла file в список данные всех пользователей.
 	 * @throws IOException 
 	 */
 	private void writeInList(File file) throws IOException {
@@ -114,7 +115,6 @@ public class FileStorage implements Storage {
 	@Override
 	public void createStorageObject() throws IOException {
 		maxIdFile = new File ("maxId.txt");
-		//setHidden("maxId.txt", false);
 		writer = new FileWriter (file, true); 
 		writer.close();
 		reader = new BufferedReader (new FileReader (file));
@@ -194,11 +194,10 @@ public class FileStorage implements Storage {
 		idLine = idReader.readLine();
 		id = Integer.parseInt(idLine);
 		writeUserInFile (user, id, true);
-		//SallUsersDeleted = false;
 	}
 	
 	/**
-	 * Метод находит максимальный ПК пользователей списка и записывает его в файл. Если список пуст, записывает "-1".
+	 * Метод находит максимальный ПК пользователей списка и записывает его в cоответствующий файл. Если список пуст, записывает "-1".
 	 * @throws IOException
 	 */
 	private void findMaxUserId() throws IOException {
@@ -221,23 +220,8 @@ public class FileStorage implements Storage {
 	
 	@Override
 	public void addUser (User user, int deletedId) throws IOException {
-		/*if (allUsersDeleted) {
-			//addDeletedUser();
-			usersDataList.clear();
-			allUsersDeleted = false;
-			//return;
-		}*/
-		
-		/*if (allUsersDeleted) {
-			addDeletedUser(user, deletedId);
-			return;
-		}*/
-		
 		writeUserInFile (user, deletedId - 1, false);
-		//System.out.println("yes");
 		findMaxUserId();
-		//System.out.println("yes");
-		//System.out.println("yes");
 	}
 	
 	/**
@@ -319,15 +303,12 @@ public class FileStorage implements Storage {
 	
 	@Override
 	public void deleteAllUsers() throws IOException {
-		//writer.close();
 		writer = new FileWriter (file, false); 
 		writer.write("Код:" + "\t" + "Имя:    " +  "\t\t\t\t\t\t\t" + "Фамилия:" + "\t\t\t\t\t\t\t" + "Возраст:" + "\t" + "Активен:" + "\r\n\r\n");
 		reader = new BufferedReader (new FileReader (file));
-		//int i = 0;
 		String line = reader.readLine();
-		while (line != null) {
+		while (line != null) 
 			writer.write("\r\n");
-		}
 		writer.close();
 		allUsersDeleted = true;
 		deletedUsersDataList.clear();
@@ -335,17 +316,15 @@ public class FileStorage implements Storage {
 			deletedUsersDataList.add(usersDataList.get(i));
 		}
 		usersDataList.clear();
-		//System.out.println(deletedUsersDataList.toString());
-		//updateIdFile();
 	}
 	
 	@Override
-	public List <User> getUsersDataSet(boolean isSorted, boolean deletedUsers) {
-		if (deletedUsers) {
-			if (isSorted) Collections.sort(deletedUsersDataList, new UsersListSorter());
+	public List <User> getUsersDataSet(boolean sorting, boolean usersIsDeleted) {
+		if (usersIsDeleted) {
+			if (sorting) Collections.sort(deletedUsersDataList, new UsersListSorter());
 			return deletedUsersDataList;
 		}
-		if (isSorted) Collections.sort(usersDataList, new UsersListSorter());
+		if (sorting) Collections.sort(usersDataList, new UsersListSorter());
 		return usersDataList;
 	}
 	

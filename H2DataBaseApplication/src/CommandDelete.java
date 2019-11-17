@@ -2,7 +2,7 @@
 /**
  * Класс предназначен для реализации команды удаления пользователя.
  */
-public class CommandDelete implements Command{
+public class CommandDelete implements Command {
 	
 	private Storage storage;
 	private User user;
@@ -10,7 +10,7 @@ public class CommandDelete implements Command{
 	/**
 	 * Конструктор класса CommandDelete.
 	 * @param storage - хранилище данных пользователей
-	 * @param user - объект класса User
+	 * @param user - объект класса User (пользователь, которого необходимо удалить из хранилища)
 	 */
 	public CommandDelete (Storage storage, User user) {
 		this.storage = storage;

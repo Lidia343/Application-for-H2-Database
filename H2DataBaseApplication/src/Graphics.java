@@ -4,9 +4,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -91,6 +88,7 @@ public class Graphics {
 	private NameEditingSupport nameEditingSupport;
 	private SurnameEditingSupport surnameEditingSupport;
 	private IsActiveEditingSupport isActiveEditingSupport;
+	
 	private TableViewerColumn nameColumn;
 	private TableViewerColumn surnameColumn;
 	private TableViewerColumn ageColumn;
@@ -98,8 +96,8 @@ public class Graphics {
 	
 	private StorageFactory storageFactory;
 	private Storage storage;
-	private boolean isDarkColor;
 	
+	private boolean isDarkColor;
 	private int selectedRowIndex;
 	private int selectedId;
 	private boolean isConnection;
@@ -137,7 +135,6 @@ public class Graphics {
 		
 		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (900, 550), backColor, isDarkColor);
 		setShell(shell);
-		
 		createGridLayout(shell); 
 		
 		themeComposite = new Composite (shell, SWT.BORDER);
@@ -290,7 +287,7 @@ public class Graphics {
 	    setTable(table, false);
 	    
 	    tableViewer.setContentProvider(new UsersContentProvider());
-	    tableViewer.addSelectionChangedListener(rowSelection);
+	   // table.setSortDirection(SWT.UP);
 	    
 	    TableColumnLayout tableColumnLayout = new TableColumnLayout();
 	    tableComposite.setLayout(tableColumnLayout);
@@ -344,6 +341,9 @@ public class Graphics {
 		display.dispose(); 	
 	}
 	
+	/**
+	 * Метод для установки поддержки редактирования для всех столбцов таблицы.
+	 */
 	private void setEditingSupportForColumns() {
 		ageEditingSupport = new AgeEditingSupport (tableViewer, userEditingListener, errorInputListener);
 		ageColumn.setEditingSupport(ageEditingSupport);
@@ -358,46 +358,44 @@ public class Graphics {
 		isActiveColumn.setEditingSupport(isActiveEditingSupport);
 	}
 	
+	/**
+	 * Слушатель нажатия на столбец таблицы.
+	 */
 	private TableViewerUserEditingListener userEditingListener = new TableViewerUserEditingListener () {
 		@Override
 		public void changeUserNameInStorage(User user, String name) {
-			try {
-				commandsExecuter.execute(new CommandUpdate (storage, user, name, UserData.FIRSTNAME));
-				tableViewer.refresh();
-			} catch (Exception e) {
-				createMessageBox (SWT.ERROR, e.getMessage());
-			}
+			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, name, UserData.FIRSTNAME));	
 		}
 		@Override
 		public void changeUserSurnameInStorage(User user, String surname) {
-			try {
-				commandsExecuter.execute(new CommandUpdate (storage, user, surname, UserData.LASTNAME));
-				tableViewer.refresh();
-			} catch (Exception e) {
-				createMessageBox (SWT.ERROR, e.getMessage());
-			}
+			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, surname, UserData.LASTNAME));
 		}
 		@Override
 		public void changeUserAgeInStorage(User user, int age) {
-			try {
-				commandsExecuter.execute(new CommandUpdate (storage, user, age, UserData.AGE));
-				tableViewer.refresh();
-			} catch (Exception e) {
-				createMessageBox (SWT.ERROR, e.getMessage());
-			}
+			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, age, UserData.AGE));
 		}
 		@Override
 		public void changeUserIsActiveInStorage(User user, boolean isActive) {
-			try {
-				commandsExecuter.execute(new CommandUpdate (storage, user, isActive, UserData.ISACTIVE));
-				tableViewer.refresh();
-			} catch (Exception e) {
-				createMessageBox (SWT.ERROR, e.getMessage());
-			}
+			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, isActive, UserData.ISACTIVE));
 		}
 		
 	};
 	
+	/**
+	 * Метод для вызова метода execute() переданной команды и обновления объекта tableViewer класса TableViewer.
+	 */
+	private void executeCommandAndRefreshViewer(Command command) {
+		try {
+			commandsExecuter.execute(command);
+			tableViewer.refresh();
+		} catch (Exception e) {
+			createMessageBox (SWT.ERROR, e.getMessage());
+		}
+	}
+	
+	/**
+	 * Слушатель неверного ввода данных в таблицу.
+	 */
 	private ErrorInputListener errorInputListener = new ErrorInputListener() {
 		@Override
 		public void createErrorMessage(String message) {
@@ -405,6 +403,9 @@ public class Graphics {
 		}
 	};
 	
+	/**
+	 * Метод создаёт столбцы TableViewerColumn и устанавливает на них CellLabelProvider.
+	 */
 	private void createColumns() {
 		TableViewerColumn viewerColumn = createTableViewerColumn ("Код", 0);
 		viewerColumn.setLabelProvider(new CellLabelProvider() {
@@ -597,8 +598,14 @@ public class Graphics {
 		button.setForeground(paleForeColor);
 	}	
 	
+	/**
+	 * Метод создаёт столбец в таблице Table и устанавливает слушатель нажатия на данный столбец.
+	 * @param title - заголовок столбца
+	 * @param colNumber - номер столбца
+	 * @return столбец TableViewerColumn
+	 */
 	private TableViewerColumn createTableViewerColumn(String title, int colNumber) {
-		TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+		TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
         TableColumn column = viewerColumn.getColumn();
         column.setText(title);
         column.addSelectionListener(getSelectionAdapter(column, colNumber));
@@ -606,7 +613,13 @@ public class Graphics {
         return viewerColumn;
 	}
 	
-	 private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
+	 /**
+	  * Метод для возврата слушателя нажатия на столбец таблицы.
+	 * @param column - столбец таблицы
+	 * @param index - номер столбца
+	 * @return слушатель SelectionAdapter
+	 */
+	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
 	        SelectionAdapter selectionAdapter = new SelectionAdapter() {
 	            @Override
 	            public void widgetSelected(SelectionEvent e) {
@@ -732,6 +745,9 @@ public class Graphics {
 		}
 	};
 	
+	/**
+	 * Слушатель изменения текста в списке Combo.
+	 */
 	ModifyListener comboModification = new ModifyListener () {
 		@Override
 		public void modifyText(ModifyEvent event) {
@@ -740,6 +756,9 @@ public class Graphics {
 		
 	};
 	
+	/**
+	 * Слушатель установки курсора в текстовое поле userNumbersText.
+	 */
 	FocusListener numberTextFocusing = new FocusListener () {
 		@Override
 		public void focusGained(FocusEvent arg0) {
@@ -754,7 +773,6 @@ public class Graphics {
 	 * Метод для установки цветов на кнопках.
 	 * @param b1 - объект класса Button
 	 * @param b2 - объект класса Button
-	 * @param b3 - объект класса Button
 	 */
 	private void setButtonsDefaultColor(Button b1, Button b2) {
 		b1.setBackground(backColor);
@@ -823,27 +841,6 @@ public class Graphics {
 		}
 	};
 	
-	private IStructuredSelection selection;
-	private User user;
-	
-	private ISelectionChangedListener rowSelection = new ISelectionChangedListener() {
-		
-		@Override
-		public void selectionChanged(SelectionChangedEvent item) {
-			selection = tableViewer.getStructuredSelection();
-			user = (User) selection.getFirstElement();
-			//if (user != null) System.out.println(user.getName());
-		}
-	};
-	
-	private SelectionChangedListener selectionChanged = new SelectionChangedListener() {
-		@Override
-		public User getPrevUser() {
-			
-			return null;
-		}
-	}; 
-	
 	/**
 	 * Слушатель нажатия кнопки "Сгенерировать случайных пользователей"
 	 */
@@ -876,8 +873,6 @@ public class Graphics {
 			if ((tableItemCount + userNumbers) < 9) shell.pack();
 		}
 	};
-	
-	
 	
 	/**
 	 * Слушатель нажатия кнопки "Добавить".
@@ -936,13 +931,13 @@ public class Graphics {
 	};
 	
 	/**
-	 * Слушатель нажатия "cntrl+z".
+	 * Слушатель нажатия "Control + z".
 	 */
 	KeyAdapter cancelPressingListener  = new KeyAdapter() {
 		@Override
 		public void keyPressed (KeyEvent key) {
 			
-			if ((int)key.character == 0x1a) { //Код комбинации Control + Z
+			if ((int)key.character == 0x1a) { //Код комбинации "Control + z"
 				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
 						commandsExecuter.undo();
@@ -958,13 +953,13 @@ public class Graphics {
 	};
 	
 	/**
-	 * Слушатель нажатия "cntrl+y".
+	 * Слушатель нажатия "Control + y".
 	 */
 	KeyAdapter doubleCancelPressingListener  = new KeyAdapter() {
 		@Override
 		public void keyPressed (KeyEvent key) {
 			
-			if ((int)key.character == 0x19) { //Код комбинации Control + Y
+			if ((int)key.character == 0x19) { //Код комбинации "Control + Y"
 				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
 						commandsExecuter.redo();

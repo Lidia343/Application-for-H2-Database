@@ -3,8 +3,16 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 
+/**
+ * Класс предназначен для реализации поддержки редактирования столбца "Активен" таблицы Table.
+ */
 public class IsActiveEditingSupport extends UserEditingSupport {
 
+	/**
+	 * Конструктор класса IsActiveEditingSupport.
+	 * @param viewer - объект класса TableViewer, связанный с таблицей
+	 * @param userEditingListener - слушатель нажатия на столбец таблицы
+	 */
 	public IsActiveEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener) {
 		super(viewer, userEditingListener, null);
 	}
@@ -16,8 +24,7 @@ public class IsActiveEditingSupport extends UserEditingSupport {
 
 	@Override
 	protected Object getValue(Object element) {
-		User user = (User) element;
-	    return user.isActive();
+	    return ((User) element).isActive();
 	}
 
 	@Override

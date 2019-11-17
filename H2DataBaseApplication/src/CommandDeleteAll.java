@@ -11,7 +11,6 @@ public class CommandDeleteAll implements Command{
 	/**
 	 * Конструктор класса CommandDelete.
 	 * @param storage - хранилище данных пользователей
-	 * @param user - объект класса User
 	 * @throws Exception 
 	 */
 	public CommandDeleteAll (Storage storage) {
@@ -22,14 +21,11 @@ public class CommandDeleteAll implements Command{
 	public void execute() throws Exception {
 		users = storage.getUsersDataSet(false, true);
 		storage.deleteAllUsers();
-		System.out.println(users.toString());
 	}
 	
 	@Override public void undo() throws Exception {
-		for (User user : users) {
+		for (User user : users) 
 			storage.addUser(user, user.getId());	
-			
-		}
 	}
 	
 	@Override

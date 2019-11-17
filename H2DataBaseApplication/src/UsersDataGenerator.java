@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс предназначен для генерации данных указанного количества пользователей.
+ */
 public class UsersDataGenerator {
 	
 	private List<String> femaleNames;
@@ -10,6 +13,10 @@ public class UsersDataGenerator {
 	private List<String> generatedUsersData;
 	private int userNumbers;
 	
+	/**
+	 * Конструктор класса UsersDataGenerator.
+	 * @param userNumbers - количество пользователей для генерации
+	 */
 	public UsersDataGenerator (int userNumbers) {
 		this.userNumbers = userNumbers;
 		femaleNames = new ArrayList<>();
@@ -20,6 +27,9 @@ public class UsersDataGenerator {
 		setUsersData();
 	}
 	
+	/**
+	 * Метод устанавливает возможные имена и фамилии пользователей в списки для их хранения.
+	 */
 	private void setUsersData () {
 		femaleNames.add("Екатерина"); femaleNames.add("Наталья"); 
 		femaleNames.add("Валентина"); femaleNames.add("Антонина");
@@ -39,6 +49,9 @@ public class UsersDataGenerator {
 		maleSurnames.add("Фролов"); maleSurnames.add("Дмитриев");	
 	}
 	
+	/**
+	 * Метод возвращает список сгенерированных пользовательских данных (каждый элемент списка - отдельное свойство пользователя).
+	 */
 	public List <String> generateUsersData(){
 		for (int i = 0; i < userNumbers; i++) {
 			int isMale = (int)Math.round(Math.random());
@@ -53,9 +66,6 @@ public class UsersDataGenerator {
 			int activity = (int)Math.round(Math.random());
 			if (activity == 0) generatedUsersData.add(Boolean.toString(true)); else
 			generatedUsersData.add(Boolean.toString(false));
-		}
-		for (int i = 0; i < generatedUsersData.size(); i++) {
-			if (Math.floorMod(i, 2) == 0) System.out.println ();
 		}
 		return generatedUsersData;
 	}

@@ -1,7 +1,16 @@
 import org.eclipse.jface.viewers.TableViewer;
 
+/**
+ * Класс предназначен для реализации поддержки редактирования столбца "Фамилия" таблицы Table.
+ */
 public class SurnameEditingSupport extends UserEditingSupport {
 	
+	/**
+	 * Конструктор класса SurnameEditingSupport.
+	 * @param viewer - объект класса TableViewer, связанный с таблицей
+	 * @param userEditingListener - слушатель нажатия на столбец таблицы
+	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
+	 */
 	public SurnameEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
 		super(viewer, userEditingListener, errorInputListener);
 	}

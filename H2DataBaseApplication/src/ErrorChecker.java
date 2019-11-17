@@ -8,11 +8,17 @@ public class ErrorChecker {
 	private String errorMessage;
 	private int messageCode;
 	
+	/**
+	 * Конструктор класса ErorChecker. 
+	 */
 	public ErrorChecker () {
 		errorMessage = "";
 		messageCode = SWT.OK;
 	}
 	
+	/**
+	 * Метод проверяет переданное имя на наличие ошибок.
+	 */
 	public void checkName(String name) {
 		if (isEmptyInput (name)) return;
 		if (name != null) 
@@ -20,6 +26,9 @@ public class ErrorChecker {
 				errorMessage = "Значение поля \"Имя\"/\"Фамилия\" должно содержать только символы русского или английского алфавита. Длина имени/фамилии не должна превышать 50 символов и быть менее 2 символов.";
 	}
 	
+	/**
+	 * Метод проверяет переданный возраст на наличие ошибок.
+	 */
 	public void checkAge (String age) {
 		if (isEmptyInput (age)) return;
 		int intAge = 18;
@@ -36,6 +45,9 @@ public class ErrorChecker {
 		}
 	}
 	
+	/**
+	 * Метод проверяет переданное количество пользователей на наличие ошибок.
+	 */
 	public void checkUserNumbers(String userNumbers) {
 		if (isEmptyInput (userNumbers)) return;
 		if (userNumbers != null) {
@@ -48,6 +60,10 @@ public class ErrorChecker {
 		}
 	}
 	
+	/**
+	 * Метод проверяет, является ли переданная строка пустой (если ссылка на объект input не равна null).
+	 * @return true - если строка input пустая, false - в остальных случаях
+	 */
 	private boolean isEmptyInput(String input) {
 		if (input != null && input.equals("")) {
 			messageCode = SWT.ICON_WARNING;
@@ -60,7 +76,7 @@ public class ErrorChecker {
 	/**
 	 *  Метод для определения того, является ли переданная строка именем/фамилией.
 	 * @param name - строка
-	 * @return true - если является, false - не является
+	 * @return true - строка является именем/фамилией, false - иначе
 	 */
 	private boolean isName(String name) {
 		for (int i = 0; i < name.length(); i++) 

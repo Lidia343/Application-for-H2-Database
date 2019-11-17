@@ -4,7 +4,7 @@ import java.util.List;
 /**
  * Класс предназначен для реализации команды добавления пользователя.
  */
-public class CommandAdd implements Command{
+public class CommandAdd implements Command {
 	
 	private Storage storage;
 	private User user;
@@ -12,7 +12,7 @@ public class CommandAdd implements Command{
 	/**
 	 * Конструктор класса CommandAdd.
 	 * @param storage - хранилище данных пользователей
-	 * @param user - объект класса User
+	 * @param user - объект класса User (пользователь, которого необходимо добавить в хранилище)
 	 */
 	public CommandAdd (Storage storage, User user) {
 		this.storage = storage;
@@ -33,11 +33,6 @@ public class CommandAdd implements Command{
 	}
 	
 	@Override public void undo() throws Exception {
-		/*User user = null;
-		List<User> users = new ArrayList<>();
-		users = storage.getUsersDataSet(false, false);
-		for (User temp : users) user = temp;
-		if (users.size() != 0)*/
 		storage.deleteUser(user.getId());
 	}
 	

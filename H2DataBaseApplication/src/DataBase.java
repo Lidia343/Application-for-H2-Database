@@ -20,6 +20,7 @@ public class DataBase implements Storage {
 	  
     /**
 	* Конструктор класса DataBase
+	* @param databaseName - имя базы данных
 	*/
 	public DataBase(String databaseName) {
 		this.databaseName = databaseName;
@@ -37,7 +38,6 @@ public class DataBase implements Storage {
 	  
 	@Override
 	public void createStorageObject() throws SQLException{
-		 
 		String sql = "CREATE TABLE IF NOT EXISTS USERS (id INT NOT NULL AUTO_INCREMENT (0, 1) PRIMARY KEY, "
 		+ "Name varchar(255) NOT NULL, Surname varchar(255) NOT NULL, Age INT NOT NULL, isActive BOOLEAN NOT NULL)"; 
 		statement.executeUpdate(sql);
@@ -90,13 +90,12 @@ public class DataBase implements Storage {
 	
 	
 	@Override
-	public List <User> getUsersDataSet(boolean isSorted, boolean deletedUsers) throws SQLException {
-
+	public List <User> getUsersDataSet(boolean sorting, boolean usersIsDeleted) throws SQLException {
 		List <User> users = new ArrayList <>();
 		
-		if (isSorted)  resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users order by id"); else
+		if (sorting)  resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users order by id"); else
 		resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users");
-			  
+
 	    while (resultSet.next())
 		if (resultSet != null) {	
 			User user = new User();
