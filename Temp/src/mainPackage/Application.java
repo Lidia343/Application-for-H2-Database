@@ -10,7 +10,7 @@ public class Application implements IApplication {
 		graphics.createWindow();
 		return IApplication.EXIT_OK;
 	}
-
+	
 	@Override
 	public void stop() {
 	}
