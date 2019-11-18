@@ -1,4 +1,4 @@
-package temp;
+package mainPackage;
 import org.eclipse.swt.SWT;
 
 /**

@@ -774,12 +774,18 @@ public class Graphics {
 	 * Метод для установки цветов на кнопках.
 	 * @param b1 - объект класса Button
 	 * @param b2 - объект класса Button
+	 * @param b3 - объект класса Button
+	 * @param b4 - объект класса Button
 	 */
-	private void setButtonsDefaultColor(Button b1, Button b2) {
+	private void setButtonsDefaultColor(Button b1, Button b2, Button b3, Button b4) {
 		b1.setBackground(backColor);
 		b2.setBackground(backColor);
+		b3.setBackground(backColor);
+		b4.setBackground(backColor);
 		b1.setForeground(paleForeColor);
 		b2.setForeground(paleForeColor);
+		b3.setForeground(paleForeColor);
+		b4.setForeground(paleForeColor);
 	}
 	
 	/**
@@ -794,18 +800,28 @@ public class Graphics {
 				if (event.toString().charAt(i) == ' ') buffer = ""; else
 					buffer += Character.toString (event.toString().charAt(i));
 					if (buffer.equals("{Открыть}")) {
-						setButtonsDefaultColor(deletingUserButton, addingUserButton);
+						setButtonsDefaultColor(deletingUserButton, addingUserButton, generatingButton, deletingAllUsersButton);
 						setButton (openingStorageButton, true);
 						break;
 					}
 					if (buffer.equals("{Добавить}")) {
-						setButtonsDefaultColor(deletingUserButton, openingStorageButton);
+						setButtonsDefaultColor(deletingUserButton, openingStorageButton, generatingButton, deletingAllUsersButton);
 						setButton (addingUserButton, true);
 						break;
 					}
 					if (buffer.equals("{Удалить}")) {
-						setButtonsDefaultColor(addingUserButton, openingStorageButton);
+						setButtonsDefaultColor(addingUserButton, openingStorageButton, generatingButton, deletingAllUsersButton);
 						setButton (deletingUserButton, true);
+						break;
+					}
+					if (buffer.equals("{Сгенерировать случайных пользователей}")) {
+						setButtonsDefaultColor(deletingUserButton, addingUserButton, openingStorageButton, deletingAllUsersButton);
+						setButton (generatingButton, true);
+						break;
+					}
+					if (buffer.equals("{Удалить всех}")) {
+						setButtonsDefaultColor(deletingUserButton, addingUserButton, openingStorageButton, generatingButton);
+						setButton (deletingAllUsersButton, true);
 						break;
 					}
 			}

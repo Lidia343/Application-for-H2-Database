@@ -2,14 +2,14 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="Temp"
+         id="App"
          point="org.eclipse.core.runtime.applications">
       <application
             cardinality="singleton-global"
             thread="main"
             visible="true">
          <run
-               class="temp.Application3">
+               class="mainPackage.Application">
          </run>
       </application>
    </extension>

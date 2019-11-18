@@ -1,4 +1,4 @@
-package temp;
+package mainPackage;
 
 /**
  * Фабрика для создания объектов классов, реализующих интерфейс Storage.

@@ -1,4 +1,4 @@
-package temp;
+package mainPackage;
 import org.eclipse.jface.viewers.TableViewer;
 
 /**

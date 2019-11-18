@@ -1,4 +1,4 @@
-package temp;
+package mainPackage;
 import java.io.InputStream;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
