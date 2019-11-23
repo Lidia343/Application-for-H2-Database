@@ -34,7 +34,7 @@ public class CommandGenerate implements Command{
 	
 	@Override public void undo() throws Exception {
 		for (User user : generatedUsers) 
-		storage.deleteUser(user.getId());
+			storage.deleteUser(user.getId());
 	}
 	
 	@Override
