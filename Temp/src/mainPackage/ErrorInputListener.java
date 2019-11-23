@@ -3,13 +3,13 @@ package mainPackage;
 /**
  * Класс предназначен для реализации слушателя неверного ввода данных.
  */
-public class ErrorInputListener {
+public class ErrorInputListener implements InputListener {
 	
 	/**
-	 * Метод отправляет сообщение об ошибке ввода пользователю.
+	 * Метод выводит в консоли сообщение об ошибке ввода.
 	 * @param message - сообщение об ошибке
 	 */
-	public void createErrorMessage(String message) {
+	public void createMessage(String message) {
 		System.out.println(message);
 	}
 }
