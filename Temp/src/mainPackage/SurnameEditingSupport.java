@@ -12,7 +12,7 @@ public class SurnameEditingSupport extends UserEditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public SurnameEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
+	public SurnameEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
 		super(viewer, userEditingListener, errorInputListener);
 	}
 
@@ -29,6 +29,6 @@ public class SurnameEditingSupport extends UserEditingSupport {
 			errorInputListener.createMessage(surnameChecker.getErrorMesssage());
 			return;
 		}
-		userEditingListener.changeUserSurnameInStorage((User)element, String.valueOf(userInputValue));
+		userEditingListener.changeUserSurname((User)element, String.valueOf(userInputValue));
 	}
 }

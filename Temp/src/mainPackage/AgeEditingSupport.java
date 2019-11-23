@@ -12,7 +12,7 @@ public class AgeEditingSupport extends UserEditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public AgeEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
+	public AgeEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
 		super(viewer, userEditingListener, errorInputListener);
 	}
 
@@ -29,6 +29,6 @@ public class AgeEditingSupport extends UserEditingSupport {
 			errorInputListener.createMessage(ageChecker.getErrorMesssage());
 			return;
 		}
-		userEditingListener.changeUserAgeInStorage((User) element, Integer.parseInt(String.valueOf(userInputValue)));
+		userEditingListener.changeUserAge((User) element, Integer.parseInt(String.valueOf(userInputValue)));
 	}
 }

@@ -14,7 +14,7 @@ public class IsActiveEditingSupport extends UserEditingSupport {
 	 * @param viewer - объект класса TableViewer, связанный с таблицей
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 */
-	public IsActiveEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener) {
+	public IsActiveEditingSupport(TableViewer viewer, UserEditingListener userEditingListener) {
 		super(viewer, userEditingListener, null);
 	}
 
@@ -30,6 +30,6 @@ public class IsActiveEditingSupport extends UserEditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		userEditingListener.changeUserIsActiveInStorage((User)element, Boolean.parseBoolean(String.valueOf(value)));
+		userEditingListener.changeUserIsActive((User)element, Boolean.parseBoolean(String.valueOf(value)));
 	}
 }

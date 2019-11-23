@@ -363,21 +363,21 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия на столбец таблицы.
 	 */
-	private TableViewerUserEditingListener userEditingListener = new TableViewerUserEditingListener () {
+	private UserEditingListener userEditingListener = new UserEditingListener () {
 		@Override
-		public void changeUserNameInStorage(User user, String name) {
+		public void changeUserName(User user, String name) {
 			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, name, UserData.FIRSTNAME));	
 		}
 		@Override
-		public void changeUserSurnameInStorage(User user, String surname) {
+		public void changeUserSurname(User user, String surname) {
 			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, surname, UserData.LASTNAME));
 		}
 		@Override
-		public void changeUserAgeInStorage(User user, int age) {
+		public void changeUserAge(User user, int age) {
 			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, age, UserData.AGE));
 		}
 		@Override
-		public void changeUserIsActiveInStorage(User user, boolean isActive) {
+		public void changeUserIsActive(User user, boolean isActive) {
 			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, isActive, UserData.ISACTIVE));
 		}
 		

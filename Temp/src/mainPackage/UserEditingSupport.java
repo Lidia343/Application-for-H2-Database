@@ -12,7 +12,7 @@ public class UserEditingSupport extends EditingSupport {
 
 	protected final TableViewer viewer;
 	private final CellEditor editor;
-	protected TableViewerUserEditingListener userEditingListener;
+	protected UserEditingListener userEditingListener;
 	protected ErrorInputListener errorInputListener;
 
 	/**
@@ -21,7 +21,7 @@ public class UserEditingSupport extends EditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public UserEditingSupport(TableViewer viewer, TableViewerUserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
+	public UserEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
 		super(viewer);
 		this.viewer = viewer;
 		this.editor = new TextCellEditor(viewer.getTable());
