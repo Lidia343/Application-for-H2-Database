@@ -347,6 +347,14 @@ public class Graphics {
 	 * Метод для установки поддержки редактирования для всех столбцов таблицы.
 	 */
 	private void setEditingSupportForColumns() {
+		
+		//Слушатель неверного ввода данных в таблицу:
+		ErrorInputListener errorInputListener = new ErrorInputListener() {
+			@Override
+			public void createMessage(String message) {
+				createMessageBox (SWT.ERROR, message);
+			}
+		};
 		ageEditingSupport = new AgeEditingSupport (tableViewer, userEditingListener, errorInputListener);
 		ageColumn.setEditingSupport(ageEditingSupport);
 		
@@ -394,16 +402,6 @@ public class Graphics {
 			createMessageBox (SWT.ERROR, e.getMessage());
 		}
 	}
-	
-	/**
-	 * Слушатель неверного ввода данных в таблицу.
-	 */
-	private ErrorInputListener errorInputListener = new ErrorInputListener() {
-		@Override
-		public void createMessage(String message) {
-			createMessageBox (SWT.ERROR, message);
-		}
-	};
 	
 	/**
 	 * Метод создаёт столбцы TableViewerColumn и устанавливает на них CellLabelProvider.
