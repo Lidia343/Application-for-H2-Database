@@ -1,6 +1,4 @@
 package mainPackage;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Класс предназначен для реализации команды добавления пользователя.
@@ -22,15 +20,8 @@ public class CommandAdd implements Command {
 	
 	@Override
 	public void execute() throws Exception {
-		storage.addUser(user);	
-		/*Поскольку у поля user в данном классе не установлено значение ПК (оно устанавливается непосредственно в хранилище),
-		необходимо, предусматривая возможное восстановление пользователя в дальнейшем, после добавления user в хранилище
-		присвоить полю user аналогичное значение из текущего хранилища, но с установленным ПК:*/
-		List<User> users = new ArrayList<>();
-		users = storage.getUsersDataSet(false, false);
-		for (User temp : users) {
-			user = temp;
-		}
+		int currentID = storage.addUser(user);	
+		user.setId(currentID);
 	}
 	
 	@Override public void undo() throws Exception {
