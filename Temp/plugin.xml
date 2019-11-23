@@ -14,15 +14,23 @@
       </application>
    </extension>
    <extension
-         id="product"
+         id="product1"
          point="org.eclipse.core.runtime.products">
       <product
             application="H2DataBasePlug-in.App"
-            name="DataBaseApplicationForH2">
+            name="DatabaseApplication">
          <property
                name="appName"
-               value="DataBaseApplicationForH2">
+               value="DatabaseApplication">
          </property>
+      </product>
+   </extension>
+   <extension
+         id="product2"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="H2DataBasePlug-in.App"
+            name="DatabaseApplication">
       </product>
    </extension>
 
