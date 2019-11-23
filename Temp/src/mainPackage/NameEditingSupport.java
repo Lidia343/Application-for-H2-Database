@@ -26,7 +26,7 @@ public class NameEditingSupport extends UserEditingSupport {
 		ErrorChecker nameChecker = new ErrorChecker();
 		nameChecker.checkName(String.valueOf(userInputValue));
 		if (!nameChecker.getErrorMesssage().equals("")) {
-			errorInputListener.createErrorMessage(nameChecker.getErrorMesssage());
+			errorInputListener.createMessage(nameChecker.getErrorMesssage());
 			return;
 		}
 	    userEditingListener.changeUserNameInStorage((User)element, String.valueOf(userInputValue));

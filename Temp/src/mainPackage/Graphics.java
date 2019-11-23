@@ -400,7 +400,7 @@ public class Graphics {
 	 */
 	private ErrorInputListener errorInputListener = new ErrorInputListener() {
 		@Override
-		public void createErrorMessage(String message) {
+		public void createMessage(String message) {
 			createMessageBox (SWT.ERROR, message);
 		}
 	};

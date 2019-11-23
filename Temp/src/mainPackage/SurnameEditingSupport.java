@@ -26,7 +26,7 @@ public class SurnameEditingSupport extends UserEditingSupport {
 		ErrorChecker surnameChecker = new ErrorChecker();
 		surnameChecker.checkName(String.valueOf(userInputValue));
 		if (!surnameChecker.getErrorMesssage().equals("")) {
-			errorInputListener.createErrorMessage(surnameChecker.getErrorMesssage());
+			errorInputListener.createMessage(surnameChecker.getErrorMesssage());
 			return;
 		}
 		userEditingListener.changeUserSurnameInStorage((User)element, String.valueOf(userInputValue));

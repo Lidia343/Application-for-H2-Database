@@ -26,7 +26,7 @@ public class AgeEditingSupport extends UserEditingSupport {
 		ErrorChecker ageChecker = new ErrorChecker();
 		ageChecker.checkAge(String.valueOf(userInputValue));
 		if (!ageChecker.getErrorMesssage().equals("")) {
-			errorInputListener.createErrorMessage(ageChecker.getErrorMesssage());
+			errorInputListener.createMessage(ageChecker.getErrorMesssage());
 			return;
 		}
 		userEditingListener.changeUserAgeInStorage((User) element, Integer.parseInt(String.valueOf(userInputValue)));
