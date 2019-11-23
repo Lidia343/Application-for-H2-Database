@@ -5,11 +5,16 @@ package mainPackage;
  */
 public class User {
 	
+	public static final int DEFAULT_ID = -1;
 	private int id;
 	private String name;
 	private String surname;
 	private int age;
 	private boolean isActive;
+	
+	public User() {
+		id = DEFAULT_ID;
+	}
 	
 	/**
 	 * Метод устанавливает код пользователя.
