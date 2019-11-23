@@ -6,6 +6,8 @@ package mainPackage;
  * таблицы, в которой хранятся данные пользователей.
  */
 public class UserData {
+	private UserData() {
+	}
 	public static final int FIRSTNAME = 0;
 	public static final int LASTNAME = 1;
 	public static final int AGE = 2;
