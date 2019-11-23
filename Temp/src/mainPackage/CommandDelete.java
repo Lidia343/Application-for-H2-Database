@@ -24,7 +24,7 @@ public class CommandDelete implements Command {
 	}
 	
 	@Override public void undo() throws Exception {
-		storage.addUser(user, user.getId());
+		storage.addUser(user);
 	}
 	
 	@Override

@@ -39,6 +39,6 @@ public class CommandAdd implements Command {
 	
 	@Override
 	public void redo() throws Exception {
-		storage.addUser(user, user.getId());
+		storage.addUser(user);
 	}
 }

@@ -24,15 +24,9 @@ public interface Storage {
 	/**
 	 * Метод для добавления данных пользователя в хранилище.
 	 * @param user - объект, содержащий данные для добавления
+	 * @return код добавленного пользователя
 	 */
-	void addUser(User user) throws Exception;
-	
-	/**
-	 * Метод для добавления данных пользователя в хранилище.
-	 * @param user - объект, содержащий данные для добавления
-	 * @param deletedUserId - код удалённого пользователя (передаётся при восстановлении удалённого пользователя)
-	 */
-	void addUser(User user, int deletedUserId) throws Exception;
+	int addUser(User user) throws Exception;
 	
 	/**
 	 * Метод для изменения данных пользователя в хранилище.

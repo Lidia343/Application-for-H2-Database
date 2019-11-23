@@ -52,26 +52,23 @@ public class DataBase implements Storage {
 		createStorageObject();
 	}
 	
-	/**
-	 * Метод отправляет запрос к БД.
-	 */
-	private void sendAddingRequest(String request) throws SQLException {
-		statement.executeUpdate(request);
+	@Override
+	public int addUser(User user) throws SQLException {
+		String addingReguest;
+		if (user.getId() == -1)
+			addingReguest = "INSERT INTO Users VALUES (DEFAULT, '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
+		else
+			addingReguest = "INSERT INTO Users VALUES (" + user.getId() + ", '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
+		statement.executeUpdate(addingReguest);
+		String selectingRequest = "SELECT * FROM USERS WHERE ID = (SELECT MAX (id) FROM Users)";
+		resultSet = statement.executeQuery(selectingRequest);
+		int currentID = -1;
+		if (resultSet != null)
+			while (resultSet.next())
+				currentID = resultSet.getInt("ID");
+		return currentID;
 	}
 	
-	@Override
-	public void addUser(User user) throws SQLException {
-		String sql = "INSERT INTO Users VALUES (DEFAULT, '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
-		sendAddingRequest (sql);
-	}
-	
-	@Override
-	public void addUser(User user, int deletedId) throws SQLException {
-		System.out.println("yes");
-		String sql = "INSERT INTO Users VALUES (" + deletedId + ", '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
-	    sendAddingRequest (sql);
-	}
-	  
 	@Override
 	public void updateUser(User user) throws SQLException {
 		String sql = "UPDATE Users SET NAME='" + user.getName() + "', SURNAME = '" + user.getSurname() +  "', AGE = " + user.getAge() + ", ISACTIVE = " + user.isActive() + " WHERE ID=" + user.getId();

@@ -27,7 +27,7 @@ public class CommandDeleteAll implements Command{
 	
 	@Override public void undo() throws Exception {
 		for (User user : users) 
-			storage.addUser(user, user.getId());	
+			storage.addUser(user);	
 	}
 	
 	@Override

@@ -184,17 +184,25 @@ public class FileStorage implements Storage {
 	}
 	
 	@Override
-	public void addUser (User user) throws IOException{
-		if (allUsersDeleted) {
-			
-			usersDataList.clear();
-			allUsersDeleted = false;
+	public int addUser (User user) throws IOException{
+		if (user.getId() == -1) {
+			if (allUsersDeleted) {
+				usersDataList.clear();
+				allUsersDeleted = false;
+			}
+			String idLine;
+			idReader = new BufferedReader (new FileReader (maxIdFile));
+			idLine = idReader.readLine();
+			id = Integer.parseInt(idLine);
+			writeUserInFile (user, id, true);
+			System.out.println("" + (id + 1));
+			return (id + 1);
+		} 
+		else {
+			writeUserInFile (user, user.getId() - 1, false);
+			findMaxUserId();
+			return user.getId();
 		}
-		String idLine;
-		idReader = new BufferedReader (new FileReader (maxIdFile));
-		idLine = idReader.readLine();
-		id = Integer.parseInt(idLine);
-		writeUserInFile (user, id, true);
 	}
 	
 	/**
@@ -217,12 +225,6 @@ public class FileStorage implements Storage {
 			
 			updateIdFile(Integer.toString(indexes[maxi]));
 		} else updateIdFile ("-1");
-	}
-	
-	@Override
-	public void addUser (User user, int deletedId) throws IOException {
-		writeUserInFile (user, deletedId - 1, false);
-		findMaxUserId();
 	}
 	
 	/**

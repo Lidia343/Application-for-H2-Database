@@ -23,6 +23,18 @@ public class CommandGenerate implements Command{
 		generatedUsers = new ArrayList<>();
 	}
 	
+	/*@Override
+	public void execute() throws Exception {
+		generatedUsers = generator.generateUsers();
+		User user = null;
+		for (User u : generatedUsers) {
+			storage.addUser(u);
+			allUsers = storage.getUsersDataSet(false, false);
+			for (User temp : allUsers)
+				user = temp;
+			u.setId(user.getId());
+		}
+	}*/
 	@Override
 	public void execute() throws Exception {
 		generatedUsers = generator.generateUsers();
@@ -44,6 +56,6 @@ public class CommandGenerate implements Command{
 	@Override
 	public void redo() throws Exception {
 		for (User user : generatedUsers)
-			storage.addUser(user, user.getId());	
+			storage.addUser(user);	
 	}
 }
