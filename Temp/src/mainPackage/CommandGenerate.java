@@ -27,12 +27,12 @@ public class CommandGenerate implements Command{
 	public void execute() throws Exception {
 		generatedUsers = generator.generateUsers();
 		User user = null;
-		for (int i = 0; i < generatedUsers.size(); i++) {
-			storage.addUser(generatedUsers.get(i));
+		for (User u : generatedUsers) {
+			storage.addUser(u);
 			allUsers = storage.getUsersDataSet(false, false);
 			for (User temp : allUsers)
 				user = temp;
-			generatedUsers.get(i).setId(user.getId());
+			u.setId(user.getId());
 		}
 	}
 	
