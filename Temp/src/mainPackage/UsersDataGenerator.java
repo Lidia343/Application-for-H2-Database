@@ -12,7 +12,7 @@ public class UsersDataGenerator {
 	private List<String> maleNames;
 	private List<String> femaleSurnames;
 	private List<String> maleSurnames;
-	private List<String> generatedUsersData;
+	private List<User> generatedUsers;
 	private int userNumbers;
 	
 	/**
@@ -25,7 +25,7 @@ public class UsersDataGenerator {
 		maleNames = new ArrayList<>();
 		femaleSurnames = new ArrayList<>();
 		maleSurnames = new ArrayList<>();
-		generatedUsersData = new ArrayList<>();
+		generatedUsers = new ArrayList<>();
 		setUsersData();
 	}
 	
@@ -54,21 +54,24 @@ public class UsersDataGenerator {
 	/**
 	 * Метод возвращает список сгенерированных пользовательских данных (каждый элемент списка - отдельное свойство пользователя).
 	 */
-	public List <String> generateUsersData(){
+	public List <User> generateUsers() {
+		User user;
 		for (int i = 0; i < userNumbers; i++) {
+			user = new User();
 			int isMale = (int)Math.round(Math.random());
 			if (isMale == 0){
-				generatedUsersData.add(maleNames.get((int)Math.round(Math.random()*(maleNames.size() - 1))));
-				generatedUsersData.add (maleSurnames.get((int)Math.round(Math.random()*(maleNames.size() - 1))));
+				user.setName(maleNames.get((int)Math.round(Math.random()*(maleNames.size() - 1))));
+				user.setSurname(maleSurnames.get((int)Math.round(Math.random()*(maleSurnames.size() - 1))));
 			} else {
-				generatedUsersData.add(femaleNames.get((int)Math.round(Math.random()*(femaleNames.size() - 1))));
-				generatedUsersData.add (femaleSurnames.get((int)Math.round(Math.random()*(femaleNames.size() - 1))));
+				user.setName(femaleNames.get((int)Math.round(Math.random()*(femaleNames.size() - 1))));
+				user.setSurname(femaleSurnames.get((int)Math.round(Math.random()*(femaleNames.size() - 1))));
 			}
-			generatedUsersData.add(Integer.toString(18 + (int)Math.round(Math.random()*(182))));
+			user.setAge(18 + (int)Math.round(Math.random()*(182)));
 			int activity = (int)Math.round(Math.random());
-			if (activity == 0) generatedUsersData.add(Boolean.toString(true)); else
-			generatedUsersData.add(Boolean.toString(false));
+			if (activity == 0) user.setIsActive(true); else
+				user.setIsActive(false);
+			generatedUsers.add(user);
 		}
-		return generatedUsersData;
+		return generatedUsers;
 	}
 }

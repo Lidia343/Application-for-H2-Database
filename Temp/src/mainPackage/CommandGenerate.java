@@ -10,7 +10,6 @@ public class CommandGenerate implements Command{
 	private Storage storage;
 	private List <User> allUsers;
 	private List <User> generatedUsers;
-	private List<String> generatedUsersLines;
 	private UsersDataGenerator generator;
 
 	/**
@@ -26,7 +25,7 @@ public class CommandGenerate implements Command{
 	
 	@Override
 	public void execute() throws Exception {
-		setGeneratedUsers();
+		generatedUsers = generator.generateUsers();
 		User user = null;
 		for (int i = 0; i < generatedUsers.size(); i++) {
 			storage.addUser(generatedUsers.get(i));
@@ -34,23 +33,6 @@ public class CommandGenerate implements Command{
 			for (User temp : allUsers)
 				user = temp;
 			generatedUsers.get(i).setId(user.getId());
-		}
-	}
-	
-	/**
-	 * Метод устанавливает список для сгенерированных пользователей значениями, полученными 
-	 * из метода генерации пользователей generateUsersData() класса UsersDataGenerator.
-	 */
-	private void setGeneratedUsers() {
-		generatedUsersLines = generator.generateUsersData();
-		User user;
-		for (int i = 0; i < generatedUsersLines.size() - 3; i+=4) {
-			user = new User();
-			user.setName(generatedUsersLines.get(i));
-			user.setSurname(generatedUsersLines.get(i + 1));
-			user.setAge(Integer.parseInt(generatedUsersLines.get(i + 2)));
-			user.setIsActive(Boolean.parseBoolean(generatedUsersLines.get(i + 3)));
-			generatedUsers.add(user);	
 		}
 	}
 	
