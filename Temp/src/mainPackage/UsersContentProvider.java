@@ -15,7 +15,7 @@ public class UsersContentProvider implements IStructuredContentProvider {
 			try {
 				return ((ModelProvider)inputElement).getUsersData().toArray();
 			} catch (Exception e) {
-				return null;
+				System.out.println(e.getMessage());
 			}
 		return null;
 	}
