@@ -22,9 +22,8 @@ public class ErrorChecker {
 	 */
 	public void checkName(String name) {
 		if (isEmptyInput (name)) return;
-		if (name != null) 
-			if (!isName(name)) 
-				errorMessage = "Значение поля \"Имя\"/\"Фамилия\" должно содержать только символы русского или английского алфавита. Длина имени/фамилии не должна превышать 50 символов и быть менее 2 символов.";
+		if (!isName(name)) 
+			errorMessage = "Значение поля \"Имя\"/\"Фамилия\" должно содержать только символы русского или английского алфавита. Длина имени/фамилии не должна превышать 50 символов и быть менее 2 символов.";
 	}
 	
 	/**
@@ -51,22 +50,25 @@ public class ErrorChecker {
 	 */
 	public void checkUserNumbers(String userNumbers) {
 		if (isEmptyInput (userNumbers)) return;
-		if (userNumbers != null) {
-			try { 
-				Integer.parseInt(userNumbers);
-			} catch (NumberFormatException e) {
-				messageCode = SWT.ICON_WARNING; 
-				errorMessage = "Введите целое число";
-			}
+		try { 
+			Integer.parseInt(userNumbers);
+		} catch (NumberFormatException e) {
+			messageCode = SWT.ICON_WARNING; 
+			errorMessage = "Введите целое число";
 		}
 	}
 	
 	/**
-	 * Метод проверяет, является ли переданная строка пустой (если ссылка на объект input не равна null).
-	 * @return true - если строка input пустая, false - в остальных случаях
+	 * Метод проверяет, равна ли ссылка на переданную строку равной null и, если нет, является ли строка пустой.
+	 * @return true - если ссылка на строку input равна null или строка input пустая, false - в остальных случаях
 	 */
 	private boolean isEmptyInput(String input) {
-		if (input != null && input.equals("")) {
+		if (input == null) {
+			messageCode = SWT.ERROR;
+			errorMessage = "Значение переданного параметра равно null.";
+			return true;
+		}
+		if (input.equals("")) {
 			messageCode = SWT.ICON_WARNING;
 			errorMessage = "Все поля должны быть заполнены";
 			return true;
