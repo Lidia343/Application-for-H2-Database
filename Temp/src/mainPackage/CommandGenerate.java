@@ -8,7 +8,6 @@ import java.util.List;
 public class CommandGenerate implements Command{
 	
 	private Storage storage;
-	private List <User> allUsers;
 	private List <User> generatedUsers;
 	private UsersDataGenerator generator;
 
@@ -23,28 +22,13 @@ public class CommandGenerate implements Command{
 		generatedUsers = new ArrayList<>();
 	}
 	
-	/*@Override
-	public void execute() throws Exception {
-		generatedUsers = generator.generateUsers();
-		User user = null;
-		for (User u : generatedUsers) {
-			storage.addUser(u);
-			allUsers = storage.getUsersDataSet(false, false);
-			for (User temp : allUsers)
-				user = temp;
-			u.setId(user.getId());
-		}
-	}*/
 	@Override
 	public void execute() throws Exception {
 		generatedUsers = generator.generateUsers();
-		User user = null;
-		for (User u : generatedUsers) {
-			storage.addUser(u);
-			allUsers = storage.getUsersDataSet(false, false);
-			for (User temp : allUsers)
-				user = temp;
-			u.setId(user.getId());
+		int currentID;
+		for (User user : generatedUsers) {
+			currentID = storage.addUser(user);
+			user.setId(currentID);
 		}
 	}
 	
