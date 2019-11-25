@@ -662,7 +662,8 @@ public class Graphics {
 	private void createMessageBox (int messageCode, String message) {
 		MessageBox messageBox = new MessageBox (shell, messageCode);
 		messageBox.setText("Сообщение");
-		messageBox.setMessage(message);
+		if (message != null) messageBox.setMessage(message); else
+			 messageBox.setMessage("");
 		messageBox.open();
 	}
 	
