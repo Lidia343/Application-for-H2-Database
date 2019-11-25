@@ -111,8 +111,8 @@ public class DataBase implements Storage {
 
 	@Override
 	public void closeStorage() throws SQLException {	
-		resultSet.close();
-		statement.close(); 
-		connection.close();
+		if (resultSet != null) resultSet.close();
+		if (statement != null) statement.close(); 
+		if (connection != null) connection.close();
 	}
 }

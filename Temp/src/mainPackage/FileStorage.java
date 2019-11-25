@@ -333,8 +333,8 @@ public class FileStorage implements Storage {
 	
 	@Override
 	public void closeStorage() throws IOException {
-		reader.close();
+		if (reader != null) reader.close();
 		if (idReader != null) idReader.close();
-		writer.close();
+		if (writer != null) writer.close();
 	}
 }
