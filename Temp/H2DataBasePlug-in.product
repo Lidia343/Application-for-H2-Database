@@ -21,7 +21,8 @@
 
    <plugins>
       <plugin id="H2DataBasePlug-in"/>
-      <plugin id="com.h2database"/>
+      <plugin id="org.h2"/>
+      <plugin id="org.h2.source"/>
    </plugins>
 
 
