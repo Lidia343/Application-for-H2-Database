@@ -22,7 +22,6 @@
    <plugins>
       <plugin id="H2DataBasePlug-in"/>
       <plugin id="org.h2"/>
-      <plugin id="org.h2.source"/>
    </plugins>
 
 
