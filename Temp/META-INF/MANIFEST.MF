@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: H2DataBasePlug-in
-Bundle-SymbolicName: H2DataBasePlug-in;singleton:=true
+Bundle-SymbolicName: Temp;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: H2DataBasePlug-in
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
