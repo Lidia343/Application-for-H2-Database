@@ -7,5 +7,6 @@ Automatic-Module-Name: H2DataBasePlug-in
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.swt,
- org.eclipse.jface
-Import-Package: org.h2
+ org.eclipse.jface,
+ org.h2,
+ org.h2.source
