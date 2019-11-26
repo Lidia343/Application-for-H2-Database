@@ -3,7 +3,7 @@ package mainPackage;
 /**
  * Интерфейс слушателя ввода данных.
  */
-public interface InputListener {
+public interface UserInputValidationResultListener {
 	
 	/**
 	 * Метод для вывода сообщения пользователю.
