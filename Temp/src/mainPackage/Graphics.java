@@ -399,7 +399,7 @@ public class Graphics {
 			commandsExecuter.execute(command);
 			tableViewer.refresh();
 		} catch (Exception e) {
-			createMessageBox (SWT.ERROR, e.getMessage());
+			createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения команды.");
 		}
 	}
 	
@@ -658,6 +658,20 @@ public class Graphics {
 	 * Метод для создания дочернего окна с сообщением пользователю (вид сообщения зависит от переданных параметров).
 	 * @param messageCode - код сообщения (SWT.ERROR или SWT.ICON_INFORMATION)
 	 * @param message - сообщение для пользователя
+	 * @param defaultMessage - сообщение для пользователя по умолчанию (выводится, если message = null)
+	 */
+	private void createMessageBox (int messageCode, String message, String defaultMessage) {
+		if (message == null) message = defaultMessage;
+		MessageBox messageBox = new MessageBox (shell, messageCode);
+		messageBox.setText("Сообщение");
+		messageBox.setMessage(message); 
+		messageBox.open();
+	}
+	
+	/**
+	 * Метод для создания дочернего окна с сообщением пользователю (вид сообщения зависит от переданных параметров).
+	 * @param messageCode - код сообщения (SWT.ERROR или SWT.ICON_INFORMATION)
+	 * @param message - сообщение для пользователя
 	 */
 	private void createMessageBox (int messageCode, String message) {
 		MessageBox messageBox = new MessageBox (shell, messageCode);
@@ -841,7 +855,7 @@ public class Graphics {
 					try {
 						storage.closeStorage();
 					} catch (Exception e) {
-						createMessageBox (SWT.ERROR, e.getMessage());
+						createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения закрытия хранилища.");
 						return;
 					}
 				} else isConnection = true;
@@ -883,7 +897,7 @@ public class Graphics {
 			try {
 				commandsExecuter.execute (new CommandGenerate (storage, userNumbers));
 			} catch (Exception e) {
-				createMessageBox (SWT.ERROR, e.getMessage());
+				createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения команды генерации пользователей.");
 			}
 			tableViewer.refresh();
 			if ((tableItemCount + userNumbers) < 9) shell.pack();
@@ -918,7 +932,7 @@ public class Graphics {
 					clearTextFields();
 					if ((table.getItemCount() + 1) < 9) shell.pack();
 				} catch(Exception e) { 		
-					createMessageBox (SWT.ERROR, e.getMessage());
+					createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения команды добавления пользователя.");
 				} 	
 			} else createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
 		}
@@ -955,7 +969,7 @@ public class Graphics {
 					try {
 						commandsExecuter.undo();
 					} catch (Exception e) {
-						createMessageBox(SWT.ERROR, e.getMessage());
+						createMessageBox(SWT.ERROR, e.getMessage(), "Ошибка выполнения отмены команды.");
 						return;
 					}
 					clearTextFields();
@@ -977,7 +991,7 @@ public class Graphics {
 					try {
 						commandsExecuter.redo();
 					} catch (Exception e) {
-						createMessageBox(SWT.ERROR, e.getMessage());
+						createMessageBox(SWT.ERROR, e.getMessage(), "Ошибка выполнения отмены отмены команды.");
 						return;
 					}
 					clearTextFields();
@@ -1015,21 +1029,24 @@ public class Graphics {
 			}
 			clearTextFields();
 			
+			String potentialErrorMesaage = "";
 			try {
 				List<User> users = new ArrayList<User>();
+				potentialErrorMesaage = "Ошибка выполнения получения данных из хранилища.";
 				users = storage.getUsersDataSet(false, false);
 				User user = null;
 				for (User temp : users) {
 					if (temp.getId() == selectedId) user = temp;
 				}
+				potentialErrorMesaage = "Ошибка выполнения команды удаления пользователя.";
 				commandsExecuter.execute(new CommandDelete (storage, user));
-			
 				titleLabel.setText("Добавление пользователя:");
 			
 				tableViewer.refresh();
+				potentialErrorMesaage = "Ошибка выполнения обновления хранилища.";
 				if (table.getItemCount() == 0) storage.updateStorageObject();
 			} catch (Exception e) {
-				createMessageBox(SWT.ERROR, e.getMessage());
+				createMessageBox(SWT.ERROR, e.getMessage(), potentialErrorMesaage);
 			}
 		}
 	};
@@ -1049,27 +1066,32 @@ public class Graphics {
 				return;
 			}
 			clearTextFields();
+			String potentialErrorMessage = "Ошибка выполнения команды удаления пользователей.";
 			try {
 				commandsExecuter.execute(new CommandDeleteAll (storage));
 				titleLabel.setText("Добавление пользователя:");
 				tableViewer.refresh();
+				potentialErrorMessage = "Ошибка выполнения обновления хранилища.";
 				storage.updateStorageObject();
 			} catch (Exception e) {
-				createMessageBox(SWT.ERROR, e.getMessage());
+				createMessageBox(SWT.ERROR, e.getMessage(), potentialErrorMessage);
 			}
 		}
 	};
 	
 	/**
-	 * Метод для установки соединения с базой данных.
+	 * Метод для установки соединения с хранилищем.
 	 */
 	private void setStorage() {
 		storage = storageFactory.getStorage(combo.getText());
+		String potentialErrorMessage = "";
 		try {
 			if (combo.getText().equals("")) combo.setText(defaultDatabaseName);
+			potentialErrorMessage = "Ошибка выполнения установки соединения с хранилищем.";
 			storage.setStorage(); 
 			shellProperties = shellPropertiesFactory.getShellProperties(storage);
 			setShell (shell);
+			potentialErrorMessage = "Ошибка выполнения создания хранилища.";
 			storage.createStorageObject();
 			ModelProvider modelProvider = new ModelProvider(storage);
 			tableViewer.setInput(modelProvider);
@@ -1077,7 +1099,7 @@ public class Graphics {
 			setEditingSupportForColumns();
 			tableViewer.refresh();
 		} catch (Exception e) {
-			createMessageBox(SWT.ERROR, e.getMessage());
+			createMessageBox(SWT.ERROR, e.getMessage(), potentialErrorMessage);
 			return;
 		}
 	}
