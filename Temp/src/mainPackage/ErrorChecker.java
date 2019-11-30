@@ -63,11 +63,8 @@ public class ErrorChecker {
 	 * @return true - если ссылка на строку input равна null или строка input пустая, false - в остальных случаях
 	 */
 	private boolean isEmptyInput(String input) {
-		if (input == null) {
-			messageCode = SWT.ERROR;
-			errorMessage = "Значение переданного параметра равно null.";
-			return true;
-		}
+		if (input == null) 
+			throw new IllegalArgumentException("В метод isEmptyInput() не должно передаваться значение null.");
 		if (input.equals("")) {
 			messageCode = SWT.ICON_WARNING;
 			errorMessage = "Все поля должны быть заполнены";
