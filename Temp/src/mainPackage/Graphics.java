@@ -10,10 +10,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Table;
@@ -29,8 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -125,8 +125,8 @@ public class Graphics {
 	 */
 	public void createWindow() {
 		
-		shell.addKeyListener(cancelPressingListener);
-		shell.addKeyListener(doubleCancelPressingListener);
+		display.addFilter(SWT.KeyDown, cancelPressingListener);
+		display.addFilter(SWT.KeyDown, doubleCancelPressingListener);
 		
 		paleForeColor = new Color (display, 170, 250, 170); 
 		lightForeColor = new Color (display, 100, 250, 100);
@@ -290,7 +290,6 @@ public class Graphics {
 	    
 	    tableViewer.setContentProvider(new UsersContentProvider());
 	    tableViewer.addSelectionChangedListener(tableRowSelection);
-	    // table.setSortDirection(SWT.UP);
 	    
 	    TableColumnLayout tableColumnLayout = new TableColumnLayout();
 	    tableComposite.setLayout(tableColumnLayout);
@@ -555,8 +554,6 @@ public class Graphics {
 		text.setBackground(backColor);
 		text.setForeground(lightForeColor);
 		text.setFont(font);
-		text.addKeyListener(cancelPressingListener);
-		text.addKeyListener(doubleCancelPressingListener);
 	}
 	
 	/**
@@ -578,8 +575,6 @@ public class Graphics {
 		button.setBackground(backColor);
 		button.setForeground(paleForeColor);
 		button.setFont(font);
-		button.addKeyListener(cancelPressingListener);
-		button.addKeyListener(doubleCancelPressingListener);
 		button.addSelectionListener(isPressingSelection);
 	}	
 	
@@ -649,8 +644,6 @@ public class Graphics {
 			table.setFont(font);
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
-			table.addKeyListener(cancelPressingListener);
-			table.addKeyListener(doubleCancelPressingListener);
 		}
 	}
 	
@@ -960,11 +953,10 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия "Control + z".
 	 */
-	KeyAdapter cancelPressingListener  = new KeyAdapter() {
+    Listener cancelPressingListener  = new Listener() {
 		@Override
-		public void keyPressed (KeyEvent key) {
-			
-			if ((int)key.character == 0x1a) { //Код комбинации "Control + z"
+		public void handleEvent(Event event) {
+			if ((int)event.character == 0x1a) { //Код комбинации "Control + z"
 				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
 						commandsExecuter.undo();
@@ -982,11 +974,10 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия "Control + y".
 	 */
-	KeyAdapter doubleCancelPressingListener  = new KeyAdapter() {
+	Listener doubleCancelPressingListener  = new Listener() {
 		@Override
-		public void keyPressed (KeyEvent key) {
-			
-			if ((int)key.character == 0x19) { //Код комбинации "Control + Y"
+		public void handleEvent(Event event) {
+			if ((int)event.character == 0x19) { //Код комбинации "Control + Y"
 				if (commandsExecuter.getCommandsListSize() != 0) {
 					try {
 						commandsExecuter.redo();
