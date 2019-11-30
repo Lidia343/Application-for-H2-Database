@@ -5,11 +5,9 @@ package mainPackage;
  * неизменяемым полям, каждое из которых соответствует одному из столбцов 
  * таблицы, в которой хранятся данные пользователей.
  */
-public class UserData {
-	private UserData() {
-	}
-	public static final int FIRSTNAME = 0;
-	public static final int LASTNAME = 1;
-	public static final int AGE = 2;
-	public static final int ISACTIVE = 3;
+public interface UserData {
+	int FIRSTNAME = 0;
+	int LASTNAME = 1;
+	int AGE = 2;
+	int ISACTIVE = 3;
 }
