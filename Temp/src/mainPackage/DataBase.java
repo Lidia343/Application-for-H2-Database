@@ -62,13 +62,11 @@ public class DataBase implements Storage {
 		else
 			addingReguest = insertingRequestPart + user.getId() + userRequestPart; 
 		
-		statement.executeUpdate(addingReguest, Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate(addingReguest, Statement.RETURN_GENERATED_KEYS);	
 		resultSet = statement.getGeneratedKeys();
 		if (resultSet != null)
-			while (resultSet.next()) {
-				System.out.println("" + resultSet.getInt(1));
+			while (resultSet.next()) 
 				return resultSet.getInt(1);
-			}
 		return -1;
 	}
 	
