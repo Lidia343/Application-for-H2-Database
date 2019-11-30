@@ -42,7 +42,7 @@ public class ShellProperties {
 		 */
 		private void setImage () {
 			try {
-				InputStream stream = Graphics.class.getResourceAsStream(imageName);
+				InputStream stream = Graphics.class.getResourceAsStream("/icons/" + imageName);
 				image = new Image (Display.getDefault(), stream);
 				stream.close();
 			} catch (Exception e) {
