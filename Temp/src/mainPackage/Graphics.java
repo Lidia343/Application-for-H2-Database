@@ -609,7 +609,6 @@ public class Graphics {
         TableColumn column = viewerColumn.getColumn();
         column.setText(title);
         column.addSelectionListener(getSelectionAdapter(column, colNumber));
-        //createMenuItem(contextMenu, column);
         return viewerColumn;
 	}
 
@@ -626,6 +625,7 @@ public class Graphics {
 	                comparator.setColumn(index);
 	                int dir = comparator.getDirection();
 	                tableViewer.getTable().setSortDirection(dir);
+	                tableViewer.getTable().setSortColumn(column);
 	                tableViewer.refresh();
 	            }
 	        };
