@@ -54,11 +54,13 @@ public class DataBase implements Storage {
 	
 	@Override
 	public int addUser(User user) throws SQLException {
+		String insertingRequestPart = "INSERT INTO Users VALUES (";
+		String userRequestPart = ", '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")";
 		String addingReguest;
 		if (user.getId() == -1)
-			addingReguest = "INSERT INTO Users VALUES (DEFAULT, '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
+			addingReguest = insertingRequestPart + "DEFAULT" + userRequestPart; 
 		else
-			addingReguest = "INSERT INTO Users VALUES (" + user.getId() + ", '" + user.getName() + "', '" + user.getSurname() + "', " + user.getAge() + ", " + user.isActive() + ")"; 
+			addingReguest = insertingRequestPart + user.getId() + userRequestPart; 
 		statement.executeUpdate(addingReguest);
 		String selectingRequest = "SELECT * FROM USERS WHERE ID = (SELECT MAX (id) FROM Users)";
 		resultSet = statement.executeQuery(selectingRequest);
@@ -71,7 +73,8 @@ public class DataBase implements Storage {
 	
 	@Override
 	public void updateUser(User user) throws SQLException {
-		String sql = "UPDATE Users SET NAME='" + user.getName() + "', SURNAME = '" + user.getSurname() +  "', AGE = " + user.getAge() + ", ISACTIVE = " + user.isActive() + " WHERE ID=" + user.getId();
+		String sql = "UPDATE Users SET NAME='" + user.getName() + "', SURNAME = '" + user.getSurname() 
+		+  "', AGE = " + user.getAge() + ", ISACTIVE = " + user.isActive() + " WHERE ID=" + user.getId();
 		statement.executeUpdate(sql);
 	  }
 	  
@@ -91,10 +94,10 @@ public class DataBase implements Storage {
 	@Override
 	public List <User> getUsersDataSet(boolean sorting, boolean usersIsDeleted) throws SQLException {
 		List <User> users = new ArrayList <>();
+		String selectingRequest = "SELECT id, Name, Surname, Age, isActive FROM Users";
+		if (sorting)  resultSet = statement.executeQuery(selectingRequest + "order by id"); else
+		resultSet = statement.executeQuery(selectingRequest);
 		
-		if (sorting)  resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users order by id"); else
-		resultSet = statement.executeQuery("SELECT id, Name, Surname, Age, isActive FROM Users");
-
 	    while (resultSet.next())
 		if (resultSet != null) {	
 			User user = new User();
