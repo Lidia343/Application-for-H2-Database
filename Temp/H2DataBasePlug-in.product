@@ -20,7 +20,9 @@
    </vm>
 
    <plugins>
-      <plugin id="H2DataBasePlug-in"/>
+      <plugin id="Temp"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.swt"/>
       <plugin id="org.h2"/>
    </plugins>
 
