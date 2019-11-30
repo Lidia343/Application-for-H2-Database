@@ -17,6 +17,6 @@ public class UsersContentProvider implements IStructuredContentProvider {
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-		return null;
+		return new Object[0];
 	}
 }
