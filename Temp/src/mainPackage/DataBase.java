@@ -61,14 +61,15 @@ public class DataBase implements Storage {
 			addingReguest = insertingRequestPart + "DEFAULT" + userRequestPart; 
 		else
 			addingReguest = insertingRequestPart + user.getId() + userRequestPart; 
-		statement.executeUpdate(addingReguest);
-		String selectingRequest = "SELECT * FROM USERS WHERE ID = (SELECT MAX (id) FROM Users)";
-		resultSet = statement.executeQuery(selectingRequest);
-		int currentID = -1;
+		
+		statement.executeUpdate(addingReguest, Statement.RETURN_GENERATED_KEYS);
+		resultSet = statement.getGeneratedKeys();
 		if (resultSet != null)
-			while (resultSet.next())
-				currentID = resultSet.getInt("ID");
-		return currentID;
+			while (resultSet.next()) {
+				System.out.println("" + resultSet.getInt(1));
+				return resultSet.getInt(1);
+			}
+		return -1;
 	}
 	
 	@Override
