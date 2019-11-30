@@ -9,7 +9,7 @@
             thread="main"
             visible="true">
          <run
-               class="mainPackage.Application">
+               class="main.Application">
          </run>
       </application>
    </extension>
