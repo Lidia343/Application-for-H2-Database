@@ -1,5 +1,7 @@
 package errors;
 
+import editing.InputValidationResultListener;
+
 /**
  * Класс предназначен для реализации слушателя неверного ввода данных.
  */

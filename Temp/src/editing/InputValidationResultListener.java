@@ -1,4 +1,4 @@
-package errors;
+package editing;
 
 /**
  * Интерфейс слушателя ввода данных.
