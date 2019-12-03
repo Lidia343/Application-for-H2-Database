@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="stores" name="Stores" schema="schema/stores.exsd"/>
    <extension
          id="App"
          point="org.eclipse.core.runtime.applications">
@@ -24,6 +25,13 @@
                value="DatabaseApplication">
          </property>
       </product>
+   </extension>
+   <extension
+         point="Temp.stores">
+      <store
+            class="storages.DataBase"
+            name="jdbc:h2:~/test">
+      </store>
    </extension>
 
 </plugin>
