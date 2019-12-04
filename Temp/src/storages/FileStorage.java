@@ -198,7 +198,6 @@ public class FileStorage implements Storage {
 			idLine = idReader.readLine();
 			id = Integer.parseInt(idLine);
 			writeUserInFile (user, id, true);
-			System.out.println("" + (id + 1));
 			return (id + 1);
 		} 
 		else {
