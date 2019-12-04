@@ -2,7 +2,10 @@ package storages;
 
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+
+import storages.DataBase;
 /**
  * Фабрика для создания объектов классов, реализующих интерфейс Storage.
  */
@@ -13,6 +16,7 @@ public class StorageFactory
 	/**
 	 * Метод возвращает хранилище данных пользователей.
 	 * @param a_storageName - имя хранилища
+	 * @throws CoreException 
 	 */
 	public Storage getStorage(String a_storageName) 
 	{
@@ -23,8 +27,14 @@ public class StorageFactory
 		{
 			if (a_storageName.equals(m_extension.getAttribute("name"))) 
 			{
-				m_storage = new DataBase(a_storageName);
-				return m_storage;
+				try
+				{
+					return (DataBase)m_extension.createExecutableExtension("class");
+				}
+				catch(CoreException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 		if (a_storageName.endsWith(".txt")) 

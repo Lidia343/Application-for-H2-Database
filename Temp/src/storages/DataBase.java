@@ -8,12 +8,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IContributor;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
+
 import user.User;  
 
 /**
  * Класс предназначен для работы с базой данных.
  */
-public class DataBase implements Storage 
+public class DataBase implements Storage, IExecutableExtension
 {
 	private String m_JDBC_Driver;
 	private String m_databaseName;
@@ -29,6 +36,12 @@ public class DataBase implements Storage
 	public DataBase(String a_databaseName) 
 	{
 		m_databaseName = a_databaseName;
+		m_JDBC_Driver = "org.h2.Driver"; 
+	}
+	public DataBase() 
+	{
+		//m_databaseName = this.getAttribute("name");
+		//m_databaseName = "jdbc:h2:~/test";
 		m_JDBC_Driver = "org.h2.Driver"; 
 	}
 	  
@@ -135,5 +148,14 @@ public class DataBase implements Storage
 		if (m_resultSet != null) m_resultSet.close();
 		if (m_statement != null) m_statement.close(); 
 		if (m_connection != null) m_connection.close();
+	}
+
+	
+	@Override
+	public void setInitializationData(IConfigurationElement a_config, String a_propertyName,
+			Object a_data) throws CoreException
+	{
+		System.out.println(a_config.getAttribute("name"));
+		m_databaseName = a_config.getAttribute("name");
 	}
 }
