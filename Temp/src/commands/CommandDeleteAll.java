@@ -8,33 +8,37 @@ import user.User;
 /**
  * Класс предназначен для реализации команды удаления всех пользователей.
  */
-public class CommandDeleteAll implements Command{
-	
-	private final Storage storage;
-	private List<User> users;
+public class CommandDeleteAll implements Command
+{
+	private final Storage m_storage;
+	private List<User> m_users;
 	
 	/**
 	 * Конструктор класса CommandDelete.
-	 * @param storage - хранилище данных пользователей
+	 * @param a_storage - хранилище данных пользователей
 	 * @throws Exception 
 	 */
-	public CommandDeleteAll (Storage storage) {
-		this.storage = storage;
+	public CommandDeleteAll (Storage a_storage) 
+	{
+		m_storage = a_storage;
 	}
 	
 	@Override
-	public void execute() throws Exception {
-		users = storage.getUsersDataSet(false, true);
-		storage.deleteAllUsers();
+	public void execute() throws Exception 
+	{
+		m_users = m_storage.getUsersDataSet(false, true);
+		m_storage.deleteAllUsers();
 	}
 	
-	@Override public void undo() throws Exception {
-		for (User user : users) 
-			storage.addUser(user);	
+	@Override public void undo() throws Exception 
+	{
+		for (User user : m_users) 
+			m_storage.addUser(user);	
 	}
 	
 	@Override
-	public void redo() throws Exception {
-		storage.deleteAllUsers();
+	public void redo() throws Exception 
+	{
+		m_storage.deleteAllUsers();
 	}
 }

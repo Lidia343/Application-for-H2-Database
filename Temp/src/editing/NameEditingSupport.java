@@ -9,31 +9,35 @@ import user.UserEditingListener;
 /**
  * Класс предназначен для реализации поддержки редактирования столбца "Имя" таблицы Table.
  */
-public class NameEditingSupport extends UserEditingSupport {
-	
+public class NameEditingSupport extends UserEditingSupport 
+{
 	/**
 	 * Конструктор класса AgeEditingSupport.
-	 * @param viewer - объект класса TableViewer, связанный с таблицей
-	 * @param userEditingListener - слушатель нажатия на столбец таблицы
-	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
+	 * @param a_viewer - объект класса TableViewer, связанный с таблицей
+	 * @param a_userEditingListener - слушатель нажатия на столбец таблицы
+	 * @param a_errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public NameEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultHandler errorInputListener) {
-		super(viewer, userEditingListener, errorInputListener);
+	public NameEditingSupport(TableViewer a_viewer, UserEditingListener a_userEditingListener, InputValidationResultHandler a_errorInputListener) 
+	{
+		super(a_viewer, a_userEditingListener, a_errorInputListener);
 	}
 
 	@Override
-	protected Object getValue(Object element) {
-	    return ((User) element).getName();
+	protected Object getValue(Object a_element) 
+	{
+	    return ((User) a_element).getName();
 	}
 
 	@Override
-	protected void setValue(Object element, Object userInputValue) {
-		ErrorChecker nameChecker = new ErrorChecker();
-		nameChecker.checkName(String.valueOf(userInputValue));
-		if (!nameChecker.getErrorMesssage().equals("")) {
-			errorInputListener.createMessage(nameChecker.getErrorMesssage());
+	protected void setValue(Object a_element, Object a_userInputValue) 
+	{
+		ErrorChecker m_nameChecker = new ErrorChecker();
+		m_nameChecker.checkName(String.valueOf(a_userInputValue));
+		if (!m_nameChecker.getErrorMesssage().equals("")) 
+		{
+			m_errorInputListener.createMessage(m_nameChecker.getErrorMesssage());
 			return;
 		}
-	    userEditingListener.changeUserName((User)element, String.valueOf(userInputValue));
+		m_userEditingListener.changeUserName((User)a_element, String.valueOf(a_userInputValue));
 	}
 }

@@ -60,692 +60,751 @@ import user.UsersContentProvider;
 /**
  * Класс предназначен для создания интерфейса программы и реализации взаимодействия с пользователем через данный интерфейс.
  */
-public class Graphics {
+public class Graphics 
+{
+	private ShellPropertiesFactory m_shellPropertiesFactory;
+	private ShellProperties m_shellProperties;
+	private Display m_display; 
+	private Shell m_shell; 
+	private Color m_paleForeColor; 
+	private Color m_lightForeColor;
+	private Color m_buttonBackColor;
+	private Color m_buttonForeColor;
+	private Color m_backColor; 
+	private Font m_font; 
 	
-	private ShellPropertiesFactory shellPropertiesFactory;
-	private ShellProperties shellProperties;
-	private Display display; 
-	private Shell shell; 
-	private Color paleForeColor; 
-	private Color lightForeColor;
-	private Color buttonBackColor;
-	private Color buttonForeColor;
-	private Color backColor; 
-	private Font font; 
+	private TableViewer m_tableViewer;
+	private TableViewerComparator m_comparator;
 	
-	private TableViewer tableViewer;
-	private TableViewerComparator comparator;
+	private Button m_darkThemeButton;
+	private Button m_lightThemeButton;
+	private Composite m_heightComposite;
+	private Composite m_genAndAddComposite;
+	private Composite m_themeComposite;
+	private Composite m_tableComposite;
+	private Composite m_downComposite;
+	private Combo m_combo;
+	private Button m_openingStorageButton;
+	private Label m_titleLabel;
+	private Label m_lightThemeLabel;
+	private Label m_darkThemeLabel;
+	private Label m_choosingLabel;
+	private Label m_nameLabel;
+	private Label m_surnameLabel;
+	private Label m_ageLabel;
+	private Label m_isActiveLabel;
+	private Label m_userChoosingLabel;
+	private Text m_nameText;
+	private Text m_surnameText;
+	private Text m_ageText;
+	private Text m_userNumbersText;
+	private Button m_generatingButton;
+	private Button m_addingUserButton;
+	private Button m_isActiveButton;
+	private Table m_table;
+	private Button m_deletingUserButton;
+	private Button m_deletingAllUsersButton;
 	
-	private Button darkThemeButton;
-	private Button lightThemeButton;
-	private Composite heightComposite;
-	private Composite genAndAddComposite;
-	private Composite themeComposite;
-	private Composite tableComposite;
-	private Composite downComposite;
-	private Combo combo;
-	private Button openingStorageButton;
-	private Label titleLabel;
-	private Label lightThemeLabel;
-	private Label darkThemeLabel;
-	private Label choosingLabel;
-	private Label nameLabel;
-	private Label surnameLabel;
-	private Label ageLabel;
-	private Label isActiveLabel;
-	private Label userChoosingLabel;
-	private Text nameText;
-	private Text surnameText;
-	private Text ageText;
-	private Text userNumbersText;
-	private Button generatingButton;
-	private Button addingUserButton;
-	private Button isActiveButton;
-	private Table table;
-	private Button deletingUserButton;
-	private Button deletingAllUsersButton;
+	private final String m_defaultDatabaseName = "jdbc:h2:~/test";
+	private final String m_defaultFileName = "file.txt";
 	
-	private final String defaultDatabaseName = "jdbc:h2:~/test";
-	private final String defaultFileName = "file.txt";
+	private AgeEditingSupport m_ageEditingSupport;
+	private NameEditingSupport m_nameEditingSupport;
+	private SurnameEditingSupport m_surnameEditingSupport;
+	private IsActiveEditingSupport m_isActiveEditingSupport;
 	
-	private AgeEditingSupport ageEditingSupport;
-	private NameEditingSupport nameEditingSupport;
-	private SurnameEditingSupport surnameEditingSupport;
-	private IsActiveEditingSupport isActiveEditingSupport;
+	private TableViewerColumn m_nameColumn;
+	private TableViewerColumn m_surnameColumn;
+	private TableViewerColumn m_ageColumn;
+	private TableViewerColumn m_isActiveColumn;
 	
-	private TableViewerColumn nameColumn;
-	private TableViewerColumn surnameColumn;
-	private TableViewerColumn ageColumn;
-	private TableViewerColumn isActiveColumn;
+	private StorageFactory m_storageFactory;
+	private Storage m_storage;
 	
-	private StorageFactory storageFactory;
-	private Storage storage;
+	private boolean m_isDarkColor;
+	private int m_selectedId;
+	private boolean m_isConnection;
 	
-	private boolean isDarkColor;
-	private int selectedId;
-	private boolean isConnection;
-	
-	private CommandsExecuter commandsExecuter;
+	private CommandsExecuter m_commandsExecuter;
 	
 	/**
 	 * Конструктор класса Graphics.
 	 */
-	public Graphics() {
-		display = new Display();
-		shell = new Shell (display);
-		shellPropertiesFactory = new ShellPropertiesFactory();
-		storageFactory = new StorageFactory();
-		isConnection = false;
-		commandsExecuter = new CommandsExecuter();
-		isDarkColor = true;
-		comparator = new TableViewerComparator();
+	public Graphics() 
+	{
+		m_display = new Display();
+		m_shell = new Shell (m_display);
+		m_shellPropertiesFactory = new ShellPropertiesFactory();
+		m_storageFactory = new StorageFactory();
+		m_isConnection = false;
+		m_commandsExecuter = new CommandsExecuter();
+		m_isDarkColor = true;
+		m_comparator = new TableViewerComparator();
 	}
 	
 	/**
 	 * Метод для создания и инициализации графических компонентов.
 	 */
-	public void createWindow() {
+	public void createWindow() 
+	{
+		m_display.addFilter(SWT.KeyDown, m_cancelPressingListener);
+		m_display.addFilter(SWT.KeyDown, m_doubleCancelPressingListener);
 		
-		display.addFilter(SWT.KeyDown, cancelPressingListener);
-		display.addFilter(SWT.KeyDown, doubleCancelPressingListener);
+		m_paleForeColor = new Color (m_display, 170, 250, 170); 
+		m_lightForeColor = new Color (m_display, 100, 250, 100);
+		m_buttonBackColor = new Color (m_display, 200, 200, 200);
+		m_buttonForeColor = new Color (m_display, 30, 50, 30);
+		m_backColor = new Color (m_display, 83, 82, 82);   
+		m_font = new Font(m_display, "Courier New", 13, SWT.NORMAL);
 		
-		paleForeColor = new Color (display, 170, 250, 170); 
-		lightForeColor = new Color (display, 100, 250, 100);
-		buttonBackColor = new Color (display, 200, 200, 200);
-		buttonForeColor = new Color (display, 30, 50, 30);
-		backColor = new Color (display, 83, 82, 82);   
-		font = new Font(display, "Courier New", 13, SWT.NORMAL);
+		m_shellProperties = m_shellPropertiesFactory.getShellProperties(m_storage, new Point (900, 550), m_backColor, m_isDarkColor);
+		setShell(m_shell);
+		createGridLayout(m_shell); 
 		
-		shellProperties = shellPropertiesFactory.getShellProperties(storage, new Point (900, 550), backColor, isDarkColor);
-		setShell(shell);
-		createGridLayout(shell); 
+		m_themeComposite = new Composite (m_shell, SWT.BORDER);
+		GridData m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		m_themeComposite.setBackground(m_backColor);
+		m_themeComposite.setLayoutData(m_gridData);
+		createGridLayout (m_themeComposite, 4);
 		
-		themeComposite = new Composite (shell, SWT.BORDER);
-		GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
-		themeComposite.setBackground(backColor);
-		themeComposite.setLayoutData(gridData);
-		createGridLayout (themeComposite, 4);
+		m_darkThemeLabel = new Label (m_themeComposite, SWT.NONE);
+		m_gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		m_darkThemeLabel.setLayoutData(m_gridData);
+		setLabel (m_darkThemeLabel, "Тёмная тема:");
 		
-		darkThemeLabel = new Label (themeComposite, SWT.NONE);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
-		darkThemeLabel.setLayoutData(gridData);
-		setLabel (darkThemeLabel, "Тёмная тема:");
+		m_darkThemeButton = new Button (m_themeComposite, SWT.RADIO);
+		m_gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
+		m_darkThemeButton.setLayoutData(m_gridData);
+		setButton(m_darkThemeButton, ""); 
+		m_darkThemeButton.setSelection(true);
 		
-		darkThemeButton = new Button (themeComposite, SWT.RADIO);
-		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
-		darkThemeButton.setLayoutData(gridData);
-		setButton(darkThemeButton, ""); 
-		darkThemeButton.setSelection(true);
+		m_lightThemeLabel = new Label (m_themeComposite, SWT.NONE);
+		m_gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		m_lightThemeLabel.setLayoutData(m_gridData);
+		setLabel (m_lightThemeLabel, "Светлая тема:");
 		
-		lightThemeLabel = new Label (themeComposite, SWT.NONE);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
-		lightThemeLabel.setLayoutData(gridData);
-		setLabel (lightThemeLabel, "Светлая тема:");
-		
-		lightThemeButton = new Button (themeComposite, SWT.RADIO);
-		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
-		lightThemeButton.setLayoutData(gridData);
-		setButton(lightThemeButton, ""); 
+		m_lightThemeButton = new Button (m_themeComposite, SWT.RADIO);
+		m_gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
+		m_lightThemeButton.setLayoutData(m_gridData);
+		setButton(m_lightThemeButton, ""); 
 	
-		darkThemeButton.addSelectionListener(darkThemeSelection);
-		lightThemeButton.addSelectionListener(lightThemeSelection);
+		m_darkThemeButton.addSelectionListener(m_darkThemeSelection);
+		m_lightThemeButton.addSelectionListener(m_lightThemeSelection);
 		
-		//Композит для размещения choosingLabel с надписью "Имя хранилища", списка combo для временного хранения имён хранилищ и кнопки "Открыть" для открытия указанного хранилища:
-		heightComposite = new Composite (shell, SWT.BORDER);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
-		heightComposite.setBackground(backColor);
-		heightComposite.setLayoutData(gridData);
+		//Композит для размещения choosingLabel с надписью "Имя хранилища", списка m_combo для временного хранения имён хранилищ и кнопки "Открыть" для открытия указанного хранилища:
+		m_heightComposite = new Composite (m_shell, SWT.BORDER);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		m_heightComposite.setBackground(m_backColor);
+		m_heightComposite.setLayoutData(m_gridData);
 		
-		createGridLayout (heightComposite, 2);
+		createGridLayout (m_heightComposite, 2);
 		
-		choosingLabel = new Label (heightComposite, SWT.NONE);
-		gridData = createGridData(SWT.LEFT, false, 0, 0, 0, 0);
-		choosingLabel.setLayoutData(gridData);
-		setLabel(choosingLabel, "Имя хранилища:");
+		m_choosingLabel = new Label (m_heightComposite, SWT.NONE);
+		m_gridData = createGridData(SWT.LEFT, false, 0, 0, 0, 0);
+		m_choosingLabel.setLayoutData(m_gridData);
+		setLabel(m_choosingLabel, "Имя хранилища:");
 		
-		combo = new Combo (heightComposite, SWT.DROP_DOWN);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
-		combo.setLayoutData(gridData);
-		setCombo (combo);
-		combo.add(defaultDatabaseName);
-		combo.add(defaultFileName);
-		combo.addModifyListener(comboModification);
+		m_combo = new Combo (m_heightComposite, SWT.DROP_DOWN);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
+		m_combo.setLayoutData(m_gridData);
+		setCombo (m_combo);
+		m_combo.add(m_defaultDatabaseName);
+		m_combo.add(m_defaultFileName);
+		m_combo.addModifyListener(m_comboModification);
 		
-		openingStorageButton = new Button (heightComposite, SWT.PUSH);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 2);
-		int choosingButtonWidthHint = gridData.widthHint;
-		openingStorageButton.setLayoutData(gridData);
-		setButton(openingStorageButton, "Открыть"); 
+		m_openingStorageButton = new Button (m_heightComposite, SWT.PUSH);
+		m_gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 2);
+		int choosingButtonWidthHint = m_gridData.widthHint;
+		m_openingStorageButton.setLayoutData(m_gridData);
+		setButton(m_openingStorageButton, "Открыть"); 
 		
-		titleLabel = new Label(shell, SWT.NONE);
-		gridData = createGridData(SWT.CENTER, false, 0, 0, 0, 2);
-		titleLabel.setLayoutData(gridData);
-		setLabel(titleLabel, "Добавление пользователя:");
+		m_titleLabel = new Label(m_shell, SWT.NONE);
+		m_gridData = createGridData(SWT.CENTER, false, 0, 0, 0, 2);
+		m_titleLabel.setLayoutData(m_gridData);
+		setLabel(m_titleLabel, "Добавление пользователя:");
 		
-		nameLabel = new Label(shell, SWT.NONE);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
-		nameLabel.setLayoutData(gridData);
-		setLabel(nameLabel, "Имя:");
+		m_nameLabel = new Label(m_shell, SWT.NONE);
+		m_gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		m_nameLabel.setLayoutData(m_gridData);
+		setLabel(m_nameLabel, "Имя:");
 		
-		nameText = new Text (shell, SWT.BORDER);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
-		nameText.setLayoutData(gridData);
-		setText(nameText, true);
+		m_nameText = new Text (m_shell, SWT.BORDER);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
+		m_nameText.setLayoutData(m_gridData);
+		setText(m_nameText, true);
 		
-		surnameLabel = new Label (shell, SWT.NONE);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
-		surnameLabel.setLayoutData(gridData);
-		setLabel (surnameLabel, "Фамилия:");
+		m_surnameLabel = new Label (m_shell, SWT.NONE);
+		m_gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		m_surnameLabel.setLayoutData(m_gridData);
+		setLabel (m_surnameLabel, "Фамилия:");
 		
-		surnameText = new Text (shell, SWT.BORDER);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
-		surnameText.setLayoutData(gridData);
-		setText(surnameText, true);
+		m_surnameText = new Text (m_shell, SWT.BORDER);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
+		m_surnameText.setLayoutData(m_gridData);
+		setText(m_surnameText, true);
 		
-		ageLabel = new Label (shell, SWT.NONE);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
-		ageLabel.setLayoutData(gridData);
-		setLabel (ageLabel, "Возраст:");
+		m_ageLabel = new Label (m_shell, SWT.NONE);
+		m_gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		m_ageLabel.setLayoutData(m_gridData);
+		setLabel (m_ageLabel, "Возраст:");
 		
-		ageText = new Text (shell, SWT.BORDER);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
-		ageText.setLayoutData(gridData);
-		setText(ageText, true);
+		m_ageText = new Text (m_shell, SWT.BORDER);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
+		m_ageText.setLayoutData(m_gridData);
+		setText(m_ageText, true);
 		
-		isActiveLabel = new Label (shell, SWT.NONE);
-		gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
-		isActiveLabel.setLayoutData(gridData);
-		setLabel (isActiveLabel, "Активен:");
+		m_isActiveLabel = new Label (m_shell, SWT.NONE);
+		m_gridData = createGridData(SWT.RIGHT, false, 0, 0, 0, 0);
+		m_isActiveLabel.setLayoutData(m_gridData);
+		setLabel (m_isActiveLabel, "Активен:");
 		
-		isActiveButton = new Button (shell, SWT.CHECK);
-		gridData = createGridData(SWT.LEFT, false, 0, 0, 0, 0);
-		isActiveButton.setLayoutData(gridData);
-		setButton(isActiveButton, ""); 
+		m_isActiveButton = new Button (m_shell, SWT.CHECK);
+		m_gridData = createGridData(SWT.LEFT, false, 0, 0, 0, 0);
+		m_isActiveButton.setLayoutData(m_gridData);
+		setButton(m_isActiveButton, ""); 
 		
-		addingUserButton = new Button (shell, SWT.PUSH);
-		gridData = createGridData (SWT.RIGHT, false, 120, 30, 50, 2);
-		gridData.widthHint = choosingButtonWidthHint;
-		addingUserButton.setLayoutData(gridData);
-		setButton(addingUserButton, "Добавить"); 
+		m_addingUserButton = new Button (m_shell, SWT.PUSH);
+		m_gridData = createGridData (SWT.RIGHT, false, 120, 30, 50, 2);
+		m_gridData.widthHint = choosingButtonWidthHint;
+		m_addingUserButton.setLayoutData(m_gridData);
+		setButton(m_addingUserButton, "Добавить"); 
 		
-		genAndAddComposite = new Composite (shell, SWT.NONE);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
-		genAndAddComposite.setBackground(backColor);
-		genAndAddComposite.setLayoutData(gridData);
-		createGridLayout (genAndAddComposite, 3);
+		m_genAndAddComposite = new Composite (m_shell, SWT.NONE);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		m_genAndAddComposite.setBackground(m_backColor);
+		m_genAndAddComposite.setLayoutData(m_gridData);
+		createGridLayout (m_genAndAddComposite, 3);
 		
-		generatingButton = new Button (genAndAddComposite, SWT.PUSH);
-		gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
-		generatingButton.setLayoutData(gridData);
-		setButton (generatingButton, "Сгенерировать случайных пользователей");
+		m_generatingButton = new Button (m_genAndAddComposite, SWT.PUSH);
+		m_gridData = createGridData (SWT.LEFT, false, 0, 0, 0, 0);
+		m_generatingButton.setLayoutData(m_gridData);
+		setButton (m_generatingButton, "Сгенерировать случайных пользователей");
 		
-		generatingButton.addSelectionListener(generatingSelection);
+		m_generatingButton.addSelectionListener(m_generatingSelection);
 		
-		userChoosingLabel = new Label (genAndAddComposite, SWT.NONE);
-		gridData = createGridData(SWT.RIGHT, true, 0, 0, 0, 0);
-		userChoosingLabel.setLayoutData(gridData);
-		setLabel (userChoosingLabel, "Количество пользователей:");
-		userChoosingLabel.setVisible(false);
+		m_userChoosingLabel = new Label (m_genAndAddComposite, SWT.NONE);
+		m_gridData = createGridData(SWT.RIGHT, true, 0, 0, 0, 0);
+		m_userChoosingLabel.setLayoutData(m_gridData);
+		setLabel (m_userChoosingLabel, "Количество пользователей:");
+		m_userChoosingLabel.setVisible(false);
 		
-		userNumbersText = new Text (genAndAddComposite, SWT.BORDER);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
-		userNumbersText.setLayoutData(gridData);
-		setText(userNumbersText, true);
-		userNumbersText.setVisible(false);
-		userNumbersText.setText("5");
-		userNumbersText.addFocusListener(numberTextFocusing);
+		m_userNumbersText = new Text (m_genAndAddComposite, SWT.BORDER);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 0);
+		m_userNumbersText.setLayoutData(m_gridData);
+		setText(m_userNumbersText, true);
+		m_userNumbersText.setVisible(false);
+		m_userNumbersText.setText("5");
+		m_userNumbersText.addFocusListener(m_numberTextFocusing);
 		
-		shell.setDefaultButton(openingStorageButton);
-		addingUserButton.addSelectionListener(addingUserSelection);
+		m_shell.setDefaultButton(m_openingStorageButton);
+		m_addingUserButton.addSelectionListener(m_addingUserSelection);
 		
-		tableComposite = new Composite (shell, SWT.BORDER);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.grabExcessVerticalSpace = true;
-		tableComposite.setLayoutData(gridData);
+		m_tableComposite = new Composite (m_shell, SWT.BORDER);
+		m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+		m_gridData.verticalAlignment = SWT.FILL;
+		m_gridData.grabExcessVerticalSpace = true;
+		m_tableComposite.setLayoutData(m_gridData);
 		
-		tableViewer = new TableViewer(tableComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		m_tableViewer = new TableViewer(m_tableComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns();
-	    table = tableViewer.getTable();
-	    setTable(table, false);
+		m_table = m_tableViewer.getTable();
+	    setTable(m_table, false);
 	    
-	    tableViewer.setContentProvider(new UsersContentProvider());
-	    tableViewer.addSelectionChangedListener(tableRowSelection);
+	    m_tableViewer.setContentProvider(new UsersContentProvider());
+	    m_tableViewer.addSelectionChangedListener(m_tableRowSelection);
 	    
-	    TableColumnLayout tableColumnLayout = new TableColumnLayout();
-	    tableComposite.setLayout(tableColumnLayout);
+	    TableColumnLayout m_tableColumnLayout = new TableColumnLayout();
+	    m_tableComposite.setLayout(m_tableColumnLayout);
 	    	
-	    ColumnWeightData columnWeightData = new ColumnWeightData(100);
-	    columnWeightData.resizable = true;
-	    columnWeightData.minimumWidth = 100;
-	    tableColumnLayout.setColumnData(table.getColumn(0), columnWeightData);
-	    tableColumnLayout.setColumnData(table.getColumn(1), columnWeightData);
-	    tableColumnLayout.setColumnData(table.getColumn(2), columnWeightData);
-	    tableColumnLayout.setColumnData(table.getColumn(3), columnWeightData);
-	    tableColumnLayout.setColumnData(table.getColumn(4), columnWeightData);
+	    ColumnWeightData m_columnWeightData = new ColumnWeightData(100);
+	    m_columnWeightData.resizable = true;
+	    m_columnWeightData.minimumWidth = 100;
+	    m_tableColumnLayout.setColumnData(m_table.getColumn(0), m_columnWeightData);
+	    m_tableColumnLayout.setColumnData(m_table.getColumn(1), m_columnWeightData);
+	    m_tableColumnLayout.setColumnData(m_table.getColumn(2), m_columnWeightData);
+	    m_tableColumnLayout.setColumnData(m_table.getColumn(3), m_columnWeightData);
+	    m_tableColumnLayout.setColumnData(m_table.getColumn(4), m_columnWeightData);
 	   	
-	    downComposite = new Composite (shell, SWT.BORDER);
-		gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
-		downComposite.setBackground(backColor);
-		downComposite.setLayoutData(gridData);
-		createGridLayout (downComposite, 2);
+	    m_downComposite = new Composite (m_shell, SWT.BORDER);
+	    m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+	    m_downComposite.setBackground(m_backColor);
+	    m_downComposite.setLayoutData(m_gridData);
+	    createGridLayout (m_downComposite, 2);
 		
-		deletingUserButton = new Button (downComposite, SWT.PUSH);
-		gridData = createGridData (SWT.RIGHT, true, 0, 0, 500, 0);
-		deletingUserButton.setLayoutData(gridData);
-		setButton(deletingUserButton, "Удалить"); 
+	    m_deletingUserButton = new Button (m_downComposite, SWT.PUSH);
+	    m_gridData = createGridData (SWT.RIGHT, true, 0, 0, 500, 0);
+	    m_deletingUserButton.setLayoutData(m_gridData);
+		setButton(m_deletingUserButton, "Удалить"); 
 		
-		deletingAllUsersButton = new Button (downComposite, SWT.PUSH);
-		gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 0);
-		deletingAllUsersButton.setLayoutData(gridData);
-		setButton(deletingAllUsersButton, "Удалить всех"); 
-		deletingAllUsersButton.addSelectionListener(deletingAllUsersSelection);
+		m_deletingAllUsersButton = new Button (m_downComposite, SWT.PUSH);
+		m_gridData = createGridData (SWT.RIGHT, false, 0, 0, 0, 0);
+		m_deletingAllUsersButton.setLayoutData(m_gridData);
+		setButton(m_deletingAllUsersButton, "Удалить всех"); 
+		m_deletingAllUsersButton.addSelectionListener(m_deletingAllUsersSelection);
 		
-		openingStorageButton.addSelectionListener(isOpeningSelection);
-		deletingUserButton.addSelectionListener(deletingUserSelection);
+		m_openingStorageButton.addSelectionListener(m_isOpeningSelection);
+		m_deletingUserButton.addSelectionListener(m_deletingUserSelection);
 		
-		shell.pack(); //Установка оптимального размера окна под имеющиеся компоненты
-		shell.open(); //Открытие окна
+		m_shell.pack(); //Установка оптимального размера окна под имеющиеся компоненты
+		m_shell.open(); //Открытие окна
 			
-		/* Пока ресурсы, ассоциированные с shell, не освобождены,
-		 * если display не используется, выполнение текущего потока приостанавливается:*/
-		while (!shell.isDisposed()) { 
-			if (!display.readAndDispatch()) display.sleep(); 
+		/* Пока ресурсы, ассоциированные с m_shell, не освобождены,
+		 * если m_display не используется, выполнение текущего потока приостанавливается:*/
+		while (!m_shell.isDisposed()) 
+		{ 
+			if (!m_display.readAndDispatch()) m_display.sleep(); 
 		}
 		
 		//Освобождение ресурсов:
-		backColor.dispose();
-		lightForeColor.dispose();
-		paleForeColor.dispose();
-		buttonBackColor.dispose();
-		buttonForeColor.dispose();
-		font.dispose();
-		display.dispose(); 	
+		m_backColor.dispose();
+		m_lightForeColor.dispose();
+		m_paleForeColor.dispose();
+		m_buttonBackColor.dispose();
+		m_buttonForeColor.dispose();
+		m_font.dispose();
+		m_display.dispose(); 	
 	}
 	
 	/**
 	 * Метод для установки поддержки редактирования для всех столбцов таблицы.
 	 */
-	private void setEditingSupportForColumns() {
-		
+	private void setEditingSupportForColumns() 
+	{
 		//Слушатель неверного ввода данных в таблицу:
-		InputValidationResultHandler errorInputListener = new InputValidationResultHandler() {
+		InputValidationResultHandler m_errorInputListener = new InputValidationResultHandler() 
+		{
 			@Override
-			public void createMessage(String message) {
-				createMessageBox (SWT.ERROR, message);
+			public void createMessage(String a_message) 
+			{
+				createMessageBox (SWT.ERROR, a_message);
 			}
 		};
-		ageEditingSupport = new AgeEditingSupport (tableViewer, userEditingListener, errorInputListener);
-		ageColumn.setEditingSupport(ageEditingSupport);
+		m_ageEditingSupport = new AgeEditingSupport (m_tableViewer, m_userEditingListener, m_errorInputListener);
+		m_ageColumn.setEditingSupport(m_ageEditingSupport);
 		
-		nameEditingSupport = new NameEditingSupport(tableViewer, userEditingListener, errorInputListener);
-		nameColumn.setEditingSupport(nameEditingSupport);
+		m_nameEditingSupport = new NameEditingSupport(m_tableViewer, m_userEditingListener, m_errorInputListener);
+		m_nameColumn.setEditingSupport(m_nameEditingSupport);
 		
-		surnameEditingSupport = new SurnameEditingSupport(tableViewer, userEditingListener, errorInputListener);
-		surnameColumn.setEditingSupport(surnameEditingSupport);
+		m_surnameEditingSupport = new SurnameEditingSupport(m_tableViewer, m_userEditingListener, m_errorInputListener);
+		m_surnameColumn.setEditingSupport(m_surnameEditingSupport);
 		
-		isActiveEditingSupport = new IsActiveEditingSupport(tableViewer, userEditingListener);
-		isActiveColumn.setEditingSupport(isActiveEditingSupport);
+		m_isActiveEditingSupport = new IsActiveEditingSupport(m_tableViewer, m_userEditingListener);
+		m_isActiveColumn.setEditingSupport(m_isActiveEditingSupport);
 	}
 	
 	/**
 	 * Слушатель нажатия на столбец таблицы.
 	 */
-	private UserEditingListener userEditingListener = new UserEditingListener () {
+	private UserEditingListener m_userEditingListener = new UserEditingListener () 
+	{
 		@Override
-		public void changeUserName(User user, String name) {
-			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, name, UserData.FIRSTNAME));	
+		public void changeUserName(User a_user, String a_name) 
+		{
+			executeCommandAndRefreshViewer (new CommandUpdate (m_storage, a_user, a_name, UserData.FIRSTNAME));	
 		}
 		@Override
-		public void changeUserSurname(User user, String surname) {
-			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, surname, UserData.LASTNAME));
+		public void changeUserSurname(User a_user, String a_surname) 
+		{
+			executeCommandAndRefreshViewer (new CommandUpdate (m_storage, a_user, a_surname, UserData.LASTNAME));
 		}
 		@Override
-		public void changeUserAge(User user, int age) {
-			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, age, UserData.AGE));
+		public void changeUserAge(User a_user, int a_age) 
+		{
+			executeCommandAndRefreshViewer (new CommandUpdate (m_storage, a_user, a_age, UserData.AGE));
 		}
 		@Override
-		public void changeUserIsActive(User user, boolean isActive) {
-			executeCommandAndRefreshViewer (new CommandUpdate (storage, user, isActive, UserData.ISACTIVE));
+		public void changeUserIsActive(User a_user, boolean a_isActive) 
+		{
+			executeCommandAndRefreshViewer (new CommandUpdate (m_storage, a_user, a_isActive, UserData.ISACTIVE));
 		}
 		
 	};
 	
 	/**
-	 * Метод для вызова метода execute() переданной команды и обновления объекта tableViewer класса TableViewer.
+	 * Метод для вызова метода execute() переданной команды и обновления объекта a_tableViewer класса TableViewer.
 	 */
-	private void executeCommandAndRefreshViewer(Command command) {
-		try {
-			commandsExecuter.execute(command);
-			tableViewer.refresh();
-		} catch (Exception e) {
-			createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения команды.");
+	private void executeCommandAndRefreshViewer(Command a_command) 
+	{
+		try 
+		{
+			m_commandsExecuter.execute(a_command);
+			m_tableViewer.refresh();
+		} catch (Exception a_e) 
+		{
+			createMessageBox (SWT.ERROR, a_e.getMessage(), "Ошибка выполнения команды.");
 		}
 	}
 	
 	/**
 	 * Метод создаёт столбцы TableViewerColumn и устанавливает на них CellLabelProvider.
 	 */
-	private void createColumns() {
-		TableViewerColumn viewerColumn = createTableViewerColumn ("Код", 0);
-		viewerColumn.setLabelProvider(new CellLabelProvider() {
+	private void createColumns() 
+	{
+		TableViewerColumn m_viewerColumn = createTableViewerColumn ("Код", 0);
+		m_viewerColumn.setLabelProvider(new CellLabelProvider() 
+		{
             @Override
-            public void update(ViewerCell cell) {
-                cell.setText(Integer.toString((((User) cell.getElement()).getId())));
+            public void update(ViewerCell a_cell) 
+            {
+                a_cell.setText(Integer.toString((((User) a_cell.getElement()).getId())));
             }
         });
 		
-		nameColumn = createTableViewerColumn ("Имя", 1);
-		nameColumn.setLabelProvider(new CellLabelProvider() {
+		m_nameColumn = createTableViewerColumn ("Имя", 1);
+		m_nameColumn.setLabelProvider(new CellLabelProvider() 
+		{
             @Override
-            public void update(ViewerCell cell) {
-                cell.setText(((User) cell.getElement()).getName());
+            public void update(ViewerCell a_cell) 
+            {
+            	a_cell.setText(((User) a_cell.getElement()).getName());
             }
         });
 		
-		surnameColumn = createTableViewerColumn ("Фамилия", 2);
-		surnameColumn.setLabelProvider(new CellLabelProvider() {
+		m_surnameColumn = createTableViewerColumn ("Фамилия", 2);
+		m_surnameColumn.setLabelProvider(new CellLabelProvider() 
+		{
             @Override
-            public void update(ViewerCell cell) {
-                cell.setText(((User) cell.getElement()).getSurname());
+            public void update(ViewerCell a_cell) 
+            {
+            	a_cell.setText(((User) a_cell.getElement()).getSurname());
             }
         });
 		
-		ageColumn = createTableViewerColumn ("Возраст", 3);
-		ageColumn.setLabelProvider(new CellLabelProvider() {
+		m_ageColumn = createTableViewerColumn ("Возраст", 3);
+		m_ageColumn.setLabelProvider(new CellLabelProvider() 
+		{
             @Override
-            public void update(ViewerCell cell) {
-                cell.setText(Integer.toString((((User) cell.getElement()).getAge())));
+            public void update(ViewerCell a_cell) 
+            {
+            	a_cell.setText(Integer.toString((((User) a_cell.getElement()).getAge())));
             }
         });
 		
-		isActiveColumn = createTableViewerColumn ("Активен", 4);
-		isActiveColumn.setLabelProvider(new CellLabelProvider() {
+		m_isActiveColumn = createTableViewerColumn ("Активен", 4);
+		m_isActiveColumn.setLabelProvider(new CellLabelProvider() 
+		{
             @Override
-            public void update(ViewerCell cell) {
-                cell.setText(Boolean.toString((((User) cell.getElement()).isActive())));
+            public void update(ViewerCell a_cell) 
+            {
+            	a_cell.setText(Boolean.toString((((User) a_cell.getElement()).isActive())));
             }
         });
 	}
 	
 	/**
-	 * Метод для установки свойств компонента shell.
-	 * @param shell - объект класса Shell
+	 * Метод для установки свойств компонента a_shell.
+	 * @param a_shell - объект класса Shell
 	 */
-	private void setShell (Shell shell) {
-		shell.setText (shellProperties.getTitle());
-		shell.setImage(shellProperties.getImage());
-		shell.setMinimumSize(shellProperties.getSize());
-		shell.setBackground(shellProperties.getBackColor());
+	private void setShell (Shell a_shell) 
+	{
+		a_shell.setText (m_shellProperties.getTitle());
+		a_shell.setImage(m_shellProperties.getImage());
+		a_shell.setMinimumSize(m_shellProperties.getSize());
+		a_shell.setBackground(m_shellProperties.getBackColor());
 	}
 	
 	/**
-	 * Создание таблицы из ячеек на shell для расположения в них графических компонентов.
-	 * @param s - объект класса Shell
+	 * Создание таблицы из ячеек на a_shell для расположения в них графических компонентов.
+	 * @param a_s - объект класса Shell
 	 */
-	private void createGridLayout(Shell s) { 
-		
-		GridLayout g = new GridLayout();
-		g.numColumns = 2; //Количество столбцов
-		g.marginWidth = 5; //Расстояние от левого и правого краев окна
-		g.marginHeight = 5; //Расстояние от верхнего и нижненго краев окна
-		g.horizontalSpacing = 5; //Расстояние между соседними ячейками по горизонтали
-		g.verticalSpacing = 10; //Расстояние между соседними ячейками по вертикали
-		s.setLayout(g); //Установка слоя на окно shell
+	private void createGridLayout(Shell a_s) 
+	{
+		GridLayout m_g = new GridLayout();
+		m_g.numColumns = 2; //Количество столбцов
+		m_g.marginWidth = 5; //Расстояние от левого и правого краев окна
+		m_g.marginHeight = 5; //Расстояние от верхнего и нижненго краев окна
+		m_g.horizontalSpacing = 5; //Расстояние между соседними ячейками по горизонтали
+		m_g.verticalSpacing = 10; //Расстояние между соседними ячейками по вертикали
+		a_s.setLayout(m_g); //Установка слоя на окно shell
 	}
 	
 	/**
-	 * Создание таблицы из ячеек на composite для расположения в них графических компонентов.
-	 * @param composite - объект класса Composite
-	 * @param numColumns - количество столбцов
+	 * Создание таблицы из ячеек на a_composite для расположения в них графических компонентов.
+	 * @param a_composite - объект класса Composite
+	 * @param a_numColumns - количество столбцов
 	 */
-	private void createGridLayout(Composite composite, int numColumns) { 
-		
-		GridLayout g = new GridLayout();
-		g.numColumns = numColumns; //Количество столбцов
-		g.marginWidth = 5; //Расстояние от левого и правого краев окна
-		g.marginHeight = 5; //Расстояние от верхнего и нижненго краев окна
-		g.horizontalSpacing = 5; //Расстояние между соседними ячейками по горизонтали
-		g.verticalSpacing = 10; //Расстояние между соседними ячейками по вертикали
-		composite.setLayout(g); //Установка слоя на окно shell
+	private void createGridLayout(Composite a_composite, int a_numColumns) 
+	{
+		GridLayout m_g = new GridLayout();
+		m_g.numColumns = a_numColumns; //Количество столбцов
+		m_g.marginWidth = 5; //Расстояние от левого и правого краев окна
+		m_g.marginHeight = 5; //Расстояние от верхнего и нижненго краев окна
+		m_g.horizontalSpacing = 5; //Расстояние между соседними ячейками по горизонтали
+		m_g.verticalSpacing = 10; //Расстояние между соседними ячейками по вертикали
+		a_composite.setLayout(m_g); //Установка слоя на окно shell
 	}
 	
 	/**
 	 * Метод для создания объекта класса GridData (для управления данными, связанными с различными компонентами).
-	 * Обязательным является указание значений horAl и grab, остальные параметры можно передать как 0 (будут установлены значения по умолчанию).
-	 * @param horAl - выравнивание по горизонтали
-	 * @param grab - разрешение/запрет захвата свободного пространства по горизонтали при изменении размеров окна
-	 * @param width - ширина компонента
-	 * @param height - высота компонента
-	 * @param horInd - отступ по горизонтали от начального положения (что задаётся способом выравнивания) компонента в ячейке
-	 * @param horSpan - количество ячеек, занимаемое компонентом по горизонтали
-	 * @return gridData - объект класса GridData
+	 * Обязательным является указание значений a_horAl и a_grab, остальные параметры можно передать как 0 (будут установлены значения по умолчанию).
+	 * @param a_horAl - выравнивание по горизонтали
+	 * @param a_grab - разрешение/запрет захвата свободного пространства по горизонтали при изменении размеров окна
+	 * @param a_width - ширина компонента
+	 * @param a_height - высота компонента
+	 * @param a_horInd - отступ по горизонтали от начального положения (что задаётся способом выравнивания) компонента в ячейке
+	 * @param a_horSpan - количество ячеек, занимаемое компонентом по горизонтали
+	 * @return a_gridData - объект класса GridData
 	 */
-	private GridData createGridData(int horAl, boolean grab, int width, int height, int horInd, int horSpan) {
-		
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = horAl; 
-		gridData.grabExcessHorizontalSpace = grab; 
-		if (width != 0) gridData.widthHint = width; 
-		if (height != 0) gridData.heightHint = height; 
-		if (horInd != 0) gridData.horizontalIndent = horInd; 
-		if (horSpan != 0) gridData.horizontalSpan = horSpan; 
-		return gridData;
+	private GridData createGridData(int a_horAl, boolean a_grab, int a_width, int a_height, int a_horInd, int a_horSpan) 
+	{
+		GridData m_gridData = new GridData();
+		m_gridData.horizontalAlignment = a_horAl; 
+		m_gridData.grabExcessHorizontalSpace = a_grab; 
+		if (a_width != 0) m_gridData.widthHint = a_width; 
+		if (a_height != 0) m_gridData.heightHint = a_height; 
+		if (a_horInd != 0) m_gridData.horizontalIndent = a_horInd; 
+		if (a_horSpan != 0) m_gridData.horizontalSpan = a_horSpan; 
+		return m_gridData;
 	}
 	
 	/**
 	 * Метод для установки свойств компонента Combo.
-	 *  * @param combo - объект класса Combo
+	 *  * @param a_combo - объект класса Combo
 	 */
-	private void setCombo  (Combo combo) {
-		combo.setBackground(backColor);
-		combo.setForeground(lightForeColor);
-		combo.setFont(font);
+	private void setCombo  (Combo a_combo) 
+	{
+		a_combo.setBackground(m_backColor);
+		a_combo.setForeground(m_lightForeColor);
+		a_combo.setFont(m_font);
 	}
 	
 	/**
 	 * Метод установки свойств для компонента Label
-	 * @param label - компонент Label
-	 * @param text - текст
+	 * @param a_label - компонент Label
+	 * @param a_text - текст
 	 */
-	private void setLabel(Label label, String text) {
-		
-		label.setText(text); 
-		label.setBackground(backColor);
-		label.setForeground(paleForeColor);
-		label.setFont(font); 
+	private void setLabel(Label a_label, String a_text) 
+	{
+		a_label.setText(a_text); 
+		a_label.setBackground(m_backColor);
+		a_label.setForeground(m_paleForeColor);
+		a_label.setFont(m_font); 
 	}
 	
 	/**
 	 * Метод установки свойств для компонента Label
-	 * @param label - компонент Label
+	 * @param a_label - компонент Label
 	 */
-	private void setLabel(Label label) {
-		label.setBackground(backColor);
-		label.setForeground(paleForeColor);
+	private void setLabel(Label a_label) 
+	{
+		a_label.setBackground(m_backColor);
+		a_label.setForeground(m_paleForeColor);
 	}
 	
 	/**
 	 * Метод установки свойств для компонента Text.
-	 * @param text - компонент Text
-	 * @param editable - редактируемость
+	 * @param a_text - компонент Text
+	 * @param a_editable - редактируемость
 	 */
-	private void setText (Text text, boolean editable) { 
-		text.setEditable(editable); 
-		text.setBackground(backColor);
-		text.setForeground(lightForeColor);
-		text.setFont(font);
+	private void setText (Text a_text, boolean a_editable) 
+	{ 
+		a_text.setEditable(a_editable); 
+		a_text.setBackground(m_backColor);
+		a_text.setForeground(m_lightForeColor);
+		a_text.setFont(m_font);
 	}
 	
 	/**
 	 * Метод установки свойств для компонента Text.
-	 * @param text - компонент Text
+	 * @param a_text - компонент Text
 	 */
-	private void setText (Text text) { 
-		text.setBackground(backColor);
-		text.setForeground(lightForeColor);
+	private void setText (Text a_text) 
+	{ 
+		a_text.setBackground(m_backColor);
+		a_text.setForeground(m_lightForeColor);
 	}
 	
 	/**
 	 * Метод установки свойств для компонента Button.
-	 * @param button - компонент Button
-	 * @param text - название кнопки
+	 * @param a_button - компонент Button
+	 * @param a_text - название кнопки
 	 */
-	private void setButton(Button button, String text) { 
-		button.setText(text);
-		button.setBackground(backColor);
-		button.setForeground(paleForeColor);
-		button.setFont(font);
-		button.addSelectionListener(isPressingSelection);
+	private void setButton(Button a_button, String a_text) 
+	{ 
+		a_button.setText(a_text);
+		a_button.setBackground(m_backColor);
+		a_button.setForeground(m_paleForeColor);
+		a_button.setFont(m_font);
+		a_button.addSelectionListener(m_isPressingSelection);
 	}	
 	
 	/**
 	 * Метод установки свойств для компонента Button.
-	 * @param button - компонент Button
-	 * @param isOnlyChoosingButtonColors - установить только цвета, соответствующие цветам последней нажатой кнопке / не устанавливать их
+	 * @param a_button - компонент Button
+	 * @param a_isOnlyChoosingButtonColors - установить только цвета, соответствующие цветам последней нажатой кнопке / не устанавливать их
 	 */
-	private void setButton(Button button, boolean isOnlyChoosingButtonColors) { 
-		if (isOnlyChoosingButtonColors) {
-			button.setBackground(buttonBackColor);
-			button.setForeground(buttonForeColor);
+	private void setButton(Button a_button, boolean a_isOnlyChoosingButtonColors) 
+	{ 
+		if (a_isOnlyChoosingButtonColors) 
+		{
+			a_button.setBackground(m_buttonBackColor);
+			a_button.setForeground(m_buttonForeColor);
 			return;
 		} 
-		button.setBackground(backColor);
-		button.setForeground(paleForeColor);
+		a_button.setBackground(m_backColor);
+		a_button.setForeground(m_paleForeColor);
 	}	
 	
 	/**
 	 * Метод создаёт столбец в таблице Table и устанавливает слушатель нажатия на данный столбец.
-	 * @param title - заголовок столбца
-	 * @param colNumber - номер столбца
+	 * @param a_title - заголовок столбца
+	 * @param a_colNumber - номер столбца
 	 * @return столбец TableViewerColumn
 	 */
-	private TableViewerColumn createTableViewerColumn(String title, int colNumber) {
-		TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
-        TableColumn column = viewerColumn.getColumn();
-        column.setText(title);
-        column.addSelectionListener(getSelectionAdapter(column, colNumber));
-        return viewerColumn;
+	private TableViewerColumn createTableViewerColumn(String a_title, int a_colNumber) 
+	{
+		TableViewerColumn m_viewerColumn = new TableViewerColumn(m_tableViewer, SWT.CENTER);
+        TableColumn m_column = m_viewerColumn.getColumn();
+        m_column.setText(a_title);
+        m_column.addSelectionListener(getSelectionAdapter(m_column, a_colNumber));
+        return m_viewerColumn;
 	}
 
 	 /**
 	  * Метод для возврата слушателя нажатия на столбец таблицы.
-	 * @param column - столбец таблицы
-	 * @param index - номер столбца
+	 * @param a_column - столбец таблицы
+	 * @param a_index - номер столбца
 	 * @return слушатель SelectionAdapter
 	 */
-	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
-	        SelectionAdapter selectionAdapter = new SelectionAdapter() {
+	private SelectionAdapter getSelectionAdapter(final TableColumn a_column, final int a_index) 
+	{
+	        SelectionAdapter m_selectionAdapter = new SelectionAdapter() 
+	        {
 	            @Override
-	            public void widgetSelected(SelectionEvent e) {
-	                comparator.setColumn(index);
-	                int dir = comparator.getDirection();
-	                tableViewer.getTable().setSortDirection(dir);
-	                tableViewer.getTable().setSortColumn(column);
-	                tableViewer.refresh();
+	            public void widgetSelected(SelectionEvent a_e) 
+	            {
+	            	m_comparator.setColumn(a_index);
+	                int m_dir = m_comparator.getDirection();
+	                m_tableViewer.getTable().setSortDirection(m_dir);
+	                m_tableViewer.getTable().setSortColumn(a_column);
+	                m_tableViewer.refresh();
 	            }
 	        };
-	        return selectionAdapter;
-	    }
+	        return m_selectionAdapter;
+	}
 	 
 	/**
 	 * Метод для устновки свойств компонента Table.
-	 * @param table - объект класса Table
-	 * @param isOnlyColors - установить только цвета таблицы / установить не только цвета таблицы
+	 * @param a_table - объект класса Table
+	 * @param a_isOnlyColors - установить только цвета таблицы / установить не только цвета таблицы
 	 */
-	private void setTable(Table table, boolean isOnlyColors) {
-		
-		table.setBackground(backColor);
-		table.setForeground(lightForeColor);
-		if (!isOnlyColors) {
-			GridData gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
-			table.setLayoutData(gridData);
-			table.setBackground(backColor);
-			table.setForeground(lightForeColor);
-			table.setFont(font);
-			table.setHeaderVisible(true);
-			table.setLinesVisible(true);
+	private void setTable(Table a_table, boolean a_isOnlyColors) 
+	{
+		a_table.setBackground(m_backColor);
+		a_table.setForeground(m_lightForeColor);
+		if (!a_isOnlyColors) 
+		{
+			GridData m_gridData = createGridData(SWT.FILL, true, 0, 0, 0, 2);
+			a_table.setLayoutData(m_gridData);
+			a_table.setBackground(m_backColor);
+			a_table.setForeground(m_lightForeColor);
+			a_table.setFont(m_font);
+			a_table.setHeaderVisible(true);
+			a_table.setLinesVisible(true);
 		}
 	}
 	
 	/**
 	 * Метод для создания дочернего окна с сообщением пользователю (вид сообщения зависит от переданных параметров).
-	 * @param messageCode - код сообщения (SWT.ERROR или SWT.ICON_INFORMATION)
-	 * @param message - сообщение для пользователя
-	 * @param defaultMessage - сообщение для пользователя по умолчанию (выводится, если message = null)
+	 * @param a_messageCode - код сообщения (SWT.ERROR или SWT.ICON_INFORMATION)
+	 * @param a_message - сообщение для пользователя
+	 * @param a_defaultMessage - сообщение для пользователя по умолчанию (выводится, если a_message = null)
 	 */
-	private void createMessageBox (int messageCode, String message, String defaultMessage) {
-		if (message == null) message = defaultMessage;
-		MessageBox messageBox = new MessageBox (shell, messageCode);
-		messageBox.setText("Сообщение");
-		messageBox.setMessage(message); 
-		messageBox.open();
+	private void createMessageBox (int a_messageCode, String a_message, String a_defaultMessage) 
+	{
+		if (a_message == null) a_message = a_defaultMessage;
+		MessageBox m_messageBox = new MessageBox (m_shell, a_messageCode);
+		m_messageBox.setText("Сообщение");
+		m_messageBox.setMessage(a_message); 
+		m_messageBox.open();
 	}
 	
 	/**
 	 * Метод для создания дочернего окна с сообщением пользователю (вид сообщения зависит от переданных параметров).
-	 * @param messageCode - код сообщения (SWT.ERROR или SWT.ICON_INFORMATION)
-	 * @param message - сообщение для пользователя
+	 * @param a_messageCode - код сообщения (SWT.ERROR или SWT.ICON_INFORMATION)
+	 * @param a_message - сообщение для пользователя
 	 */
-	private void createMessageBox (int messageCode, String message) {
-		MessageBox messageBox = new MessageBox (shell, messageCode);
-		messageBox.setText("Сообщение");
-		messageBox.setMessage(message); 
-		messageBox.open();
+	private void createMessageBox (int a_messageCode, String a_message) 
+	{
+		MessageBox m_messageBox = new MessageBox (m_shell, a_messageCode);
+		m_messageBox.setText("Сообщение");
+		m_messageBox.setMessage(a_message); 
+		m_messageBox.open();
 	}
 	
 	/**
 	 * Метод создаёт объект класса ErrorChecker, вызывает его методы и возвращает изменённый объект.
 	 */
-	private ErrorChecker createErrorChecker(boolean isOnlyUserNumbers) {
-		ErrorChecker errorChecker = new ErrorChecker();
-		if (isOnlyUserNumbers) {
-			errorChecker.checkUserNumbers((userNumbersText.getText()));
-			return errorChecker;
+	private ErrorChecker createErrorChecker(boolean a_isOnlyUserNumbers) 
+	{
+		ErrorChecker m_errorChecker = new ErrorChecker();
+		if (a_isOnlyUserNumbers) 
+		{
+			m_errorChecker.checkUserNumbers((m_userNumbersText.getText()));
+			return m_errorChecker;
 		} 
-		errorChecker.checkName(nameText.getText());
-		errorChecker.checkName(surnameText.getText());
-		errorChecker.checkAge(ageText.getText());
-		return errorChecker;
+		m_errorChecker.checkName(m_nameText.getText());
+		m_errorChecker.checkName(m_surnameText.getText());
+		m_errorChecker.checkAge(m_ageText.getText());
+		return m_errorChecker;
 	}
 	
 	/**
 	 * Метод устанавливает цвета всех компонентов в зависимости от текущего хранилища.
 	 */
-	private void setComponentsColors() {
-		shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor, isDarkColor);
-		setShell(shell);
-		setLabel(titleLabel); setLabel(lightThemeLabel); 
-		setLabel(darkThemeLabel); setLabel(choosingLabel);
-		setLabel(nameLabel); setLabel(surnameLabel);
-		setLabel(ageLabel); setLabel(isActiveLabel); setLabel(userChoosingLabel);
-		setText (nameText); setText (surnameText); setText (ageText); setText (userNumbersText);
-		setCombo (combo); 
-		setButton(openingStorageButton, false); setButton(addingUserButton, false);
-		setButton(deletingUserButton, false);
-		setButton(isActiveButton, false); setButton(darkThemeButton, false);
-		setButton(lightThemeButton, false);  setButton (generatingButton, false);
-		setButton (deletingAllUsersButton, false); setTable(table, true);		
-		heightComposite.setBackground(backColor); themeComposite.setBackground(backColor);
-		tableComposite.setBackground(backColor); genAndAddComposite.setBackground(backColor);
-		downComposite.setBackground(backColor);
+	private void setComponentsColors() 
+	{
+		m_shellProperties = m_shellPropertiesFactory.getShellProperties(m_storage, m_backColor, m_isDarkColor);
+		setShell(m_shell);
+		setLabel(m_titleLabel); 
+		setLabel(m_lightThemeLabel); 
+		setLabel(m_darkThemeLabel); 
+		setLabel(m_choosingLabel);
+		setLabel(m_nameLabel); 
+		setLabel(m_surnameLabel);
+		setLabel(m_ageLabel); 
+		setLabel(m_isActiveLabel); 
+		setLabel(m_userChoosingLabel);
+		setText(m_nameText); 
+		setText(m_surnameText); 
+		setText(m_ageText); 
+		setText(m_userNumbersText);
+		setCombo(m_combo); 
+		setButton(m_openingStorageButton, false); 
+		setButton(m_addingUserButton, false);
+		setButton(m_deletingUserButton, false);
+		setButton(m_isActiveButton, false); 
+		setButton(m_darkThemeButton, false);
+		setButton(m_lightThemeButton, false);  
+		setButton(m_generatingButton, false);
+		setButton(m_deletingAllUsersButton, false); 
+		setTable(m_table, true);		
+		m_heightComposite.setBackground(m_backColor); 
+		m_themeComposite.setBackground(m_backColor);
+		m_tableComposite.setBackground(m_backColor); 
+		m_genAndAddComposite.setBackground(m_backColor);
+		m_downComposite.setBackground(m_backColor);
 	}
 	
 	/**
 	 * Слушатель нажатия кнопки выбора тёмной темы.
 	 */
-	SelectionAdapter darkThemeSelection = new SelectionAdapter () {
+	SelectionAdapter m_darkThemeSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected (SelectionEvent event) {
-			if (darkThemeButton.getSelection() == true) {
-				lightThemeButton.setSelection(false);
-				if (isDarkColor == false) {
-					isDarkColor = true;
-					paleForeColor = new Color (display, 170, 250, 170);
-					lightForeColor = new Color (display, 100, 250, 100);
-					buttonBackColor = new Color (display, 200, 200, 200);
-					buttonForeColor = new Color (display, 30, 50, 30);
-					backColor = new Color (display, 83, 82, 82); 
+		public void widgetSelected (SelectionEvent a_event) 
+		{
+			if (m_darkThemeButton.getSelection() == true) 
+			{
+				m_lightThemeButton.setSelection(false);
+				if (m_isDarkColor == false) 
+				{
+					m_isDarkColor = true;
+					m_paleForeColor = new Color (m_display, 170, 250, 170);
+					m_lightForeColor = new Color (m_display, 100, 250, 100);
+					m_buttonBackColor = new Color (m_display, 200, 200, 200);
+					m_buttonForeColor = new Color (m_display, 30, 50, 30);
+					m_backColor = new Color (m_display, 83, 82, 82); 
 					setComponentsColors();
 				}
 			} 
@@ -755,18 +814,22 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия кнопки выбора светлой темы.
 	 */
-	SelectionAdapter lightThemeSelection = new SelectionAdapter () {
+	SelectionAdapter m_lightThemeSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected (SelectionEvent event) {
-			if (lightThemeButton.getSelection() == true) {
-				darkThemeButton.setSelection(false);
-				if (isDarkColor == true) {
-					isDarkColor = false;
-					paleForeColor = new Color (display, 45, 5, 5); 
-					lightForeColor = new Color (display, 115, 5, 5);
-					buttonBackColor = new Color (display, 223, 220, 215);
-					buttonForeColor = new Color (display, 65, 65, 65);
-					backColor = new Color (display, 255, 252, 245); 
+		public void widgetSelected (SelectionEvent a_event) 
+		{
+			if (m_lightThemeButton.getSelection() == true) 
+			{
+				m_darkThemeButton.setSelection(false);
+				if (m_isDarkColor == true) 
+				{
+					m_isDarkColor = false;
+					m_paleForeColor = new Color (m_display, 45, 5, 5); 
+					m_lightForeColor = new Color (m_display, 115, 5, 5);
+					m_buttonBackColor = new Color (m_display, 223, 220, 215);
+					m_buttonForeColor = new Color (m_display, 65, 65, 65);
+					m_backColor = new Color (m_display, 255, 252, 245); 
 					setComponentsColors();
 				}
 			} 
@@ -774,81 +837,94 @@ public class Graphics {
 	};
 	
 	/**
-	 * Слушатель изменения текста в списке Combo.
+	 * Слушатель изменения текста в списке m_combo.
 	 */
-	ModifyListener comboModification = new ModifyListener () {
+	ModifyListener m_comboModification = new ModifyListener() 
+	{
 		@Override
-		public void modifyText(ModifyEvent event) {
-			shell.setDefaultButton(openingStorageButton);
+		public void modifyText(ModifyEvent a_event) 
+		{
+			m_shell.setDefaultButton(m_openingStorageButton);
 		}
 		
 	};
 	
 	/**
-	 * Слушатель установки курсора в текстовое поле userNumbersText.
+	 * Слушатель установки курсора в текстовое поле m_userNumbersText.
 	 */
-	FocusListener numberTextFocusing = new FocusListener () {
+	FocusListener m_numberTextFocusing = new FocusListener() 
+	{
 		@Override
-		public void focusGained(FocusEvent arg0) {
-			shell.setDefaultButton(generatingButton);
+		public void focusGained(FocusEvent a_arg) 
+		{
+			m_shell.setDefaultButton(m_generatingButton);
 		}
 		@Override
-		public void focusLost(FocusEvent arg0) {
+		public void focusLost(FocusEvent a_arg) 
+		{
 		}
 	};
 	
 	/**
 	 * Метод для установки цветов на кнопках.
-	 * @param b1 - объект класса Button
-	 * @param b2 - объект класса Button
-	 * @param b3 - объект класса Button
-	 * @param b4 - объект класса Button
+	 * @param a_b1 - объект класса Button
+	 * @param a_b2 - объект класса Button
+	 * @param a_b3 - объект класса Button
+	 * @param a_b4 - объект класса Button
 	 */
-	private void setButtonsDefaultColor(Button b1, Button b2, Button b3, Button b4) {
-		b1.setBackground(backColor);
-		b2.setBackground(backColor);
-		b3.setBackground(backColor);
-		b4.setBackground(backColor);
-		b1.setForeground(paleForeColor);
-		b2.setForeground(paleForeColor);
-		b3.setForeground(paleForeColor);
-		b4.setForeground(paleForeColor);
+	private void setButtonsDefaultColor(Button a_b1, Button a_b2, Button a_b3, Button a_b4) 
+	{
+		a_b1.setBackground(m_backColor);
+		a_b2.setBackground(m_backColor);
+		a_b3.setBackground(m_backColor);
+		a_b4.setBackground(m_backColor);
+		a_b1.setForeground(m_paleForeColor);
+		a_b2.setForeground(m_paleForeColor);
+		a_b3.setForeground(m_paleForeColor);
+		a_b4.setForeground(m_paleForeColor);
 	}
 	
 	/**
 	 * Слушатель нажатия на любую кнопку (изменяет её цвета).
 	 */
-	SelectionAdapter isPressingSelection = new SelectionAdapter() {
+	SelectionAdapter m_isPressingSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected(SelectionEvent event) {
-			String buffer = "";
-			for (int i = 0; i < event.toString().length(); i++) {
-				
-				if (event.toString().charAt(i) == ' ') buffer = ""; else
-					buffer += Character.toString (event.toString().charAt(i));
-					if (buffer.equals("{Открыть}")) {
-						setButtonsDefaultColor(deletingUserButton, addingUserButton, generatingButton, deletingAllUsersButton);
-						setButton (openingStorageButton, true);
+		public void widgetSelected(SelectionEvent a_event) 
+		{
+			String m_buffer = "";
+			for (int m_i = 0; m_i < a_event.toString().length(); m_i++) 
+			{
+				if (a_event.toString().charAt(m_i) == ' ') m_buffer = ""; else
+					m_buffer += Character.toString (a_event.toString().charAt(m_i));
+					if (m_buffer.equals("{Открыть}")) 
+					{
+						setButtonsDefaultColor(m_deletingUserButton, m_addingUserButton, m_generatingButton, m_deletingAllUsersButton);
+						setButton (m_openingStorageButton, true);
 						break;
 					}
-					if (buffer.equals("{Добавить}")) {
-						setButtonsDefaultColor(deletingUserButton, openingStorageButton, generatingButton, deletingAllUsersButton);
-						setButton (addingUserButton, true);
+					if (m_buffer.equals("{Добавить}")) 
+					{
+						setButtonsDefaultColor(m_deletingUserButton, m_openingStorageButton, m_generatingButton, m_deletingAllUsersButton);
+						setButton (m_addingUserButton, true);
 						break;
 					}
-					if (buffer.equals("{Удалить}")) {
-						setButtonsDefaultColor(addingUserButton, openingStorageButton, generatingButton, deletingAllUsersButton);
-						setButton (deletingUserButton, true);
+					if (m_buffer.equals("{Удалить}")) 
+					{
+						setButtonsDefaultColor(m_addingUserButton, m_openingStorageButton, m_generatingButton, m_deletingAllUsersButton);
+						setButton (m_deletingUserButton, true);
 						break;
 					}
-					if (buffer.equals("{Сгенерировать случайных пользователей}")) {
-						setButtonsDefaultColor(deletingUserButton, addingUserButton, openingStorageButton, deletingAllUsersButton);
-						setButton (generatingButton, true);
+					if (m_buffer.equals("{Сгенерировать случайных пользователей}")) 
+					{
+						setButtonsDefaultColor(m_deletingUserButton, m_addingUserButton, m_openingStorageButton, m_deletingAllUsersButton);
+						setButton (m_generatingButton, true);
 						break;
 					}
-					if (buffer.equals("{Удалить всех}")) {
-						setButtonsDefaultColor(deletingUserButton, addingUserButton, openingStorageButton, generatingButton);
-						setButton (deletingAllUsersButton, true);
+					if (m_buffer.equals("{Удалить всех}")) 
+					{
+						setButtonsDefaultColor(m_deletingUserButton, m_addingUserButton, m_openingStorageButton, m_generatingButton);
+						setButton (m_deletingAllUsersButton, true);
 						break;
 					}
 			}
@@ -858,29 +934,34 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия кнопки "Открыть".
 	 */
-	SelectionAdapter isOpeningSelection = new SelectionAdapter() {
+	SelectionAdapter m_isOpeningSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected(SelectionEvent event) {
-			
-			if (!(combo.getText().equals(defaultDatabaseName)) && !(combo.getText().equals(defaultFileName)) && !(combo.getText().equals("")))
+		public void widgetSelected(SelectionEvent a_event) 
+		{
+			if (!(m_combo.getText().equals(m_defaultDatabaseName)) && !(m_combo.getText().equals(m_defaultFileName)) && !(m_combo.getText().equals("")))
 				createMessageBox (SWT.ERROR, "Некорректное имя хранилища.");
-				if (isConnection) {
-					commandsExecuter.reset();
-					try {
-						storage.closeStorage();
-					} catch (Exception e) {
-						createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения закрытия хранилища.");
-						return;
-					}
-				} else isConnection = true;
-				
-				setStorage();	
-				clearTextFields();
-				if (table.getItemCount() < 8) shell.pack();
-				shell.setDefaultButton(addingUserButton);
-			if (lightThemeButton.getSelection() == true) {
-				shellProperties = shellPropertiesFactory.getShellProperties(storage, backColor, isDarkColor);
-				setShell(shell);
+			if (m_isConnection) 
+			{
+				m_commandsExecuter.reset();
+				try 
+				{
+					m_storage.closeStorage();
+				} catch (Exception a_e) 
+				{
+					createMessageBox (SWT.ERROR, a_e.getMessage(), "Ошибка выполнения закрытия хранилища.");
+					return;
+				}
+			} else m_isConnection = true;	
+			
+			setStorage();	
+			clearTextFields();
+			if (m_table.getItemCount() < 8) m_shell.pack();
+				m_shell.setDefaultButton(m_addingUserButton);
+			if (m_lightThemeButton.getSelection() == true) 
+			{
+				m_shellProperties = m_shellPropertiesFactory.getShellProperties(m_storage, m_backColor, m_isDarkColor);
+				setShell(m_shell);
 			}
 		}
 	};
@@ -888,85 +969,99 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия кнопки "Сгенерировать случайных пользователей"
 	 */
-	SelectionAdapter generatingSelection = new SelectionAdapter () {
+	SelectionAdapter m_generatingSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected (SelectionEvent event) {
-			if (! ((userChoosingLabel.getVisible() == true) || (userNumbersText.getVisible() == true))) {
-				userChoosingLabel.setVisible(true);
-				userNumbersText.setVisible (true);
+		public void widgetSelected (SelectionEvent a_event) 
+		{
+			if (! ((m_userChoosingLabel.getVisible() == true) || (m_userNumbersText.getVisible() == true))) 
+			{
+				m_userChoosingLabel.setVisible(true);
+				m_userNumbersText.setVisible (true);
 				return;
 			}
-			if (!isConnection) {
+			if (!m_isConnection) 
+			{
 				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
 				return;
 			}
-			ErrorChecker errorChecker = createErrorChecker (true);
-			if (errorChecker.getMessageCode() != SWT.OK) {
-				createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
+			ErrorChecker m_errorChecker = createErrorChecker (true);
+			if (m_errorChecker.getMessageCode() != SWT.OK) 
+			{
+				createMessageBox (m_errorChecker.getMessageCode(), m_errorChecker.getErrorMesssage());
 				return;
 			}
-			int tableItemCount = table.getItemCount();
-			int userNumbers = Integer.parseInt(userNumbersText.getText());
+			int m_tableItemCount = m_table.getItemCount();
+			int m_userNumbers = Integer.parseInt(m_userNumbersText.getText());
 			
-			try {
-				commandsExecuter.execute (new CommandGenerate (storage, userNumbers));
-			} catch (Exception e) {
-				createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения команды генерации пользователей.");
+			try 
+			{
+				m_commandsExecuter.execute (new CommandGenerate (m_storage, m_userNumbers));
+			} catch (Exception a_e) 
+			{
+				createMessageBox (SWT.ERROR, a_e.getMessage(), "Ошибка выполнения команды генерации пользователей.");
 			}
-			tableViewer.refresh();
-			if ((tableItemCount + userNumbers) < 9) shell.pack();
+			m_tableViewer.refresh();
+			if ((m_tableItemCount + m_userNumbers) < 9) m_shell.pack();
 		}
 	};
 	
 	/**
 	 * Слушатель нажатия кнопки "Добавить".
 	 */
-	SelectionAdapter addingUserSelection = new SelectionAdapter() {
+	SelectionAdapter m_addingUserSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected(SelectionEvent event) {
-			
-			if (!isConnection) {
+		public void widgetSelected(SelectionEvent a_event) 
+		{
+			if (!m_isConnection) 
+			{
 				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
 				return;
 			}
-			titleLabel.setText("Добавление пользователя:");
-			ErrorChecker errorChecker = createErrorChecker(false);
+			m_titleLabel.setText("Добавление пользователя:");
+			ErrorChecker m_errorChecker = createErrorChecker(false);
 			
-			if (errorChecker.getMessageCode() == SWT.OK) {
+			if (m_errorChecker.getMessageCode() == SWT.OK) 
+			{
+				User m_user = new User();
+				m_user.setName(m_nameText.getText());
+				m_user.setSurname(m_surnameText.getText()); 
+				m_user.setAge(Integer.parseInt(m_ageText.getText()));
+				m_user.setIsActive(m_isActiveButton.getSelection());
 				
-				User user = new User();
-				user.setName(nameText.getText());
-				user.setSurname(surnameText.getText()); 
-				user.setAge(Integer.parseInt(ageText.getText()));
-				user.setIsActive(isActiveButton.getSelection());
-				
-				try {
-					commandsExecuter.execute(new CommandAdd (storage, user));
-					tableViewer.refresh();
+				try 
+				{
+					m_commandsExecuter.execute(new CommandAdd (m_storage, m_user));
+					m_tableViewer.refresh();
 					clearTextFields();
-					if ((table.getItemCount() + 1) < 9) shell.pack();
-				} catch(Exception e) { 		
-					createMessageBox (SWT.ERROR, e.getMessage(), "Ошибка выполнения команды добавления пользователя.");
+					if ((m_table.getItemCount() + 1) < 9) m_shell.pack();
+				} catch(Exception a_e) 
+				{ 		
+					createMessageBox (SWT.ERROR, a_e.getMessage(), "Ошибка выполнения команды добавления пользователя.");
 				} 	
-			} else createMessageBox (errorChecker.getMessageCode(), errorChecker.getErrorMesssage());
+			} else createMessageBox (m_errorChecker.getMessageCode(), m_errorChecker.getErrorMesssage());
 		}
 	};
 	
 	/**
 	 * Слушатель нажатия на строки таблицы.
 	 */
-	ISelectionChangedListener tableRowSelection = new ISelectionChangedListener() {
+	ISelectionChangedListener m_tableRowSelection = new ISelectionChangedListener() 
+	{
         @Override
-        public void selectionChanged(SelectionChangedEvent event) {
-            IStructuredSelection selection = tableViewer.getStructuredSelection();
-            User user = (User) selection.getFirstElement();
-            if (user != null) {
-            	selectedId = user.getId();
-            	nameText.setText(user.getName());
-    			surnameText.setText(user.getSurname());
-    			ageText.setText(Integer.toString(user.getAge()));
-    			isActiveButton.setSelection(user.isActive());
-    			shell.setDefaultButton(addingUserButton);
+        public void selectionChanged(SelectionChangedEvent a_event) 
+        {
+            IStructuredSelection m_selection = m_tableViewer.getStructuredSelection();
+            User m_user = (User) m_selection.getFirstElement();
+            if (m_user != null) 
+            {
+            	m_selectedId = m_user.getId();
+            	m_nameText.setText(m_user.getName());
+            	m_surnameText.setText(m_user.getSurname());
+    			m_ageText.setText(Integer.toString(m_user.getAge()));
+    			m_isActiveButton.setSelection(m_user.isActive());
+    			m_shell.setDefaultButton(m_addingUserButton);
             }
         }
     };
@@ -974,19 +1069,25 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия "Control + z".
 	 */
-    Listener cancelPressingListener  = new Listener() {
+    Listener m_cancelPressingListener  = new Listener() 
+    {
 		@Override
-		public void handleEvent(Event event) {
-			if ((int)event.character == 0x1a) { //Код комбинации "Control + z"
-				if (commandsExecuter.getCommandsListSize() != 0) {
-					try {
-						commandsExecuter.undo();
-					} catch (Exception e) {
-						createMessageBox(SWT.ERROR, e.getMessage(), "Ошибка выполнения отмены команды.");
+		public void handleEvent(Event a_event) 
+		{
+			if ((int)a_event.character == 0x1a) //Код комбинации "Control + z"
+			{
+				if (m_commandsExecuter.getCommandsListSize() != 0) 
+				{
+					try 
+					{
+						m_commandsExecuter.undo();
+					} catch (Exception a_e) 
+					{
+						createMessageBox(SWT.ERROR, a_e.getMessage(), "Ошибка выполнения отмены команды.");
 						return;
 					}
 					clearTextFields();
-					tableViewer.refresh();
+					m_tableViewer.refresh();
 				} else return;
 			}
 		}
@@ -995,19 +1096,25 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия "Control + y".
 	 */
-	Listener doubleCancelPressingListener  = new Listener() {
+	Listener m_doubleCancelPressingListener = new Listener() 
+	{
 		@Override
-		public void handleEvent(Event event) {
-			if ((int)event.character == 0x19) { //Код комбинации "Control + Y"
-				if (commandsExecuter.getCommandsListSize() != 0) {
-					try {
-						commandsExecuter.redo();
-					} catch (Exception e) {
-						createMessageBox(SWT.ERROR, e.getMessage(), "Ошибка выполнения отмены отмены команды.");
+		public void handleEvent(Event a_event)
+		{
+			if ((int)a_event.character == 0x19) //Код комбинации "Control + Y"
+			{
+				if (m_commandsExecuter.getCommandsListSize() != 0) 
+				{
+					try 
+					{
+						m_commandsExecuter.redo();
+					} catch (Exception a_e) 
+					{
+						createMessageBox(SWT.ERROR, a_e.getMessage(), "Ошибка выполнения отмены отмены команды.");
 						return;
 					}
 					clearTextFields();
-					tableViewer.refresh();
+					m_tableViewer.refresh();
 				} else return;
 			}
 		}
@@ -1016,49 +1123,55 @@ public class Graphics {
 	/**
 	 * Метод для удаления текста из полей.
 	 */
-	private void clearTextFields() {
-		nameText.setText("");
-		surnameText.setText("");
-		ageText.setText("");
-		isActiveButton.setSelection(false);
+	private void clearTextFields() 
+	{
+		m_nameText.setText("");
+		m_surnameText.setText("");
+		m_ageText.setText("");
+		m_isActiveButton.setSelection(false);
 	}
 
 	/**
 	 * Слушатель нажатия кнопки "Удалить".
 	 */
-	SelectionAdapter deletingUserSelection = new SelectionAdapter() {
+	SelectionAdapter m_deletingUserSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected (SelectionEvent event) {
-			
-			if (!isConnection) {
+		public void widgetSelected (SelectionEvent a_event) 
+		{
+			if (!m_isConnection) 
+			{
 				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
 				return;
 			}
-			ErrorChecker errorChecker = createErrorChecker(false);
-			if (errorChecker.getMessageCode() != SWT.OK) {
+			ErrorChecker m_errorChecker = createErrorChecker(false);
+			if (m_errorChecker.getMessageCode() != SWT.OK) 
+			{
 				createMessageBox(SWT.ICON_WARNING, "Пользователь не выбран.");
 				return;
 			}
 			clearTextFields();
 			
-			String potentialErrorMesaage = "";
-			try {
-				List<User> users = new ArrayList<User>();
-				potentialErrorMesaage = "Ошибка выполнения получения данных из хранилища.";
-				users = storage.getUsersDataSet(false, false);
-				User user = null;
-				for (User temp : users) {
-					if (temp.getId() == selectedId) user = temp;
-				}
-				potentialErrorMesaage = "Ошибка выполнения команды удаления пользователя.";
-				commandsExecuter.execute(new CommandDelete (storage, user));
-				titleLabel.setText("Добавление пользователя:");
+			String m_potentialErrorMesaage = "";
+			try 
+			{
+				List<User> m_users = new ArrayList<User>();
+				m_potentialErrorMesaage = "Ошибка выполнения получения данных из хранилища.";
+				m_users = m_storage.getUsersDataSet(false, false);
+				User m_user = null;
+				for (User m_temp : m_users) 
+					if (m_temp.getId() == m_selectedId) m_user = m_temp;
+				
+				m_potentialErrorMesaage = "Ошибка выполнения команды удаления пользователя.";
+				m_commandsExecuter.execute(new CommandDelete (m_storage, m_user));
+				m_titleLabel.setText("Добавление пользователя:");
 			
-				tableViewer.refresh();
-				potentialErrorMesaage = "Ошибка выполнения обновления хранилища.";
-				if (table.getItemCount() == 0) storage.updateStorageObject();
-			} catch (Exception e) {
-				createMessageBox(SWT.ERROR, e.getMessage(), potentialErrorMesaage);
+				m_tableViewer.refresh();
+				m_potentialErrorMesaage = "Ошибка выполнения обновления хранилища.";
+				if (m_table.getItemCount() == 0) m_storage.updateStorageObject();
+			} catch (Exception a_e) 
+			{
+				createMessageBox(SWT.ERROR, a_e.getMessage(), m_potentialErrorMesaage);
 			}
 		}
 	};
@@ -1066,27 +1179,33 @@ public class Graphics {
 	/**
 	 * Слушатель нажатия кнопки "Удалить всех".
 	 */
-	SelectionAdapter deletingAllUsersSelection = new SelectionAdapter() {
+	SelectionAdapter m_deletingAllUsersSelection = new SelectionAdapter() 
+	{
 		@Override
-		public void widgetSelected (SelectionEvent event) {
-			if (!isConnection) {
+		public void widgetSelected (SelectionEvent a_event) 
+		{
+			if (!m_isConnection) 
+			{
 				createMessageBox(SWT.ERROR, "Выберите хранилище данных.");
 				return;
 			}
-			if (table.getItemCount() == 0) {
+			if (m_table.getItemCount() == 0) 
+			{
 				createMessageBox(SWT.ICON_WARNING, "Нет данных для удаления.");
 				return;
 			}
 			clearTextFields();
-			String potentialErrorMessage = "Ошибка выполнения команды удаления пользователей.";
-			try {
-				commandsExecuter.execute(new CommandDeleteAll (storage));
-				titleLabel.setText("Добавление пользователя:");
-				tableViewer.refresh();
-				potentialErrorMessage = "Ошибка выполнения обновления хранилища.";
-				storage.updateStorageObject();
-			} catch (Exception e) {
-				createMessageBox(SWT.ERROR, e.getMessage(), potentialErrorMessage);
+			String m_potentialErrorMessage = "Ошибка выполнения команды удаления пользователей.";
+			try 
+			{
+				m_commandsExecuter.execute(new CommandDeleteAll (m_storage));
+				m_titleLabel.setText("Добавление пользователя:");
+				m_tableViewer.refresh();
+				m_potentialErrorMessage = "Ошибка выполнения обновления хранилища.";
+				m_storage.updateStorageObject();
+			} catch (Exception a_e) 
+			{
+				createMessageBox(SWT.ERROR, a_e.getMessage(), m_potentialErrorMessage);
 			}
 		}
 	};
@@ -1094,24 +1213,27 @@ public class Graphics {
 	/**
 	 * Метод для установки соединения с хранилищем.
 	 */
-	private void setStorage() {
-		storage = storageFactory.getStorage(combo.getText());
-		String potentialErrorMessage = "";
-		try {
-			if (combo.getText().equals("")) combo.setText(defaultDatabaseName);
-			potentialErrorMessage = "Ошибка выполнения установки соединения с хранилищем.";
-			storage.setStorage(); 
-			shellProperties = shellPropertiesFactory.getShellProperties(storage);
-			setShell (shell);
-			potentialErrorMessage = "Ошибка выполнения создания хранилища.";
-			storage.createStorageObject();
-			UsersModelProvider modelProvider = new UsersModelProvider(storage);
-			tableViewer.setInput(modelProvider);
-			tableViewer.setComparator(comparator);
+	private void setStorage() 
+	{
+		m_storage = m_storageFactory.getStorage(m_combo.getText());
+		String m_potentialErrorMessage = "";
+		try 
+		{
+			if (m_combo.getText().equals("")) m_combo.setText(m_defaultDatabaseName);
+			m_potentialErrorMessage = "Ошибка выполнения установки соединения с хранилищем.";
+			m_storage.setStorage(); 
+			m_shellProperties = m_shellPropertiesFactory.getShellProperties(m_storage);
+			setShell (m_shell);
+			m_potentialErrorMessage = "Ошибка выполнения создания хранилища.";
+			m_storage.createStorageObject();
+			UsersModelProvider m_modelProvider = new UsersModelProvider(m_storage);
+			m_tableViewer.setInput(m_modelProvider);
+			m_tableViewer.setComparator(m_comparator);
 			setEditingSupportForColumns();
-			tableViewer.refresh();
-		} catch (Exception e) {
-			createMessageBox(SWT.ERROR, e.getMessage(), potentialErrorMessage);
+			m_tableViewer.refresh();
+		} catch (Exception a_e) 
+		{
+			createMessageBox(SWT.ERROR, a_e.getMessage(), m_potentialErrorMessage);
 			return;
 		}
 	}

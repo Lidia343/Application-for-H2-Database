@@ -10,60 +10,74 @@ import storages.Storage;
 /**
  * Фабрика для создания объектов класса ShellProperties.
  */
-public class ShellPropertiesFactory {
-	
+public class ShellPropertiesFactory 
+{
 	/**
 	 * Метод возвращает объект класса ShellProperties.
-	 * @param storage - хранилище данных пользователей
-	 * @param size - размер компонента Shell
-	 * @param backColor - фоновый цвет
-	 * @param isDarkColor - установить тёмный фон / установить светлый фон
+	 * @param a_storage - хранилище данных пользователей
+	 * @param a_size - размер компонента Shell
+	 * @param a_backColor - фоновый цвет
+	 * @param a_isDarkColor - установить тёмный фон / установить светлый фон
 	 */
-	public ShellProperties getShellProperties (Storage storage, Point size, Color backColor, boolean isDarkColor) {
-		ShellProperties shellProperties = null;
-		if (storage == null) {
-			if (isDarkColor) shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "darkQuestion.png").size(size).backColor(backColor).build(); else
-			shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "lightQuestion.png").size(size).backColor(backColor).build();
-		} else
-		if (storage instanceof DataBase) {
-			if (isDarkColor) shellProperties = new ShellProperties.Builder("Работа с базой данных", "darkDatabase.png").size(size).backColor(backColor).build(); else
-			shellProperties = new ShellProperties.Builder("Работа с базой данных", "lightDatabase.png").size(size).backColor(backColor).build();
-		} else
-		if (storage instanceof FileStorage) {
-			if (isDarkColor) shellProperties = new ShellProperties.Builder("Работа с файлом", "darkFile.png").size(size).backColor(backColor).build(); else
-			shellProperties = new ShellProperties.Builder("Работа с файлом", "lightFile.png").size(size).backColor(backColor).build();
-		}
-		return shellProperties;
+	public ShellProperties getShellProperties (Storage a_storage, Point a_size, Color a_backColor, boolean a_isDarkColor) 
+	{
+		ShellProperties m_shellProperties = null;
+		if (a_storage == null) 
+		{
+			if (a_isDarkColor) 
+				m_shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "darkQuestion.png").size(a_size).backColor(a_backColor).build(); 
+			else
+				m_shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "lightQuestion.png").size(a_size).backColor(a_backColor).build();
+		} 
+		else
+			if (a_storage instanceof DataBase) 
+			{
+				if (a_isDarkColor) 
+					m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "darkDatabase.png").size(a_size).backColor(a_backColor).build(); 
+				else
+					m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "lightDatabase.png").size(a_size).backColor(a_backColor).build();
+			} else
+				if (a_storage instanceof FileStorage) 
+				{
+					if (a_isDarkColor) 
+						m_shellProperties = new ShellProperties.Builder("Работа с файлом", "darkFile.png").size(a_size).backColor(a_backColor).build(); 
+					else
+						m_shellProperties = new ShellProperties.Builder("Работа с файлом", "lightFile.png").size(a_size).backColor(a_backColor).build();
+				}
+		return m_shellProperties;
 	}
 	
 	/**
 	 * Метод возвращает объект класса ShellProperties.
-	 * @param storage - хранилище данных пользователей
-	 * @param size - размер компонента Shell
+	 * @param a_storage - хранилище данных пользователей
+	 * @param a_size - размер компонента Shell
 	 */
-	public ShellProperties getShellProperties (Storage storage, Point size) {
-		ShellProperties shellProperties = getShellProperties (storage, size, null, true);
-		return shellProperties;
+	public ShellProperties getShellProperties (Storage a_storage, Point a_size) 
+	{
+		ShellProperties m_shellProperties = getShellProperties (a_storage, a_size, null, true);
+		return m_shellProperties;
 	}
 	
 	/**
 	 * Метод возвращает объект класса ShellProperties.
-	 * @param storage - хранилище данных пользователей
-	 * @param backColor - фоновый цвет
-	 * @param isDarkColor - установить тёмный фон / установить светлый фон
+	 * @param a_storage - хранилище данных пользователей
+	 * @param a_backColor - фоновый цвет
+	 * @param a_isDarkColor - установить тёмный фон / установить светлый фон
 	 */
-	public ShellProperties getShellProperties (Storage storage, Color backColor, boolean isDarkColor) {
-		ShellProperties shellProperties = getShellProperties (storage, null, backColor, isDarkColor);
-		return shellProperties;
+	public ShellProperties getShellProperties (Storage a_storage, Color a_backColor, boolean a_isDarkColor) 
+	{
+		ShellProperties m_shellProperties = getShellProperties (a_storage, null, a_backColor, a_isDarkColor);
+		return m_shellProperties;
 	}
 	
 	/**
 	 * Метод возвращает объект класса ShellProperties.
-	 * @param storage - хранилище данных пользователей
+	 * @param a_storage - хранилище данных пользователей
 	 */
-	public ShellProperties getShellProperties (Storage storage) {
-		ShellProperties shellProperties = getShellProperties (storage, null, null, true);
-		return shellProperties;
+	public ShellProperties getShellProperties (Storage a_storage) 
+	{
+		ShellProperties m_shellProperties = getShellProperties (a_storage, null, null, true);
+		return m_shellProperties;
 	}
 }
 	

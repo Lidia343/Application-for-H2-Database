@@ -6,33 +6,38 @@ import user.User;
 /**
  * Класс предназначен для реализации команды добавления пользователя.
  */
-public class CommandAdd implements Command {
-	
-	private Storage storage;
-	private User user;
+public class CommandAdd implements Command
+{
+	private Storage	m_storage;
+	private User m_user;
 
 	/**
 	 * Конструктор класса CommandAdd.
-	 * @param storage - хранилище данных пользователей
-	 * @param user - объект класса User (пользователь, которого необходимо добавить в хранилище)
+	 * @param a_storage - хранилище данных пользователей
+	 * @param a_user - объект класса User (пользователь, которого необходимо добавить в хранилище)
 	 */
-	public CommandAdd (Storage storage, User user) {
-		this.storage = storage;
-		this.user = user;
+	public CommandAdd(Storage a_storage, User a_user)
+	{
+		m_storage = a_storage;
+		m_user = a_user;
 	}
-	
+
 	@Override
-	public void execute() throws Exception {
-		int currentID = storage.addUser(user);	
-		user.setId(currentID);
+	public void execute() throws Exception
+	{
+		int m_currentID = m_storage.addUser(m_user);
+		m_user.setId(m_currentID);
 	}
-	
-	@Override public void undo() throws Exception {
-		storage.deleteUser(user.getId());
-	}
-	
+
 	@Override
-	public void redo() throws Exception {
-		storage.addUser(user);
+	public void undo() throws Exception
+	{
+		m_storage.deleteUser(m_user.getId());
+	}
+
+	@Override
+	public void redo() throws Exception
+	{
+		m_storage.addUser(m_user);
 	}
 }

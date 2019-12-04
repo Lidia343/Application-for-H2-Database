@@ -7,8 +7,8 @@ import user.User;
 /**
  * Интерфейс, необходимый для определения методов, которые должны содержать классы, реализующие хранение данных.
  */
-public interface Storage {
-	
+public interface Storage 
+{
 	/**
 	 * Метод для установки хранилища.
 	 */
@@ -26,22 +26,22 @@ public interface Storage {
 	
 	/**
 	 * Метод для добавления данных пользователя в хранилище.
-	 * @param user - объект, содержащий данные для добавления
+	 * @param a_user - объект, содержащий данные для добавления
 	 * @return код добавленного пользователя
 	 */
-	int addUser(User user) throws Exception;
+	int addUser(User a_user) throws Exception;
 	
 	/**
 	 * Метод для изменения данных пользователя в хранилище.
-	 * @param user - объект класса User, на который необходимо заменить объект с аналогичным ключом в хранилище
+	 * @param a_user - объект класса User, на который необходимо заменить объект с аналогичным ключом в хранилище
 	 */
-	void updateUser(User user) throws Exception;
+	void updateUser(User a_user) throws Exception;
 	
 	/**
 	 * Метод для удаления данных пользователя из хранилища.
-	 * @param id - код пользователя
+	 * @param a_id - код пользователя
 	 */
-	void deleteUser(int id) throws Exception;
+	void deleteUser(int a_id) throws Exception;
 	
 	/**
 	 * Метод для удаления данных всех пользователей из хранилища.
@@ -50,10 +50,10 @@ public interface Storage {
 	
 	/**
 	 * Метод для возврата списка, содержащего данные всех пользователей хранилища.
-	 * @param sorting - сортировать данные пользователей по коду / не сортировать
-	 * @param usersIsDeleted - вернуть список удалённых пользователей / вернуть список текущих пользователей
+	 * @param a_sorting - сортировать данные пользователей по коду / не сортировать
+	 * @param a_usersIsDeleted - вернуть список удалённых пользователей / вернуть список текущих пользователей
 	 */
-	List <User> getUsersDataSet(boolean isSorted, boolean deletedUsers) throws Exception;
+	List <User> getUsersDataSet(boolean a_isSorted, boolean a_usersAreDeleted) throws Exception;
 	
 	/**
 	 * Метод для закрытия хранилища без потерь данных, содержащихся в нём.

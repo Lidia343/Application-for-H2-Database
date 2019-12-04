@@ -9,79 +9,97 @@ import user.User;
 /**
  * Класс предназначен для возможности сортировки данных пользователей по выбранному столбцу.
  */
-public class TableViewerComparator extends ViewerComparator {
-	private int propertyIndex;
+public class TableViewerComparator extends ViewerComparator 
+{
+	private int m_propertyIndex;
 	private static final int DESCENDING = 1; // нисходящее направление
-	private int direction = DESCENDING;
+	private int m_direction = DESCENDING;
 
 	/**
 	 * Конструктор класса TableViewerComparator.
 	 */
-	public TableViewerComparator() {
-		this.propertyIndex = 0;
-		direction = DESCENDING;
+	public TableViewerComparator() 
+	{
+		m_propertyIndex = 0;
+		m_direction = DESCENDING;
 	}
 
 	/**
 	 * Метод возвращает направление сортировки (нисходящее или восходящее).
 	 */
-	public int getDirection() {
-		return direction == 1 ? SWT.DOWN : SWT.UP;
+	public int getDirection() 
+	{
+		return m_direction == 1 ? SWT.DOWN : SWT.UP;
 	}
 
 	/**
 	 * Метод устанавливает номер выбранного для сортировки столбца.
+	 * @param a_column - номер столбца
 	 */
-	public void setColumn(int column) {
-		if (column == this.propertyIndex) {
-			direction = 1 - direction;
-		} else {
-			this.propertyIndex = column;
-			direction = DESCENDING;
-		}
+	public void setColumn(int a_column) 
+	{
+		if (a_column == m_propertyIndex) 
+		{
+			m_direction = 1 - m_direction;
+		} else 
+			{
+				m_propertyIndex = a_column;
+				m_direction = DESCENDING;
+			}
 	}
 
 	/**
 	 * Метод для сравнения данных, установленных в TableViewer.
-	 * @param viewer - объект класса TableViewer
-	 * @param e1 - первый объект таблицы для сравнения со вторым
-	 * @param e2 - второй объект таблицы 
+	 * @param a_viewer - объект класса TableViewer
+	 * @param a_e1 - первый объект таблицы для сравнения со вторым
+	 * @param a_e2 - второй объект таблицы 
 	 */
 	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		User u1 = (User) e1;
-		User u2 = (User) e2;
-		int rc = 0;
-		switch (propertyIndex) {
-		case 0:
-			if (u1.getId() == u2.getId()) 
-				rc = 0; 
-			else
-				rc = ((u1.getId() > u2.getId()) ? 1 : -1);
-			break;
-		case 1:
-			rc = u1.getName().compareTo(u2.getName());
-			break;
-		case 2:
-			rc = u1.getSurname().compareTo(u2.getSurname());
-			break;
-		case 3:
-			if (u1.getAge() == u2.getAge()) 
-				rc = 0;
-			else
-				rc = ((u1.getAge() > u2.getAge()) ? 1 : -1);
-			break;
-		case 4:
-			if (u1.isActive() == u2.isActive()) 
-				rc = 0;
-		    else
-				rc = (u1.isActive() ? 1 : -1);
-			break;
-		default:
-			rc = 0;
+	public int compare(Viewer a_viewer, Object a_e1, Object a_e2) 
+	{
+		User m_u1 = (User) a_e1;
+		User m_u2 = (User) a_e2;
+		int m_rc = 0;
+		switch (m_propertyIndex) 
+		{
+			case 0:
+			{
+				if (m_u1.getId() == m_u2.getId()) 
+					m_rc = 0; 
+				else
+					m_rc = ((m_u1.getId() > m_u2.getId()) ? 1 : -1);
+				break;
+			}
+			case 1:
+			{
+				m_rc = m_u1.getName().compareTo(m_u2.getName());
+				break;
+			}
+			case 2:
+			{
+				m_rc = m_u1.getSurname().compareTo(m_u2.getSurname());
+				break;
+			}
+			case 3:
+			{
+				if (m_u1.getAge() == m_u2.getAge()) 
+					m_rc = 0;
+				else
+					m_rc = ((m_u1.getAge() > m_u2.getAge()) ? 1 : -1);
+				break;
+			}
+			case 4:
+			{
+				if (m_u1.isActive() == m_u2.isActive()) 
+					m_rc = 0;
+			    else
+			    	m_rc = (m_u1.isActive() ? 1 : -1);
+				break;
+			}
+			default: m_rc = 0;
 		}
-		if (direction == DESCENDING) 
-			rc = -rc;
-		return rc;
+		if (m_direction == DESCENDING) 
+			m_rc = -m_rc;
+		return m_rc;
 	}
 }

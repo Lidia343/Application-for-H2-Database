@@ -9,41 +9,46 @@ import user.UsersDataGenerator;
 /**
  * Класс предназначен для реализации команды добавления указанного количества пользователей в хранилище.
  */
-public class CommandGenerate implements Command{
-	
-	private Storage storage;
-	private List <User> generatedUsers;
-	private UsersDataGenerator generator;
+public class CommandGenerate implements Command
+{
+	private Storage m_storage;
+	private List <User> m_generatedUsers;
+	private UsersDataGenerator m_generator;
 
 	/**
 	 * Конструктор класса CommandGenerate.
-	 * @param storage - хранилище данных пользователей
-	 * @param userNumbers - количество пользователей для добавления в хранилище
+	 * @param a_storage - хранилище данных пользователей
+	 * @param a_userNumbers - количество пользователей для добавления в хранилище
 	 */
-	public CommandGenerate (Storage storage, int userNumbers) {
-		this.storage = storage;
-		generator = new UsersDataGenerator (userNumbers);
-		generatedUsers = new ArrayList<>();
+	public CommandGenerate (Storage a_storage, int a_userNumbers) 
+	{
+		m_storage = a_storage;
+		m_generator = new UsersDataGenerator (a_userNumbers);
+		m_generatedUsers = new ArrayList<>();
 	}
 	
 	@Override
-	public void execute() throws Exception {
-		generatedUsers = generator.generateUsers();
+	public void execute() throws Exception 
+	{
+		m_generatedUsers = m_generator.generateUsers();
 		int currentID;
-		for (User user : generatedUsers) {
-			currentID = storage.addUser(user);
+		for (User user : m_generatedUsers) 
+		{
+			currentID = m_storage.addUser(user);
 			user.setId(currentID);
 		}
 	}
 	
-	@Override public void undo() throws Exception {
-		for (User user : generatedUsers) 
-			storage.deleteUser(user.getId());
+	@Override public void undo() throws Exception 
+	{
+		for (User user : m_generatedUsers) 
+			m_storage.deleteUser(user.getId());
 	}
 	
 	@Override
-	public void redo() throws Exception {
-		for (User user : generatedUsers)
-			storage.addUser(user);	
+	public void redo() throws Exception 
+	{
+		for (User user : m_generatedUsers)
+			m_storage.addUser(user);	
 	}
 }

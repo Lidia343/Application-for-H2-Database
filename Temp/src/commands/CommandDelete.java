@@ -6,32 +6,36 @@ import user.User;
 /**
  * Класс предназначен для реализации команды удаления пользователя.
  */
-public class CommandDelete implements Command {
-	
-	private Storage storage;
-	private User user;
+public class CommandDelete implements Command 
+{
+	private Storage m_storage;
+	private User m_user;
 	
 	/**
 	 * Конструктор класса CommandDelete.
-	 * @param storage - хранилище данных пользователей
-	 * @param user - объект класса User (пользователь, которого необходимо удалить из хранилища)
+	 * @param a_storage - хранилище данных пользователей
+	 * @param a_user - объект класса User (пользователь, которого необходимо удалить из хранилища)
 	 */
-	public CommandDelete (Storage storage, User user) {
-		this.storage = storage;
-		this.user = user;
+	public CommandDelete (Storage a_storage, User a_user) 
+	{
+		m_storage = a_storage;
+		m_user = a_user;
 	}
 	
 	@Override
-	public void execute() throws Exception {
-		storage.deleteUser(user.getId());
+	public void execute() throws Exception 
+	{
+		m_storage.deleteUser(m_user.getId());
 	}
 	
-	@Override public void undo() throws Exception {
-		storage.addUser(user);
+	@Override public void undo() throws Exception 
+	{
+		m_storage.addUser(m_user);
 	}
 	
 	@Override
-	public void redo() throws Exception {
-		storage.deleteUser(user.getId());
+	public void redo() throws Exception 
+	{
+		m_storage.deleteUser(m_user.getId());
 	}
 }
