@@ -27,11 +27,23 @@
       </product>
    </extension>
    <extension
-         point="Temp.stores">
+         point="H2DataBasePlug-in.stores">
       <store
             class="storages.DataBase"
             name="jdbc:h2:~/test">
       </store>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="H2DataBasePlug-in.App"
+            name="DatabaseApplication">
+         <property
+               name="appName"
+               value="DatabaseApplication">
+         </property>
+      </product>
    </extension>
 
 </plugin>

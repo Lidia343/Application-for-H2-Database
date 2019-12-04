@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="Temp" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="H2DataBasePlug-in" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="Temp" id="stores" name="Stores"/>
+         <meta.schema plugin="H2DataBasePlug-in" id="stores" name="Stores"/>
       </appinfo>
       <documentation>
          Схема для объекта хранилища. Позволяет определить его имя.
