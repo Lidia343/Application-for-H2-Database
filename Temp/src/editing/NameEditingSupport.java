@@ -17,7 +17,7 @@ public class NameEditingSupport extends UserEditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public NameEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultListener errorInputListener) {
+	public NameEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultHandler errorInputListener) {
 		super(viewer, userEditingListener, errorInputListener);
 	}
 

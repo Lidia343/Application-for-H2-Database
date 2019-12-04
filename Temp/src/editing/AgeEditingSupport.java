@@ -17,7 +17,7 @@ public class AgeEditingSupport extends UserEditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public AgeEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultListener errorInputListener) {
+	public AgeEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultHandler errorInputListener) {
 		super(viewer, userEditingListener, errorInputListener);
 	}
 

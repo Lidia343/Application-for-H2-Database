@@ -14,7 +14,7 @@ public class UserEditingSupport extends EditingSupport {
 	protected final TableViewer viewer;
 	private final CellEditor editor;
 	protected UserEditingListener userEditingListener;
-	protected InputValidationResultListener errorInputListener;
+	protected InputValidationResultHandler errorInputListener;
 
 	/**
 	 * Конструктор класса UserEditingSupport.
@@ -22,7 +22,7 @@ public class UserEditingSupport extends EditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public UserEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultListener errorInputListener) {
+	public UserEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultHandler errorInputListener) {
 		super(viewer);
 		this.viewer = viewer;
 		this.editor = new TextCellEditor(viewer.getTable());

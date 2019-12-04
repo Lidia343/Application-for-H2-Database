@@ -44,7 +44,7 @@ import commands.CommandGenerate;
 import commands.CommandUpdate;
 import commands.CommandsExecuter;
 import editing.AgeEditingSupport;
-import editing.InputValidationResultListener;
+import editing.InputValidationResultHandler;
 import editing.IsActiveEditingSupport;
 import editing.NameEditingSupport;
 import editing.SurnameEditingSupport;
@@ -369,7 +369,7 @@ public class Graphics {
 	private void setEditingSupportForColumns() {
 		
 		//Слушатель неверного ввода данных в таблицу:
-		InputValidationResultListener errorInputListener = new InputValidationResultListener() {
+		InputValidationResultHandler errorInputListener = new InputValidationResultHandler() {
 			@Override
 			public void createMessage(String message) {
 				createMessageBox (SWT.ERROR, message);
