@@ -191,14 +191,14 @@ public class FileStorage implements Storage
 	{
 		calculateTabForUserData(a_user.getName(), a_user.getSurname());
 		m_writer = new FileWriter (m_file, true); 
-		String m_userLine = (m_id + 1) + "\t" + a_user.getName() + m_afterNameTab + a_user.getSurname() + m_afterSurnameTab + a_user.getAge() + "\t\t" + a_user.isActive() + "\r\n";
+		String m_userLine = (a_id + 1) + "\t" + a_user.getName() + m_afterNameTab + a_user.getSurname() + m_afterSurnameTab + a_user.getAge() + "\t\t" + a_user.isActive() + "\r\n";
 		m_writer.append(m_userLine); 
 		m_writer.close();
 			
-		a_user.setId(m_id + 1);
+		a_user.setId(a_id + 1);
 		m_usersDataList.add(a_user);
 			
-		if (a_isUpdated) updateIdFile (Integer.toString(m_id + 1));
+		if (a_isUpdated) updateIdFile (Integer.toString(a_id + 1));
 	}
 	
 	@Override
@@ -334,7 +334,7 @@ public class FileStorage implements Storage
 		
 		int m_dataIndex = 0;
 		for (User m_temp : m_usersDataList)
-			if (m_temp.getId() == m_id) m_dataIndex = m_usersDataList.indexOf(m_temp);
+			if (m_temp.getId() == a_id) m_dataIndex = m_usersDataList.indexOf(m_temp);
 		m_usersDataList.remove(m_dataIndex); 
 		findMaxUserId();
 	}
