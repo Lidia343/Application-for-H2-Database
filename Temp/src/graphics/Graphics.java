@@ -1,4 +1,5 @@
 package graphics;
+
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -18,28 +19,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
-
-import commands.Command;
-import commands.CommandAdd;
-import commands.CommandDelete;
-import commands.CommandDeleteAll;
-import commands.CommandGenerate;
-import commands.CommandUpdate;
-import commands.CommandsExecuter;
-import editing.AgeEditingSupport;
-import editing.IsActiveEditingSupport;
-import editing.NameEditingSupport;
-import editing.SurnameEditingSupport;
-import errors.ErrorChecker;
-import errors.ErrorInputListener;
-import storages.Storage;
-import storages.StorageFactory;
-import user.UsersModelProvider;
-import user.User;
-import user.UserData;
-import user.UserEditingListener;
-import user.UsersContentProvider;
-
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import java.util.ArrayList;
@@ -57,6 +36,26 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 
+import commands.Command;
+import commands.CommandAdd;
+import commands.CommandDelete;
+import commands.CommandDeleteAll;
+import commands.CommandGenerate;
+import commands.CommandUpdate;
+import commands.CommandsExecuter;
+import editing.AgeEditingSupport;
+import editing.InputValidationResultListener;
+import editing.IsActiveEditingSupport;
+import editing.NameEditingSupport;
+import editing.SurnameEditingSupport;
+import errors.ErrorChecker;
+import storages.Storage;
+import storages.StorageFactory;
+import user.UsersModelProvider;
+import user.User;
+import user.UserData;
+import user.UserEditingListener;
+import user.UsersContentProvider;
 
 /**
  * Класс предназначен для создания интерфейса программы и реализации взаимодействия с пользователем через данный интерфейс.
@@ -370,7 +369,7 @@ public class Graphics {
 	private void setEditingSupportForColumns() {
 		
 		//Слушатель неверного ввода данных в таблицу:
-		ErrorInputListener errorInputListener = new ErrorInputListener() {
+		InputValidationResultListener errorInputListener = new InputValidationResultListener() {
 			@Override
 			public void createMessage(String message) {
 				createMessageBox (SWT.ERROR, message);

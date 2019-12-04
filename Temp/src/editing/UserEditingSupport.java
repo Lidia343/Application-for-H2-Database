@@ -3,8 +3,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
-
-import errors.ErrorInputListener;
 import user.UserEditingListener;
 
 /**
@@ -16,7 +14,7 @@ public class UserEditingSupport extends EditingSupport {
 	protected final TableViewer viewer;
 	private final CellEditor editor;
 	protected UserEditingListener userEditingListener;
-	protected ErrorInputListener errorInputListener;
+	protected InputValidationResultListener errorInputListener;
 
 	/**
 	 * Конструктор класса UserEditingSupport.
@@ -24,7 +22,7 @@ public class UserEditingSupport extends EditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public UserEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
+	public UserEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultListener errorInputListener) {
 		super(viewer);
 		this.viewer = viewer;
 		this.editor = new TextCellEditor(viewer.getTable());

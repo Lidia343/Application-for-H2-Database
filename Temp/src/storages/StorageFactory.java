@@ -1,4 +1,5 @@
 package storages;
+
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.IConfigurationElement;

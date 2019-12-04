@@ -1,4 +1,5 @@
 package graphics;
+
 import java.io.InputStream;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;

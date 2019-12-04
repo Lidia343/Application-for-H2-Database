@@ -1,5 +1,4 @@
 package user;
-
 import java.util.Comparator;
 
 /**

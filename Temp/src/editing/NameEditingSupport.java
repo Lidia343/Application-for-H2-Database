@@ -1,8 +1,8 @@
 package editing;
+
 import org.eclipse.jface.viewers.TableViewer;
 
 import errors.ErrorChecker;
-import errors.ErrorInputListener;
 import user.User;
 import user.UserEditingListener;
 
@@ -17,7 +17,7 @@ public class NameEditingSupport extends UserEditingSupport {
 	 * @param userEditingListener - слушатель нажатия на столбец таблицы
 	 * @param errorInputListener - слушатель ввода в таблицу неподдерживаемого столбцом значения 
 	 */
-	public NameEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, ErrorInputListener errorInputListener) {
+	public NameEditingSupport(TableViewer viewer, UserEditingListener userEditingListener, InputValidationResultListener errorInputListener) {
 		super(viewer, userEditingListener, errorInputListener);
 	}
 
