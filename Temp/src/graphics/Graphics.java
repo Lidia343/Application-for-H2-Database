@@ -1219,7 +1219,7 @@ public class Graphics
 		String m_potentialErrorMessage = "";
 		try 
 		{
-			if (m_combo.getText().equals("")) m_combo.setText(m_defaultDatabaseName);
+			if (m_combo.getText().equals("")) m_combo.setText(m_defaultFileName);
 			m_potentialErrorMessage = "Ошибка выполнения установки соединения с хранилищем.";
 			m_storage.setStorage(); 
 			m_shellProperties = m_shellPropertiesFactory.getShellProperties(m_storage);

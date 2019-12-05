@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="stores" name="Stores" schema="schema/stores.exsd"/>
+   <extension-point id="store" name="Store" schema="schema/store.exsd"/>
    <extension
          id="App"
          point="org.eclipse.core.runtime.applications">
@@ -15,25 +15,6 @@
       </application>
    </extension>
    <extension
-         id="product1"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="H2DataBasePlug-in.App"
-            name="DatabaseApplication">
-         <property
-               name="appName"
-               value="DatabaseApplication">
-         </property>
-      </product>
-   </extension>
-   <extension
-         point="H2DataBasePlug-in.stores">
-      <store
-            class="storages.DataBase"
-            name="jdbc:h2:~/test">
-      </store>
-   </extension>
-   <extension
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
@@ -44,6 +25,20 @@
                value="DatabaseApplication">
          </property>
       </product>
+   </extension>
+   <extension
+         point="H2DataBasePlug-in.store">
+      <store
+            class="storages.Database"
+            driver="org.h2.Driver"
+            name="h2Database"
+            pattern="^(jdbc:h2:\D+)$">
+      </store>
+      <store
+            class="storages.FileStorage"
+            name="file"
+            pattern="^([^\/:*?\&quot;&lt;&gt;|]+\.txt)$">
+      </store>
    </extension>
 
 </plugin>

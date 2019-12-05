@@ -1,6 +1,6 @@
 package storages;
 
-import java.sql.Connection; 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,17 +10,15 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IContributor;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.InvalidRegistryObjectException;
 
-import user.User;  
+import storages.Storage;
+import user.User;
 
 /**
  * Класс предназначен для работы с базой данных.
  */
-public class DataBase implements Storage, IExecutableExtension
+public class Database implements Storage, IExecutableExtension
 {
 	private String m_JDBC_Driver;
 	private String m_databaseName;
@@ -29,20 +27,11 @@ public class DataBase implements Storage, IExecutableExtension
 	private Statement m_statement;
 	private ResultSet m_resultSet;
 	  
-    /**
-	* Конструктор класса DataBase
-	* @param a_databaseName - имя базы данных
-	*/
-	public DataBase(String a_databaseName) 
+	/**
+	 * Конструктор класса Database.
+	 */
+	public Database() 
 	{
-		m_databaseName = a_databaseName;
-		m_JDBC_Driver = "org.h2.Driver"; 
-	}
-	public DataBase() 
-	{
-		//m_databaseName = this.getAttribute("name");
-		//m_databaseName = "jdbc:h2:~/test";
-		m_JDBC_Driver = "org.h2.Driver"; 
 	}
 	  
 	@Override
@@ -150,12 +139,11 @@ public class DataBase implements Storage, IExecutableExtension
 		if (m_connection != null) m_connection.close();
 	}
 
-	
 	@Override
-	public void setInitializationData(IConfigurationElement a_config, String a_propertyName,
-			Object a_data) throws CoreException
+	public void setInitializationData(IConfigurationElement a_config, String a_propertyName, Object a_data) throws CoreException
 	{
-		System.out.println(a_config.getAttribute("name"));
-		m_databaseName = a_config.getAttribute("name");
+		m_databaseName = (String) a_data;
+		m_JDBC_Driver = a_config.getAttribute("driver");
 	}
 }
+

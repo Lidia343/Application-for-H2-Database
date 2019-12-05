@@ -3,7 +3,6 @@ package graphics;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 
-import storages.DataBase;
 import storages.FileStorage;
 import storages.Storage;
 
@@ -30,20 +29,19 @@ public class ShellPropertiesFactory
 				m_shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "lightQuestion.png").size(a_size).backColor(a_backColor).build();
 		} 
 		else
-			if (a_storage instanceof DataBase) 
+			if (a_storage instanceof FileStorage) 
 			{
 				if (a_isDarkColor) 
-					m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "darkDatabase.png").size(a_size).backColor(a_backColor).build(); 
+					m_shellProperties = new ShellProperties.Builder("Работа с файлом", "darkFile.png").size(a_size).backColor(a_backColor).build(); 
 				else
-					m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "lightDatabase.png").size(a_size).backColor(a_backColor).build();
+					m_shellProperties = new ShellProperties.Builder("Работа с файлом", "lightFile.png").size(a_size).backColor(a_backColor).build();
 			} else
-				if (a_storage instanceof FileStorage) 
 				{
 					if (a_isDarkColor) 
-						m_shellProperties = new ShellProperties.Builder("Работа с файлом", "darkFile.png").size(a_size).backColor(a_backColor).build(); 
+						m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "darkDatabase.png").size(a_size).backColor(a_backColor).build(); 
 					else
-						m_shellProperties = new ShellProperties.Builder("Работа с файлом", "lightFile.png").size(a_size).backColor(a_backColor).build();
-				}
+						m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "lightDatabase.png").size(a_size).backColor(a_backColor).build();
+				} 
 		return m_shellProperties;
 	}
 	

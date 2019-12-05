@@ -2,16 +2,19 @@ package storages;
 
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 
-import storages.DataBase;
 /**
  * Фабрика для создания объектов классов, реализующих интерфейс Storage.
  */
 public class StorageFactory 
 {
-	private final String m_storageExtensionID = "H2DataBasePlug-in.stores";
+	private final String m_storageExtensionID = "H2DataBasePlug-in.store";
 	
 	/**
 	 * Метод возвращает хранилище данных пользователей.
@@ -23,13 +26,16 @@ public class StorageFactory
 		IExtensionRegistry m_reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] m_extensions = m_reg.getConfigurationElementsFor(m_storageExtensionID);
 		Storage m_storage;
-		for (IConfigurationElement m_extension : m_extensions) 
+		
+		for (IConfigurationElement m_extension : m_extensions)
 		{
-			if (a_storageName.equals(m_extension.getAttribute("name"))) 
+			if (Pattern.compile(m_extension.getAttribute("pattern")).matcher(a_storageName).matches())
 			{
 				try
 				{
-					return (DataBase)m_extension.createExecutableExtension("class");
+					m_storage = (Storage) m_extension.createExecutableExtension("class");
+					((IExecutableExtension)m_storage).setInitializationData(m_extension, "name", a_storageName);
+					return m_storage;
 				}
 				catch(CoreException e)
 				{
@@ -37,10 +43,6 @@ public class StorageFactory
 				}
 			}
 		}
-		if (a_storageName.endsWith(".txt")) 
-			m_storage = new FileStorage(a_storageName); 
-		else
-			m_storage = new DataBase("jdbc:h2:~/test");
-		return m_storage;
+		return new FileStorage("file.txt");
 	}
 }

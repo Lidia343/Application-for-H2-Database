@@ -3,10 +3,10 @@
 <schema targetNamespace="H2DataBasePlug-in" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="H2DataBasePlug-in" id="stores" name="Stores"/>
+         <meta.schema plugin="H2DataBasePlug-in" id="store" name="Store"/>
       </appinfo>
       <documentation>
-         Схема для объекта хранилища. Позволяет определить его имя.
+         [Enter description of this extension point.]
       </documentation>
    </annotation>
 
@@ -49,7 +49,7 @@
 
    <element name="store">
       <complexType>
-         <attribute name="name" type="string" use="required">
+         <attribute name="driver" type="string">
             <annotation>
                <documentation>
                   
@@ -64,6 +64,20 @@
                <appinfo>
                   <meta.attribute kind="java" basedOn=":storages.Storage"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="pattern" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

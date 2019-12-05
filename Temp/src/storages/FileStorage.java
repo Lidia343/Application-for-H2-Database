@@ -9,13 +9,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+
 import user.User;
 import user.UsersListSorter;
 
 /**
  * Класс предназначен для работы с файлом, в котором должна храниться информация о пользователях.
  */
-public class FileStorage implements Storage 
+public class FileStorage implements Storage, IExecutableExtension
 {
 	private String m_fileName;
 	private File m_file;
@@ -42,6 +46,19 @@ public class FileStorage implements Storage
 	public FileStorage(String a_fileName) 
 	{
 		m_fileName = a_fileName;
+		m_id = 0;
+		m_usersDataList = new ArrayList<>();
+		m_deletedUsersDataList = new ArrayList<>();
+		m_prevUsersDataList = new ArrayList<>();
+		m_nextUsersDataList = new ArrayList<>();
+		m_allUsersDeleted = false;
+	}
+	
+	/**
+	 * Конструктор класса FileStorage.
+	 */
+	public FileStorage() 
+	{
 		m_id = 0;
 		m_usersDataList = new ArrayList<>();
 		m_deletedUsersDataList = new ArrayList<>();
@@ -376,5 +393,11 @@ public class FileStorage implements Storage
 		if (m_reader != null) m_reader.close();
 		if (m_idReader != null) m_idReader.close();
 		if (m_writer != null) m_writer.close();
+	}
+
+	@Override
+	public void setInitializationData(IConfigurationElement a_config, String a_propertyName, Object a_data) throws CoreException
+	{
+		m_fileName = (String)a_data;
 	}
 }
