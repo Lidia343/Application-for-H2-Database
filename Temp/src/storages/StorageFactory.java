@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
  */
 public class StorageFactory 
 {
-	private final String m_storageExtensionID = "H2DataBasePlug-in.store";
+	private final String m_storageExtensionID = "H2DataBasePlug-in.stores";
 	
 	/**
 	 * Метод возвращает хранилище данных пользователей.
