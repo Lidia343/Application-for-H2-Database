@@ -4,7 +4,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 
 import storages.FileStorage;
-import storages.Storage;
+import storages.IStorage;
 
 /**
  * Фабрика для создания объектов класса ShellProperties.
@@ -18,7 +18,7 @@ public class ShellPropertiesFactory
 	 * @param a_backColor - фоновый цвет
 	 * @param a_isDarkColor - установить тёмный фон / установить светлый фон
 	 */
-	public ShellProperties getShellProperties (Storage a_storage, Point a_size, Color a_backColor, boolean a_isDarkColor) 
+	public ShellProperties getShellProperties (IStorage a_storage, Point a_size, Color a_backColor, boolean a_isDarkColor) 
 	{
 		ShellProperties shellProperties = null;
 		if (a_storage == null) 
@@ -50,7 +50,7 @@ public class ShellPropertiesFactory
 	 * @param a_storage - хранилище данных пользователей
 	 * @param a_size - размер компонента Shell
 	 */
-	public ShellProperties getShellProperties (Storage a_storage, Point a_size) 
+	public ShellProperties getShellProperties (IStorage a_storage, Point a_size) 
 	{
 		ShellProperties shellProperties = getShellProperties (a_storage, a_size, null, true);
 		return shellProperties;
@@ -62,7 +62,7 @@ public class ShellPropertiesFactory
 	 * @param a_backColor - фоновый цвет
 	 * @param a_isDarkColor - установить тёмный фон / установить светлый фон
 	 */
-	public ShellProperties getShellProperties (Storage a_storage, Color a_backColor, boolean a_isDarkColor) 
+	public ShellProperties getShellProperties (IStorage a_storage, Color a_backColor, boolean a_isDarkColor) 
 	{
 		ShellProperties shellProperties = getShellProperties (a_storage, null, a_backColor, a_isDarkColor);
 		return shellProperties;
@@ -72,7 +72,7 @@ public class ShellPropertiesFactory
 	 * Метод возвращает объект класса ShellProperties.
 	 * @param a_storage - хранилище данных пользователей
 	 */
-	public ShellProperties getShellProperties (Storage a_storage) 
+	public ShellProperties getShellProperties (IStorage a_storage) 
 	{
 		ShellProperties shellProperties = getShellProperties (a_storage, null, null, true);
 		return shellProperties;

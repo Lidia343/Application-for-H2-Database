@@ -1,6 +1,6 @@
 package commands;
 
-import storages.Storage;
+import storages.IStorage;
 import user.User;
 import user.UserData;
 
@@ -9,7 +9,7 @@ import user.UserData;
  */
 public class CommandUpdate implements Command 
 {
-	private Storage m_storage;
+	private IStorage m_storage;
 	private User m_user;
 	private User m_updatedUser;
 	private Object m_value;
@@ -24,7 +24,7 @@ public class CommandUpdate implements Command
 	 * (связана с классом UsersData, предоставляющим статические неизменяемые поля, каждое из которых 
 	 * соответствует одному из разрешённых к изменению полей объекта a_user)
 	 */
-	public CommandUpdate (Storage a_storage, User a_user, Object a_value, int a_valueInformation) 
+	public CommandUpdate (IStorage a_storage, User a_user, Object a_value, int a_valueInformation) 
 	{
 		m_storage = a_storage;
 		m_user = a_user;

@@ -12,13 +12,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 
-import storages.Storage;
+import storages.IStorage;
 import user.User;
 
 /**
  * Класс предназначен для работы с базой данных.
  */
-public class Database implements Storage, IExecutableExtension
+public class Database implements IStorage, IExecutableExtension
 {
 	private String m_JDBC_Driver;
 	private String m_databaseName;

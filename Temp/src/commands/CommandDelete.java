@@ -1,6 +1,6 @@
 package commands;
 
-import storages.Storage;
+import storages.IStorage;
 import user.User;
 
 /**
@@ -8,7 +8,7 @@ import user.User;
  */
 public class CommandDelete implements Command 
 {
-	private Storage m_storage;
+	private IStorage m_storage;
 	private User m_user;
 	
 	/**
@@ -16,7 +16,7 @@ public class CommandDelete implements Command
 	 * @param a_storage - хранилище данных пользователей
 	 * @param a_user - объект класса User (пользователь, которого необходимо удалить из хранилища)
 	 */
-	public CommandDelete (Storage a_storage, User a_user) 
+	public CommandDelete (IStorage a_storage, User a_user) 
 	{
 		m_storage = a_storage;
 		m_user = a_user;

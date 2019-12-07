@@ -21,11 +21,11 @@ public class StorageFactory
 	 * @param a_storageName - имя хранилища
 	 * @throws CoreException 
 	 */
-	public Storage getStorage(String a_storageName) 
+	public IStorage getStorage(String a_storageName) 
 	{
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(STORAGE_EXTENSION_ID);
-		Storage storage;
+		IStorage storage;
 		
 		for (IConfigurationElement extension : extensions)
 		{
@@ -33,7 +33,7 @@ public class StorageFactory
 			{
 				try
 				{
-					storage = (Storage) extension.createExecutableExtension("class");
+					storage = (IStorage) extension.createExecutableExtension("class");
 					((IExecutableExtension)storage).setInitializationData(extension, "name", a_storageName);
 					return storage;
 				}

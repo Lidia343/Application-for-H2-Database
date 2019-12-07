@@ -49,7 +49,7 @@ import editing.IsActiveEditingSupport;
 import editing.NameEditingSupport;
 import editing.SurnameEditingSupport;
 import errors.ErrorChecker;
-import storages.Storage;
+import storages.IStorage;
 import storages.StorageFactory;
 import user.UsersModelProvider;
 import user.User;
@@ -119,7 +119,7 @@ public class Graphics
 	private TableViewerColumn m_isActiveColumn;
 	
 	private StorageFactory m_storageFactory;
-	private Storage m_storage;
+	private IStorage m_storage;
 	
 	private boolean m_isDarkColor;
 	private int m_selectedId;

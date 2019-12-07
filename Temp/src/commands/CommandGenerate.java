@@ -2,7 +2,7 @@ package commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import storages.Storage;
+import storages.IStorage;
 import user.User;
 import user.UsersDataGenerator;
 
@@ -11,7 +11,7 @@ import user.UsersDataGenerator;
  */
 public class CommandGenerate implements Command
 {
-	private Storage m_storage;
+	private IStorage m_storage;
 	private List <User> m_generatedUsers;
 	private UsersDataGenerator m_generator;
 
@@ -20,7 +20,7 @@ public class CommandGenerate implements Command
 	 * @param a_storage - хранилище данных пользователей
 	 * @param a_userNumbers - количество пользователей для добавления в хранилище
 	 */
-	public CommandGenerate (Storage a_storage, int a_userNumbers) 
+	public CommandGenerate (IStorage a_storage, int a_userNumbers) 
 	{
 		m_storage = a_storage;
 		m_generator = new UsersDataGenerator (a_userNumbers);

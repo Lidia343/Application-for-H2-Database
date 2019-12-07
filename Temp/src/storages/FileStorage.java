@@ -19,7 +19,7 @@ import user.UsersListSorter;
 /**
  * Класс предназначен для работы с файлом, в котором должна храниться информация о пользователях.
  */
-public class FileStorage implements Storage, IExecutableExtension
+public class FileStorage implements IStorage, IExecutableExtension
 {
 	private String m_fileName;
 	private File m_file;

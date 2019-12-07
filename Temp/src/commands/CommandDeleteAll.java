@@ -2,7 +2,7 @@ package commands;
 
 import java.util.List;
 
-import storages.Storage;
+import storages.IStorage;
 import user.User;
 
 /**
@@ -10,7 +10,7 @@ import user.User;
  */
 public class CommandDeleteAll implements Command
 {
-	private final Storage m_storage;
+	private final IStorage m_storage;
 	private List<User> m_users;
 	
 	/**
@@ -18,7 +18,7 @@ public class CommandDeleteAll implements Command
 	 * @param a_storage - хранилище данных пользователей
 	 * @throws Exception 
 	 */
-	public CommandDeleteAll (Storage a_storage) 
+	public CommandDeleteAll (IStorage a_storage) 
 	{
 		m_storage = a_storage;
 	}
