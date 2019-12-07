@@ -31,11 +31,11 @@ public class AgeEditingSupport extends UserEditingSupport
 	@Override
 	protected void setValue(Object a_element, Object a_userInputValue) 
 	{
-		ErrorChecker m_ageChecker = new ErrorChecker();
-		m_ageChecker.checkAge(String.valueOf(a_userInputValue));
-		if (!m_ageChecker.getErrorMesssage().equals("")) 
+		ErrorChecker ageChecker = new ErrorChecker();
+		ageChecker.checkAge(String.valueOf(a_userInputValue));
+		if (!ageChecker.getErrorMesssage().equals("")) 
 		{
-			m_errorInputListener.createMessage(m_ageChecker.getErrorMesssage());
+			m_errorInputListener.createMessage(ageChecker.getErrorMesssage());
 			return;
 		}
 		m_userEditingListener.changeUserAge((User) a_element, Integer.parseInt(String.valueOf(a_userInputValue)));

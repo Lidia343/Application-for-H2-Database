@@ -20,29 +20,29 @@ public class ShellPropertiesFactory
 	 */
 	public ShellProperties getShellProperties (Storage a_storage, Point a_size, Color a_backColor, boolean a_isDarkColor) 
 	{
-		ShellProperties m_shellProperties = null;
+		ShellProperties shellProperties = null;
 		if (a_storage == null) 
 		{
 			if (a_isDarkColor) 
-				m_shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "darkQuestion.png").size(a_size).backColor(a_backColor).build(); 
+				shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "darkQuestion.png").size(a_size).backColor(a_backColor).build(); 
 			else
-				m_shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "lightQuestion.png").size(a_size).backColor(a_backColor).build();
+				shellProperties = new ShellProperties.Builder("Работа с данными пользователей", "lightQuestion.png").size(a_size).backColor(a_backColor).build();
 		} 
 		else
 			if (a_storage instanceof FileStorage) 
 			{
 				if (a_isDarkColor) 
-					m_shellProperties = new ShellProperties.Builder("Работа с файлом", "darkFile.png").size(a_size).backColor(a_backColor).build(); 
+					shellProperties = new ShellProperties.Builder("Работа с файлом", "darkFile.png").size(a_size).backColor(a_backColor).build(); 
 				else
-					m_shellProperties = new ShellProperties.Builder("Работа с файлом", "lightFile.png").size(a_size).backColor(a_backColor).build();
+					shellProperties = new ShellProperties.Builder("Работа с файлом", "lightFile.png").size(a_size).backColor(a_backColor).build();
 			} else
 				{
 					if (a_isDarkColor) 
-						m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "darkDatabase.png").size(a_size).backColor(a_backColor).build(); 
+						shellProperties = new ShellProperties.Builder("Работа с базой данных", "darkDatabase.png").size(a_size).backColor(a_backColor).build(); 
 					else
-						m_shellProperties = new ShellProperties.Builder("Работа с базой данных", "lightDatabase.png").size(a_size).backColor(a_backColor).build();
+						shellProperties = new ShellProperties.Builder("Работа с базой данных", "lightDatabase.png").size(a_size).backColor(a_backColor).build();
 				} 
-		return m_shellProperties;
+		return shellProperties;
 	}
 	
 	/**
@@ -52,8 +52,8 @@ public class ShellPropertiesFactory
 	 */
 	public ShellProperties getShellProperties (Storage a_storage, Point a_size) 
 	{
-		ShellProperties m_shellProperties = getShellProperties (a_storage, a_size, null, true);
-		return m_shellProperties;
+		ShellProperties shellProperties = getShellProperties (a_storage, a_size, null, true);
+		return shellProperties;
 	}
 	
 	/**
@@ -64,8 +64,8 @@ public class ShellPropertiesFactory
 	 */
 	public ShellProperties getShellProperties (Storage a_storage, Color a_backColor, boolean a_isDarkColor) 
 	{
-		ShellProperties m_shellProperties = getShellProperties (a_storage, null, a_backColor, a_isDarkColor);
-		return m_shellProperties;
+		ShellProperties shellProperties = getShellProperties (a_storage, null, a_backColor, a_isDarkColor);
+		return shellProperties;
 	}
 	
 	/**
@@ -74,8 +74,8 @@ public class ShellPropertiesFactory
 	 */
 	public ShellProperties getShellProperties (Storage a_storage) 
 	{
-		ShellProperties m_shellProperties = getShellProperties (a_storage, null, null, true);
-		return m_shellProperties;
+		ShellProperties shellProperties = getShellProperties (a_storage, null, null, true);
+		return shellProperties;
 	}
 }
 	

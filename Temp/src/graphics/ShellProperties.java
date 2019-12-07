@@ -44,11 +44,13 @@ public class ShellProperties
 		 */
 		private void setImage () 
 		{
-			try {
-				InputStream m_stream = Graphics.class.getResourceAsStream("/icons/" + m_imageName);
-				m_image = new Image (Display.getDefault(), m_stream);
-				m_stream.close();
-			} catch (Exception e) {
+			try 
+			{
+				InputStream stream = Graphics.class.getResourceAsStream("/icons/" + m_imageName);
+				m_image = new Image (Display.getDefault(), stream);
+				stream.close();
+			} catch (Exception a_e) 
+			{
 				m_image = null;
 			}
 		}
@@ -78,7 +80,7 @@ public class ShellProperties
 		 */
 		public ShellProperties build () 
 		{
-			setImage ();
+			setImage();
 			return new ShellProperties (this);
 		}
 	}

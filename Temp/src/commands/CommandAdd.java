@@ -25,8 +25,8 @@ public class CommandAdd implements Command
 	@Override
 	public void execute() throws Exception
 	{
-		int m_currentID = m_storage.addUser(m_user);
-		m_user.setId(m_currentID);
+		int currentID = m_storage.addUser(m_user);
+		m_user.setId(currentID);
 	}
 
 	@Override

@@ -58,7 +58,7 @@ public class UserEditingSupport extends EditingSupport
 	@Override
 	protected Object getValue(Object a_value) 
 	{
-		return null;
+		return new Object();
 	}
 
 	/**

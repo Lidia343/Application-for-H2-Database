@@ -58,25 +58,25 @@ public class UsersDataGenerator
 	 */
 	public List <User> generateUsers()
 	{
-		User m_user;
-		for (int m_i = 0; m_i < m_userNumbers; m_i++) 
+		User user;
+		for (int i = 0; i < m_userNumbers; i++) 
 		{
-			m_user = new User();
-			int m_isMale = (int)Math.round(Math.random());
-			if (m_isMale == 0)
+			user = new User();
+			int isMale = (int)Math.round(Math.random());
+			if (isMale == 0)
 			{
-				m_user.setName(m_maleNames.get((int)Math.round(Math.random()*(m_maleNames.size() - 1))));
-				m_user.setSurname(m_maleSurnames.get((int)Math.round(Math.random()*(m_maleSurnames.size() - 1))));
+				user.setName(m_maleNames.get((int)Math.round(Math.random()*(m_maleNames.size() - 1))));
+				user.setSurname(m_maleSurnames.get((int)Math.round(Math.random()*(m_maleSurnames.size() - 1))));
 			} else 
 				{
-					m_user.setName(m_femaleNames.get((int)Math.round(Math.random()*(m_femaleNames.size() - 1))));
-					m_user.setSurname(m_femaleSurnames.get((int)Math.round(Math.random()*(m_femaleNames.size() - 1))));
+					user.setName(m_femaleNames.get((int)Math.round(Math.random()*(m_femaleNames.size() - 1))));
+					user.setSurname(m_femaleSurnames.get((int)Math.round(Math.random()*(m_femaleNames.size() - 1))));
 				}
-			m_user.setAge(UserData.MIN_AGE + (int)Math.round(Math.random()*(UserData.MAX_AGE - UserData.MIN_AGE)));
-			int m_activity = (int)Math.round(Math.random());
-			if (m_activity == 0) m_user.setIsActive(true); else
-				m_user.setIsActive(false);
-			m_generatedUsers.add(m_user);
+			user.setAge(UserData.MIN_AGE + (int)Math.round(Math.random()*(UserData.MAX_AGE - UserData.MIN_AGE)));
+			int activity = (int)Math.round(Math.random());
+			if (activity == 0) user.setIsActive(true); else
+				user.setIsActive(false);
+			m_generatedUsers.add(user);
 		}
 		return m_generatedUsers;
 	}

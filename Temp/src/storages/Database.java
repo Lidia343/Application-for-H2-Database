@@ -47,31 +47,31 @@ public class Database implements Storage, IExecutableExtension
 	@Override
 	public void createStorageObject() throws SQLException
 	{
-		String m_sql = "CREATE TABLE IF NOT EXISTS USERS (id INT NOT NULL AUTO_INCREMENT (0, 1) PRIMARY KEY, "
+		String sql = "CREATE TABLE IF NOT EXISTS USERS (id INT NOT NULL AUTO_INCREMENT (0, 1) PRIMARY KEY, "
 		+ "Name varchar(255) NOT NULL, Surname varchar(255) NOT NULL, Age INT NOT NULL, isActive BOOLEAN NOT NULL)"; 
-		m_statement.executeUpdate(m_sql);
+		m_statement.executeUpdate(sql);
 	 }
 	
 	@Override
 	public void updateStorageObject() throws SQLException 
 	{
-		String m_sql = "DROP TABLE IF EXISTS USERS"; 
-		m_statement.executeUpdate(m_sql);
+		String sql = "DROP TABLE IF EXISTS USERS"; 
+		m_statement.executeUpdate(sql);
 		createStorageObject();
 	}
 	
 	@Override
 	public int addUser(User a_user) throws SQLException 
 	{
-		String m_insertingRequestPart = "INSERT INTO Users VALUES (";
-		String m_userRequestPart = ", '" + a_user.getName() + "', '" + a_user.getSurname() + "', " + a_user.getAge() + ", " + a_user.isActive() + ")";
-		String m_addingReguest;
+		String insertingRequestPart = "INSERT INTO Users VALUES (";
+		String userRequestPart = ", '" + a_user.getName() + "', '" + a_user.getSurname() + "', " + a_user.getAge() + ", " + a_user.isActive() + ")";
+		String addingReguest;
 		if (a_user.getId() == -1)
-			m_addingReguest = m_insertingRequestPart + "DEFAULT" + m_userRequestPart; 
+			addingReguest = insertingRequestPart + "DEFAULT" + userRequestPart; 
 		else
-			m_addingReguest = m_insertingRequestPart + a_user.getId() + m_userRequestPart; 
+			addingReguest = insertingRequestPart + a_user.getId() + userRequestPart; 
 		
-		m_statement.executeUpdate(m_addingReguest, Statement.RETURN_GENERATED_KEYS);	
+		m_statement.executeUpdate(addingReguest, Statement.RETURN_GENERATED_KEYS);	
 		m_resultSet = m_statement.getGeneratedKeys();
 		if (m_resultSet != null)
 		{
@@ -86,49 +86,49 @@ public class Database implements Storage, IExecutableExtension
 	@Override
 	public void updateUser(User a_user) throws SQLException 
 	{
-		String m_sql = "UPDATE Users SET NAME='" + a_user.getName() + "', SURNAME = '" + a_user.getSurname() 
+		String sql = "UPDATE Users SET NAME='" + a_user.getName() + "', SURNAME = '" + a_user.getSurname() 
 		+  "', AGE = " + a_user.getAge() + ", ISACTIVE = " + a_user.isActive() + " WHERE ID=" + a_user.getId();
-		m_statement.executeUpdate(m_sql);
+		m_statement.executeUpdate(sql);
 	}
 	  
 	@Override
 	public void deleteUser(int a_id) throws SQLException 
 	{ 
-		String m_sql = "DELETE FROM Users WHERE ID=" + a_id;
-		m_statement.executeUpdate(m_sql);
+		String sql = "DELETE FROM Users WHERE ID=" + a_id;
+		m_statement.executeUpdate(sql);
 	}
 	
 	@Override
 	public void deleteAllUsers() throws SQLException 
 	{ 
-		String m_sql = "DELETE FROM Users";
-		m_statement.executeUpdate(m_sql);
+		String sql = "DELETE FROM Users";
+		m_statement.executeUpdate(sql);
 	}
 	
 	
 	@Override
 	public List <User> getUsersDataSet(boolean a_sorting, boolean a_usersAreDeleted) throws SQLException 
 	{
-		List <User> m_users = new ArrayList <>();
-		String m_selectingRequest = "SELECT id, Name, Surname, Age, isActive FROM Users";
-		if (a_sorting)  m_resultSet = m_statement.executeQuery(m_selectingRequest + "order by id"); else
-			m_resultSet = m_statement.executeQuery(m_selectingRequest);
+		List <User> users = new ArrayList <>();
+		String selectingRequest = "SELECT id, Name, Surname, Age, isActive FROM Users";
+		if (a_sorting)  m_resultSet = m_statement.executeQuery(selectingRequest + "order by id"); else
+			m_resultSet = m_statement.executeQuery(selectingRequest);
 		
 	    while (m_resultSet.next())
 	    {
 			if (m_resultSet != null) 
 			{	
-				User m_user = new User();
-				m_user.setId(m_resultSet.getInt("id"));
-				m_user.setName(m_resultSet.getString("Name"));
-				m_user.setSurname(m_resultSet.getString("Surname"));
-				m_user.setAge(m_resultSet.getInt("Age"));
-				m_user.setIsActive(m_resultSet.getBoolean("isActive"));
-				m_users.add(m_user);
+				User user = new User();
+				user.setId(m_resultSet.getInt("id"));
+				user.setName(m_resultSet.getString("Name"));
+				user.setSurname(m_resultSet.getString("Surname"));
+				user.setAge(m_resultSet.getInt("Age"));
+				user.setIsActive(m_resultSet.getBoolean("isActive"));
+				users.add(user);
 			} else 
 				return null;
 	    }
-		return m_users;
+		return users;
 	  }
 
 	@Override

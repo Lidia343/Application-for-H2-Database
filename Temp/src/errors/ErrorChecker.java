@@ -36,17 +36,17 @@ public class ErrorChecker
 	public void checkAge (String a_age) 
 	{
 		if (isEmptyInput (a_age)) return;
-		int m_intAge = UserData.MIN_AGE;
+		int intAge = UserData.MIN_AGE;
 		try 
 		{ 
-			m_intAge = Integer.parseInt(a_age);
+			intAge = Integer.parseInt(a_age);
 		} catch (NumberFormatException e) 
 		{
 			m_messageCode = SWT.ICON_WARNING; 
 			m_errorMessage = "Значение поля \"Возраст\" должно быть целым числом в пределах от " +  Integer.toString(UserData.MIN_AGE) + " до " + Integer.toString(UserData.MAX_AGE) + ".";
 			return;
 		}	
-		if (!((m_intAge >= UserData.MIN_AGE) && (m_intAge <= UserData.MAX_AGE)))
+		if (!((intAge >= UserData.MIN_AGE) && (intAge <= UserData.MAX_AGE)))
 		{ 
 			m_messageCode = SWT.ICON_WARNING;
 			m_errorMessage = "Значение поля \"Возраст\" должно быть целым числом в пределах от " +  Integer.toString(UserData.MIN_AGE) + " до " + Integer.toString(UserData.MAX_AGE) + ".";

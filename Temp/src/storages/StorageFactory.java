@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
  */
 public class StorageFactory 
 {
-	private final String m_storageExtensionID = "H2DataBasePlug-in.stores";
+	private static final String STORAGE_EXTENSION_ID = "H2DataBasePlug-in.stores";
 	
 	/**
 	 * Метод возвращает хранилище данных пользователей.
@@ -23,23 +23,23 @@ public class StorageFactory
 	 */
 	public Storage getStorage(String a_storageName) 
 	{
-		IExtensionRegistry m_reg = Platform.getExtensionRegistry();
-		IConfigurationElement[] m_extensions = m_reg.getConfigurationElementsFor(m_storageExtensionID);
-		Storage m_storage;
+		IExtensionRegistry reg = Platform.getExtensionRegistry();
+		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(STORAGE_EXTENSION_ID);
+		Storage storage;
 		
-		for (IConfigurationElement m_extension : m_extensions)
+		for (IConfigurationElement extension : extensions)
 		{
-			if (Pattern.compile(m_extension.getAttribute("pattern")).matcher(a_storageName).matches())
+			if (Pattern.compile(extension.getAttribute("pattern")).matcher(a_storageName).matches())
 			{
 				try
 				{
-					m_storage = (Storage) m_extension.createExecutableExtension("class");
-					((IExecutableExtension)m_storage).setInitializationData(m_extension, "name", a_storageName);
-					return m_storage;
+					storage = (Storage) extension.createExecutableExtension("class");
+					((IExecutableExtension)storage).setInitializationData(extension, "name", a_storageName);
+					return storage;
 				}
-				catch(CoreException e)
+				catch(CoreException a_e)
 				{
-					e.printStackTrace();
+					a_e.printStackTrace();
 				}
 			}
 		}

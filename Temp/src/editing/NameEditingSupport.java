@@ -31,11 +31,11 @@ public class NameEditingSupport extends UserEditingSupport
 	@Override
 	protected void setValue(Object a_element, Object a_userInputValue) 
 	{
-		ErrorChecker m_nameChecker = new ErrorChecker();
-		m_nameChecker.checkName(String.valueOf(a_userInputValue));
-		if (!m_nameChecker.getErrorMesssage().equals("")) 
+		ErrorChecker nameChecker = new ErrorChecker();
+		nameChecker.checkName(String.valueOf(a_userInputValue));
+		if (!nameChecker.getErrorMesssage().equals("")) 
 		{
-			m_errorInputListener.createMessage(m_nameChecker.getErrorMesssage());
+			m_errorInputListener.createMessage(nameChecker.getErrorMesssage());
 			return;
 		}
 		m_userEditingListener.changeUserName((User)a_element, String.valueOf(a_userInputValue));

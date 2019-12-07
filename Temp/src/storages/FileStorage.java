@@ -101,46 +101,46 @@ public class FileStorage implements Storage, IExecutableExtension
 	private void writeInList(File a_file) throws IOException 
 	{
 		m_writer.close();
-		User m_user;
+		User user;
 		m_reader = new BufferedReader (new FileReader (a_file));
 		m_reader.readLine();
 		m_reader.readLine();
-		String m_line = m_reader.readLine(), m_buffer;
-		int m_i;
-		int m_j = 0;
-		while (m_line != null) 
+		String line = m_reader.readLine(), buffer;
+		int i;
+		int j = 0;
+		while (line != null) 
 		{
-			m_user = new User();
-			m_buffer = "";
-			m_i = 0;
-			while (m_i < m_line.length()) 
+			user = new User();
+			buffer = "";
+			i = 0;
+			while (i < line.length()) 
 			{
-				if (((m_line.charAt(m_i) >= '0') && (m_line.charAt(m_i) <= '9')) || 
-						((m_line.charAt(m_i) >= 'a') && (m_line.charAt(m_i) <= 'z')) || 
-						((m_line.charAt(m_i) >= 'A') && (m_line.charAt(m_i) <= 'Z')) ||
-						((m_line.charAt(m_i) >= 'а') && (m_line.charAt(m_i) <= 'я')) ||
-						((m_line.charAt(m_i) >= 'А') && (m_line.charAt(m_i) <= 'Я'))) 
+				if (((line.charAt(i) >= '0') && (line.charAt(i) <= '9')) || 
+						((line.charAt(i) >= 'a') && (line.charAt(i) <= 'z')) || 
+						((line.charAt(i) >= 'A') && (line.charAt(i) <= 'Z')) ||
+						((line.charAt(i) >= 'а') && (line.charAt(i) <= 'я')) ||
+						((line.charAt(i) >= 'А') && (line.charAt(i) <= 'Я'))) 
 				{
-					m_buffer += m_line.charAt(m_i); 
-					if (m_buffer.equals("true") || m_buffer.equals("false")) 
-						m_user.setIsActive(Boolean.parseBoolean(m_buffer));
+					buffer += line.charAt(i); 
+					if (buffer.equals("true") || buffer.equals("false")) 
+						user.setIsActive(Boolean.parseBoolean(buffer));
 				} else 
 					{
-						if (!m_buffer.equals("")) 
+						if (!buffer.equals("")) 
 						{
-							if (m_j == 0) m_user.setId(Integer.parseInt(m_buffer));
-							if (m_j == 1) m_user.setName(m_buffer);
-							if (m_j == 2) m_user.setSurname(m_buffer);
-							if (m_j == 3) m_user.setAge(Integer.parseInt(m_buffer));
-							m_j++;
+							if (j == 0) user.setId(Integer.parseInt(buffer));
+							if (j == 1) user.setName(buffer);
+							if (j == 2) user.setSurname(buffer);
+							if (j == 3) user.setAge(Integer.parseInt(buffer));
+							j++;
 						}
-						m_buffer = "";  
+						buffer = "";  
 					}
-				m_i++;
+				i++;
 			}
-			m_j = 0;
-			m_usersDataList.add(m_user);
-			m_line = m_reader.readLine();
+			j = 0;
+			m_usersDataList.add(user);
+			line = m_reader.readLine();
 		}
 		findMaxUserId();
 	}
@@ -152,11 +152,11 @@ public class FileStorage implements Storage, IExecutableExtension
 		m_writer = new FileWriter (m_file, true); 
 		m_writer.close();
 		m_reader = new BufferedReader (new FileReader (m_file));
-		String m_temp = m_reader.readLine();
-		m_temp = m_reader.readLine();
-		m_temp = m_reader.readLine();
+		String temp = m_reader.readLine();
+		temp = m_reader.readLine();
+		temp = m_reader.readLine();
 		
-		if ((m_temp == null) || (m_temp.length()*m_temp.getBytes().length == m_temp.getBytes().length)) 
+		if ((temp == null) || (temp.length()*temp.getBytes().length == temp.getBytes().length)) 
 		{
 			m_writer = new FileWriter (m_file, false); 
 			m_writer.write("Код:" + "\t" + "Имя:    " +  "\t\t\t\t\t\t\t" + "Фамилия:" + "\t\t\t\t\t\t\t" + "Возраст:" + "\t" + "Активен:" + "\r\n\r\n");
@@ -186,14 +186,14 @@ public class FileStorage implements Storage, IExecutableExtension
 	{
 		m_afterNameTab = "";
 		m_afterSurnameTab = "";
-		int m_userNameSize = a_userName.length();
-		int m_userSurnameSize = a_userSurname.length();
-		int m_tabCountAfterUserName = 8 - (int)(m_userNameSize/8),
-		    m_tabCountAfterUserSurname = 8 - (int)(m_userSurnameSize/8);
-		for (int m_i = 0; m_i < m_tabCountAfterUserName; m_i++) 
+		int userNameSize = a_userName.length();
+		int userSurnameSize = a_userSurname.length();
+		int tabCountAfterUserName = 8 - (int)(userNameSize/8),
+		    tabCountAfterUserSurname = 8 - (int)(userSurnameSize/8);
+		for (int i = 0; i < tabCountAfterUserName; i++) 
 			m_afterNameTab += "\t";
 		
-		for (int m_i = 0; m_i < m_tabCountAfterUserSurname; m_i++) 
+		for (int i = 0; i < tabCountAfterUserSurname; i++) 
 			m_afterSurnameTab += "\t";
 	}
 	
@@ -208,8 +208,8 @@ public class FileStorage implements Storage, IExecutableExtension
 	{
 		calculateTabForUserData(a_user.getName(), a_user.getSurname());
 		m_writer = new FileWriter (m_file, true); 
-		String m_userLine = (a_id + 1) + "\t" + a_user.getName() + m_afterNameTab + a_user.getSurname() + m_afterSurnameTab + a_user.getAge() + "\t\t" + a_user.isActive() + "\r\n";
-		m_writer.append(m_userLine); 
+		String userLine = (a_id + 1) + "\t" + a_user.getName() + m_afterNameTab + a_user.getSurname() + m_afterSurnameTab + a_user.getAge() + "\t\t" + a_user.isActive() + "\r\n";
+		m_writer.append(userLine); 
 		m_writer.close();
 			
 		a_user.setId(a_id + 1);
@@ -228,10 +228,10 @@ public class FileStorage implements Storage, IExecutableExtension
 				m_usersDataList.clear();
 				m_allUsersDeleted = false;
 			}
-			String m_idLine;
+			String idLine;
 			m_idReader = new BufferedReader (new FileReader (m_maxIdFile));
-			m_idLine = m_idReader.readLine();
-			m_id = Integer.parseInt(m_idLine);
+			idLine = m_idReader.readLine();
+			m_id = Integer.parseInt(idLine);
 			writeUserInFile (a_user, m_id, true);
 			return (m_id + 1);
 		} 
@@ -251,23 +251,23 @@ public class FileStorage implements Storage, IExecutableExtension
 	{
 		if (m_usersDataList.size() != 0) 
 		{
-			int[] m_indexes = new int[m_usersDataList.size()];
-			for (int m_i = 0; m_i < m_usersDataList.size(); m_i++) 
+			int[] indexes = new int[m_usersDataList.size()];
+			for (int i = 0; i < m_usersDataList.size(); i++) 
 			{
-				m_indexes[m_i] = m_usersDataList.get(m_i).getId();
+				indexes[i] = m_usersDataList.get(i).getId();
 			}
 
-			int m_max = m_indexes[0], m_maxi = 0;
-			for (int m_i = 0; m_i < m_indexes.length; m_i++) 
+			int max = indexes[0], maxi = 0;
+			for (int i = 0; i < indexes.length; i++) 
 			{
-				if (m_indexes[m_i] > m_max) 
+				if (indexes[i] > max) 
 				{
-					m_max = m_indexes[m_i];
-					m_maxi = m_i;
+					max = indexes[i];
+					maxi = i;
 				}
 			}
 			
-			updateIdFile(Integer.toString(m_indexes[m_maxi]));
+			updateIdFile(Integer.toString(indexes[maxi]));
 		} else updateIdFile ("-1");
 	}
 	
@@ -282,38 +282,38 @@ public class FileStorage implements Storage, IExecutableExtension
 		m_reader = new BufferedReader (new FileReader (m_file));
 		m_prevUsersDataList.add(m_reader.readLine());
 		m_prevUsersDataList.add(m_reader.readLine());
-		String m_line = m_reader.readLine(), m_idBuffer = "";
-		m_prevUsersDataList.add(m_line);
-		int m_i;
+		String line = m_reader.readLine(), idBuffer = "";
+		m_prevUsersDataList.add(line);
+		int i;
 			
-		while (m_line != null) 
+		while (line != null) 
 		{
-			m_idBuffer = "";
-			m_i = 0;
-			while (m_i < m_line.length()) 
+			idBuffer = "";
+			i = 0;
+			while (i < line.length()) 
 			{
-				if ((m_line.charAt(m_i) >= '0') && (m_line.charAt(m_i) <= '9')) 
+				if ((line.charAt(i) >= '0') && (line.charAt(i) <= '9')) 
 				{
-					m_idBuffer += m_line.charAt(m_i);
+					idBuffer += line.charAt(i);
 				} else break;
-				m_i++;
+				i++;
 			}
-			if (m_idBuffer.equals("" + a_userId)) break;
-			m_line = m_reader.readLine();
-			m_prevUsersDataList.add(m_line);
+			if (idBuffer.equals("" + a_userId)) break;
+			line = m_reader.readLine();
+			m_prevUsersDataList.add(line);
 		}
 		m_prevUsersDataList.remove(m_prevUsersDataList.size() - 1);
-		m_line = m_reader.readLine();
-		while (m_line != null) 
+		line = m_reader.readLine();
+		while (line != null) 
 		{
-			m_nextUsersDataList.add(m_line);
-			m_line = m_reader.readLine();
+			m_nextUsersDataList.add(line);
+			line = m_reader.readLine();
 		}
 			
 		m_writer = new FileWriter (m_file, false); 
 			
-		for (m_i = 0; m_i < m_prevUsersDataList.size(); m_i++)
-			m_writer.write(m_prevUsersDataList.get(m_i) + "\r\n");
+		for (i = 0; i < m_prevUsersDataList.size(); i++)
+			m_writer.write(m_prevUsersDataList.get(i) + "\r\n");
 	}
 	
 	/**
@@ -322,8 +322,8 @@ public class FileStorage implements Storage, IExecutableExtension
 	 */
 	private void updateTextAfterUser () throws IOException 
 	{
-		for (int m_i = 0; m_i < m_nextUsersDataList.size(); m_i++)
-			m_writer.write(m_nextUsersDataList.get(m_i) + "\r\n");
+		for (int i = 0; i < m_nextUsersDataList.size(); i++)
+			m_writer.write(m_nextUsersDataList.get(i) + "\r\n");
 		m_writer.close();
 		m_prevUsersDataList.clear();
 		m_nextUsersDataList.clear();
@@ -337,10 +337,10 @@ public class FileStorage implements Storage, IExecutableExtension
 		m_writer.write(a_user.getId() + "\t" + a_user.getName() + m_afterNameTab + a_user.getSurname() + m_afterSurnameTab + a_user.getAge() + "\t\t" + a_user.isActive() + "\r\n");
 		updateTextAfterUser ();
 		
-		int m_dataIndex = 0;
-		for (User m_temp : m_usersDataList)
-			if (m_temp.getId() == a_user.getId()) m_dataIndex = m_usersDataList.indexOf(m_temp);
-		m_usersDataList.set(m_dataIndex, a_user);
+		int dataIndex = 0;
+		for (User temp : m_usersDataList)
+			if (temp.getId() == a_user.getId()) dataIndex = m_usersDataList.indexOf(temp);
+		m_usersDataList.set(dataIndex, a_user);
 	}
 	
 	@Override
@@ -349,10 +349,10 @@ public class FileStorage implements Storage, IExecutableExtension
 		updateTextBeforeUser (a_id);
 		updateTextAfterUser ();
 		
-		int m_dataIndex = 0;
-		for (User m_temp : m_usersDataList)
-			if (m_temp.getId() == a_id) m_dataIndex = m_usersDataList.indexOf(m_temp);
-		m_usersDataList.remove(m_dataIndex); 
+		int dataIndex = 0;
+		for (User temp : m_usersDataList)
+			if (temp.getId() == a_id) dataIndex = m_usersDataList.indexOf(temp);
+		m_usersDataList.remove(dataIndex); 
 		findMaxUserId();
 	}
 	
@@ -362,15 +362,15 @@ public class FileStorage implements Storage, IExecutableExtension
 		m_writer = new FileWriter (m_file, false); 
 		m_writer.write("Код:" + "\t" + "Имя:    " +  "\t\t\t\t\t\t\t" + "Фамилия:" + "\t\t\t\t\t\t\t" + "Возраст:" + "\t" + "Активен:" + "\r\n\r\n");
 		m_reader = new BufferedReader (new FileReader (m_file));
-		String m_line = m_reader.readLine();
-		while (m_line != null) 
+		String line = m_reader.readLine();
+		while (line != null) 
 			m_writer.write("\r\n");
 		m_writer.close();
 		m_allUsersDeleted = true;
 		m_deletedUsersDataList.clear();
-		for (int m_i = 0; m_i < m_usersDataList.size(); m_i++) 
+		for (int i = 0; i < m_usersDataList.size(); i++) 
 		{
-			m_deletedUsersDataList.add(m_usersDataList.get(m_i));
+			m_deletedUsersDataList.add(m_usersDataList.get(i));
 		}
 		m_usersDataList.clear();
 	}
