@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="DatabaseApplication" uid="DataBaseProduct" id="H2DataBasePlug-in.product" application="H2DataBasePlug-in.App" useFeatures="false" includeLaunchers="true">
+<product name="StorageApplication" uid="StorageProduct" id="StoragePlug-in.product" application="StoragePlug-in.App" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -20,7 +20,8 @@
    </vm>
 
    <plugins>
-      <plugin id="H2DataBasePlug-in"/>
+      <plugin id="Database"/>
+      <plugin id="StoragePlug-in"/>
       <plugin id="javax.xml"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>

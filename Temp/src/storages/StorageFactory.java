@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
  */
 public class StorageFactory 
 {
-	private static final String STORAGE_EXTENSION_ID = "H2DataBasePlug-in.stores";
+	private static final String STORAGE_EXTENSION_ID = "StoragePlug-in.stores";
 	
 	/**
 	 * Метод возвращает хранилище данных пользователей.
