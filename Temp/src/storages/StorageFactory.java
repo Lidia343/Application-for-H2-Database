@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 /**
- * Фабрика для создания объектов классов, реализующих интерфейс Storage.
+ * Фабрика для создания объектов классов, реализующих интерфейс IStorage.
  */
 public class StorageFactory 
 {

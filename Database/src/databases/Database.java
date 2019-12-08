@@ -24,10 +24,12 @@ public abstract class Database extends Storage implements IStorage
 	  
 	/**
 	 * Конструктор класса Database.
+	 * @param a_databaseName - имя базы данных
+	 * @param a_JDBCDriver - имя драйвера для базы данных
 	 */
-	public Database(String a_DatabaseName, String a_JDBCDriver) 
+	public Database(String a_databaseName, String a_JDBCDriver) 
 	{
-		super (a_DatabaseName);
+		super (a_databaseName);
 		m_JDBC_Driver = a_JDBCDriver;
 	}
 	  
