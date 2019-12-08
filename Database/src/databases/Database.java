@@ -1,4 +1,4 @@
-package storages;
+package databases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,21 +8,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-
 import storages.IStorage;
+import storages.Storage;
 import user.User;
 
 /**
  * Класс предназначен для работы с базой данных.
  */
-public class Database implements IStorage, IExecutableExtension
+public abstract class Database extends Storage implements IStorage
 {
 	private String m_JDBC_Driver;
-	private String m_databaseName;
-	  
 	private Connection m_connection;
 	private Statement m_statement;
 	private ResultSet m_resultSet;
@@ -30,8 +25,10 @@ public class Database implements IStorage, IExecutableExtension
 	/**
 	 * Конструктор класса Database.
 	 */
-	public Database() 
+	public Database(String a_DatabaseName, String a_JDBCDriver) 
 	{
+		super (a_DatabaseName);
+		m_JDBC_Driver = a_JDBCDriver;
 	}
 	  
 	@Override
@@ -40,7 +37,7 @@ public class Database implements IStorage, IExecutableExtension
 		m_connection = null; 
 		m_statement = null;  
 		Class.forName(m_JDBC_Driver);      
-		m_connection = DriverManager.getConnection(m_databaseName, "sa", ""); 
+		m_connection = DriverManager.getConnection(m_storageName, "sa", ""); 
 		m_statement = m_connection.createStatement(); 		
 	 }
 	  
@@ -138,12 +135,4 @@ public class Database implements IStorage, IExecutableExtension
 		if (m_statement != null) m_statement.close(); 
 		if (m_connection != null) m_connection.close();
 	}
-
-	@Override
-	public void setInitializationData(IConfigurationElement a_config, String a_propertyName, Object a_data) throws CoreException
-	{
-		m_databaseName = (String) a_data;
-		m_JDBC_Driver = a_config.getAttribute("driver");
-	}
 }
-

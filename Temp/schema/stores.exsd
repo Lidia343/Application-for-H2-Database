@@ -63,20 +63,13 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="driver" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":storages.IStorage"/>
+                  <meta.attribute kind="java" basedOn="storages.Storage:storages.IStorage"/>
                </appinfo>
             </annotation>
          </attribute>

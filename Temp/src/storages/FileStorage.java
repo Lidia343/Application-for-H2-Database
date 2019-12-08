@@ -9,19 +9,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-
 import user.User;
 import user.UsersListSorter;
 
 /**
  * Класс предназначен для работы с файлом, в котором должна храниться информация о пользователях.
  */
-public class FileStorage implements IStorage, IExecutableExtension
+public class FileStorage extends Storage implements IStorage
 {
-	private String m_fileName;
 	private File m_file;
 	private File m_maxIdFile; //Файл для записи максимального значения первичного ключа 
 	private int m_id;
@@ -45,20 +40,7 @@ public class FileStorage implements IStorage, IExecutableExtension
 	 */
 	public FileStorage(String a_fileName) 
 	{
-		m_fileName = a_fileName;
-		m_id = 0;
-		m_usersDataList = new ArrayList<>();
-		m_deletedUsersDataList = new ArrayList<>();
-		m_prevUsersDataList = new ArrayList<>();
-		m_nextUsersDataList = new ArrayList<>();
-		m_allUsersDeleted = false;
-	}
-	
-	/**
-	 * Конструктор класса FileStorage.
-	 */
-	public FileStorage() 
-	{
+		super(a_fileName);
 		m_id = 0;
 		m_usersDataList = new ArrayList<>();
 		m_deletedUsersDataList = new ArrayList<>();
@@ -70,7 +52,7 @@ public class FileStorage implements IStorage, IExecutableExtension
 	@Override
 	public void setStorage() 
 	{
-		m_file = new File (m_fileName);
+		m_file = new File (m_storageName);
 	}
 	
 	/**
@@ -393,11 +375,5 @@ public class FileStorage implements IStorage, IExecutableExtension
 		if (m_reader != null) m_reader.close();
 		if (m_idReader != null) m_idReader.close();
 		if (m_writer != null) m_writer.close();
-	}
-
-	@Override
-	public void setInitializationData(IConfigurationElement a_config, String a_propertyName, Object a_data) throws CoreException
-	{
-		m_fileName = (String)a_data;
 	}
 }
