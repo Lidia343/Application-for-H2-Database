@@ -1215,10 +1215,10 @@ public class Graphics
 	 */
 	private void setStorage() 
 	{
-		m_storage = m_storageFactory.getStorage(m_combo.getText());
 		String potentialErrorMessage = "";
 		try 
 		{
+			m_storage = m_storageFactory.getStorage(m_combo.getText());
 			if (m_combo.getText().equals("")) m_combo.setText(m_defaultFileName);
 			potentialErrorMessage = "Ошибка выполнения установки соединения с хранилищем.";
 			m_storage.setStorage(); 

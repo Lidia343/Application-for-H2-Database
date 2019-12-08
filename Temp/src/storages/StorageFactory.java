@@ -1,13 +1,14 @@
 package storages;
 
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
 
 /**
  * Фабрика для создания объектов классов, реализующих интерфейс Storage.
@@ -21,11 +22,10 @@ public class StorageFactory
 	 * @param a_storageName - имя хранилища
 	 * @throws CoreException 
 	 */
-	public IStorage getStorage(String a_storageName) 
+	public IStorage getStorage(String a_storageName) throws InstantiationException, IllegalAccessException 
 	{
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(STORAGE_EXTENSION_ID);
-		IStorage storage;
 		
 		for (IConfigurationElement extension : extensions)
 		{
@@ -33,13 +33,33 @@ public class StorageFactory
 			{
 				try
 				{
-					storage = (IStorage) extension.createExecutableExtension("class");
-					((IExecutableExtension)storage).setInitializationData(extension, "name", a_storageName);
-					return storage;
+					String bundleSymbolicName = extension.getContributor().getName();
+					Class<?> storageClass = Platform.getBundle(bundleSymbolicName).loadClass(extension.getAttribute("class"));
+					return (IStorage)storageClass.getConstructor(String.class).newInstance(a_storageName);
 				}
-				catch(CoreException a_e)
+				catch(ClassNotFoundException e)
 				{
-					a_e.printStackTrace();
+					e.printStackTrace();
+				}
+				catch(InvalidRegistryObjectException e)
+				{
+					e.printStackTrace();
+				}
+				catch(NoSuchMethodException e)
+				{
+					e.printStackTrace();
+				}
+				catch(SecurityException e)
+				{
+					e.printStackTrace();
+				}
+				catch(IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+				catch(InvocationTargetException e)
+				{
+					e.printStackTrace();
 				}
 			}
 		}
