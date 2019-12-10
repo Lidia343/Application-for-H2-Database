@@ -6,7 +6,7 @@
       <storage
             class="databases.H2Database"
             name="H2Database"
-            pattern="^(jdbc:h2:\D+)$">
+            pattern="^(jdbc:h2:[^:*?\&quot;&lt;&gt;|]+)$">
       </storage>
    </extension>
 
