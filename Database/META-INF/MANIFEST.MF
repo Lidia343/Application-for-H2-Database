@@ -5,6 +5,6 @@ Bundle-SymbolicName: Database;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: Database
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: H2DataBasePlug-in,
- org.eclipse.core.runtime,
- org.h2
+Require-Bundle: org.eclipse.core.runtime,
+ org.h2,
+ StoragePlug-in
