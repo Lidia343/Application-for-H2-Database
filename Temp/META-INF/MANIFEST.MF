@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: H2DataBasePlug-in
-Bundle-SymbolicName: H2DataBasePlug-in;singleton:=true
+Bundle-Name: StoragePlug-in
+Bundle-SymbolicName: StoragePlug-in;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Automatic-Module-Name: H2DataBasePlug-in
+Automatic-Module-Name: StoragePlug-in
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.swt,

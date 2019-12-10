@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="H2DataBasePlug-in" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="StoragePlug-in" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="H2DataBasePlug-in" id="stores" name="Stores"/>
+         <meta.schema plugin="StoragePlug-in" id="stores" name="Stores"/>
       </appinfo>
       <documentation>
          Схема для описания объекта хранилища.

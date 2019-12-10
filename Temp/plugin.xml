@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="store" name="Store" schema="schema/store.exsd"/>
+   <extension-point id="stores" name="Stores" schema="schema/stores.exsd"/>
    <extension
          id="App"
          point="org.eclipse.core.runtime.applications">
@@ -18,27 +18,21 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="H2DataBasePlug-in.App"
-            name="DatabaseApplication">
+            application="StoragePlug-in.App"
+            name="StorageApplication">
          <property
                name="appName"
-               value="DatabaseApplication">
+               value="StorageApplication">
          </property>
       </product>
    </extension>
    <extension
-         point="H2DataBasePlug-in.store">
-      <store
-            class="storages.Database"
-            driver="org.h2.Driver"
-            name="h2Database"
-            pattern="^(jdbc:h2:\D+)$">
-      </store>
-      <store
+         point="StoragePlug-in.stores">
+      <storage
             class="storages.FileStorage"
             name="file"
             pattern="^([^\/:*?\&quot;&lt;&gt;|]+\.txt)$">
-      </store>
+      </storage>
    </extension>
 
 </plugin>

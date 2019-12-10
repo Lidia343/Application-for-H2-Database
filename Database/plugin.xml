@@ -2,11 +2,11 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="H2DataBasePlug-in.stores">
+         point="StoragePlug-in.stores">
       <storage
             class="databases.H2Database"
             name="H2Database"
-            pattern="^(jdbc:h2:\D+)$">
+            pattern="^(jdbc:h2:[^:*?\&quot;&lt;&gt;|]+)$">
       </storage>
    </extension>
 
