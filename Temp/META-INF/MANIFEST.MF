@@ -10,4 +10,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
  org.h2
 Export-Package: storages,
- user
+ user, commands, editing, errors, graphics, main
